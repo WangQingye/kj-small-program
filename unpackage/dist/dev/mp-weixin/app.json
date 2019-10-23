@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/magazinefirst/magazinefirst",
+    "pages/index/index",
+    "pages/userrank/userrank",
+    "pages/readcodes/readcodes"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {}
+}

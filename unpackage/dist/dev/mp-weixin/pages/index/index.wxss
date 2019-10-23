@@ -1,0 +1,136 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.content {
+  background: #F0F3F5;
+}
+.head {
+  padding-bottom: 60rpx;
+  background: white;
+}
+.head .bg {
+    position: absolute;
+    top: 0;
+    height: 589rpx;
+    width: 750rpx;
+    z-index: 0;
+}
+.head .text-area {
+    margin-top: 60rpx;
+    padding: 0 30rpx;
+    position: relative;
+    z-index: 1;
+}
+.head .text-area .title {
+      font-size: 46rpx;
+      color: white;
+}
+.head .text-area .subscribe {
+      font-size: 23rpx;
+      color: #cccccc;
+}
+.head .text-area .cover-img {
+      width: 670rpx;
+      height: 860rpx;
+      display: block;
+      margin: 0 auto;
+      margin-top: 50rpx;
+}
+.head .text-area .buttons {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-justify-content: space-around;
+          -ms-flex-pack: distribute;
+              justify-content: space-around;
+      margin-top: 40rpx;
+}
+.head .text-area .buttons .button-2 {
+        color: white;
+        background: black;
+}
+.head .text-area .buttons .button-2-hover {
+        color: #C8C7CC;
+}
+.main {
+  background: white;
+  margin-top: 20rpx;
+  padding: 0 30rpx;
+}
+.main .tab {
+    text-align: center;
+    color: #666666;
+    font-size: 28rpx;
+    height: 100rpx;
+}
+.main .tab .wuc-tab-item {
+      margin: 0 40rpx;
+      font-weight: bold;
+}
+.main .tab-select {
+    color: black;
+}
+.main .main-scoll {
+    height: 500rpx;
+}
+.main .main-scoll ::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      color: transparent;
+}
+.main .magazines {
+    border-top: 1rpx solid #e6e6e6;
+    padding-top: 30rpx;
+    margin-top: -10rpx;
+    width: 690rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
+}
+.main .readcodes {
+    border-top: 1rpx solid #e6e6e6;
+    padding-top: 30rpx;
+    margin-top: -10rpx;
+    width: 690rpx;
+}
+.button-1 {
+  width: 320rpx;
+  height: 80rpx;
+  border: 2rpx solid black;
+  text-align: center;
+  line-height: 80rpx;
+  font-size: 30rpx;
+  border-radius: 0;
+}
+

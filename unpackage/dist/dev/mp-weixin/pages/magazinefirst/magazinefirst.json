@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "阅读码啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊",
+  "usingComponents": {
+    "chun-lei-modal": "/components/chunLei-modal/chunLei-modal",
+    "uni-popup": "/components/uni-popup/uni-popup"
+  }
+}

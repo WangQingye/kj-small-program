@@ -1,0 +1,38 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/magazinefirst/magazinefirst",
+			"style": {
+				"navigationBarTitleText": "阅读码啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "星光邦",
+				"navigationBarBackgroundColor": "#000000",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/userrank/userrank",
+			"style": {
+				"navigationBarTitleText": "读者排行榜"
+			}
+		},
+		{
+			"path": "pages/readcodes/readcodes",
+			"style": {
+				"navigationBarTitleText": "阅读码",
+				"navigationBarBackgroundColor": "white",
+				"navigationBarTextStyle": "black"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}

@@ -1,0 +1,177 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.user-rank {
+  padding: 0 30rpx;
+}
+.user-rank .top-user {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    margin-top: 34rpx;
+    border-bottom: 1rpx solid #E6E6E6;
+    padding-bottom: 55rpx;
+}
+.user-rank .top-user .user {
+      position: relative;
+      text-align: center;
+}
+.user-rank .top-user .user .hat1 {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 54rpx;
+        height: 46rpx;
+}
+.user-rank .top-user .user .hat2 {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 68rpx;
+        height: 58rpx;
+}
+.user-rank .top-user .user .hat3 {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        width: 44rpx;
+        height: 37rpx;
+}
+.user-rank .top-user .user .avatar1 {
+        width: 120rpx;
+        height: 120rpx;
+        border-radius: 50%;
+        margin-left: 12rpx;
+        margin-top: 22rpx;
+        display: block;
+}
+.user-rank .top-user .user .avatar2 {
+        width: 160rpx;
+        height: 160rpx;
+        border-radius: 50%;
+        margin-left: 12rpx;
+        margin-top: 30rpx;
+        display: block;
+}
+.user-rank .top-user .user .avatar3 {
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50%;
+        margin-left: 12rpx;
+        margin-top: 16rpx;
+        display: block;
+}
+.user-rank .top-user .user .girl1 {
+        width: 36rpx;
+        height: 36rpx;
+        position: absolute;
+        top: 110rpx;
+        left: 95rpx;
+}
+.user-rank .top-user .user .girl2 {
+        width: 36rpx;
+        height: 36rpx;
+        position: absolute;
+        top: 156rpx;
+        left: 135rpx;
+}
+.user-rank .top-user .user .girl3 {
+        width: 36rpx;
+        height: 36rpx;
+        position: absolute;
+        top: 80rpx;
+        left: 80rpx;
+}
+.user-rank .top-user .user .name {
+        font-size: 27rpx;
+        color: #333333;
+}
+.user-rank .top-user .user .subscribe {
+        font-size: 24rpx;
+        color: #999999;
+}
+.user-rank .top-user .user2 {
+      margin-top: 48rpx;
+}
+.user-rank .top-user .user3 {
+      margin-top: 72rpx;
+}
+.user-rank .user-list .user {
+    height: 168rpx;
+    width: 690rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    border-bottom: 1rpx solid #E6E6E6;
+}
+.user-rank .user-list .user .rank {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #1D1D1E;
+      width: 60rpx;
+      text-align: center;
+}
+.user-rank .user-list .user .avatars .avatar {
+      width: 88rpx;
+      height: 88rpx;
+      border-radius: 50%;
+}
+.user-rank .user-list .user .avatars .gender {
+      width: 30rpx;
+      height: 30rpx;
+      margin-left: -30rpx;
+}
+.user-rank .user-list .user .name {
+      font-size: 28rpx;
+      color: #1D1D1E;
+      width: 300rpx;
+}
+.user-rank .user-list .user .subscribe {
+      font-size: 28rpx;
+      color: #999999;
+}
+.user-rank .text-red {
+    color: #FF1616;
+    font-weight: bold;
+}
+
