@@ -1,16 +1,23 @@
 <template>
 	<view class="magazine-first">
-		<image class="cover-img" src="../../static/2.jpg"></image>
+		<swiper class="swiper" :interval="0" :duration="500" @change="onSwiperChange">
+			<swiper-item class="swiper-item" v-for="(item,index) in perviewImgs" :key="index">
+				<image class="swiper-img" :src="item.pic" mode="aspectFill"></image>
+				<!-- <image class="swiper-img" src="../../static/2.jpg" mode="aspectFill"></image> -->
+			</swiper-item>
+		</swiper>
 		<view class="bottom">
 			<view class="page">
-				<text>1/3</text>
+				<text>{{perviewCurrent}}/{{perviewImgs.length}}</text>
 			</view>
 			<view class="button" v-if="isIos" @click="showReadcodeInput = true">
-				<text>使用阅读码</text>
+				<text v-if="isBuy == 0">使用阅读码</text>
+				<text v-else>开始阅读</text>
 			</view>
 			<view class="button" v-else>
-				<text class="use" @click="showReadcodeInput = true">使用阅读码</text>
-				<text class="buy" @click="$refs.buyCode.open()">购买阅读码</text>
+				<text v-if="isBuy == 0" class="use" @click="showReadcodeInput = true">使用阅读码</text>
+				<text v-if="isBuy == 0" class="buy" @click="clickBuy">购买阅读码</text>
+				<text v-if="isBuy == 1">开始阅读</text>
 			</view>
 		</view>
 		<chunLei-modal v-model="showReadcodeInput" :mData="mData" type="input" @onConfirm="onReadcodeInputConfirm" navMask>
@@ -20,7 +27,7 @@
 				<text class="buy-text">购买阅读码</text>
 				<image src="../../static/question.png" class="buy-desc-icon" @click="showDesc"></image>
 				<text class="buy-desc" @click="showDesc">购买说明\n</text>
-				<text class="title">《易烊千玺》</text>
+				<text class="title">{{magTitle}}</text>
 			</view>
 			<view class="content">
 				<text class="title">选择数量</text>
@@ -36,7 +43,7 @@
 				</view>
 			</view>
 			<view class="buy-bottom">
-				<view class="button">
+				<view class="button" @click="goPay">
 					<text>共{{price}}元，去支付</text>
 				</view>
 			</view>
@@ -66,47 +73,57 @@
 					content: '1. 购买成功后可直接点击查看阅读期刊内容， 或在“ 我的杂志” 列表查看；\r\n2. 电子刊为虚拟商品， 如无系统问题， 购买后不可退换；\r\n3. 每次购买成功后， 阅读码将显示在阅读码列表中；\r\n4. 一个阅读码只可以被激活一次， 未激活的阅读码可赠与好友；\r\n5. 如有其他使用问题可私信官方账号获取支持；',
 					cancelText: 'cancel'
 				},
-				buyTypes: [{
-					num: 1,
-					price: 8
-				}, {
-					num: 10,
-					price: 70
-				}, {
-					num: 50,
-					price: 350
-				}, {
-					num: 100,
-					price: 600
-				}],
+				buyTypes: [],
 				ordinaryNum: 0,
 				choosenIndex: 0,
 				showDescModal: false,
-				isIos: false
+				isIos: false,
+				magId: "",
+				isBuy: false,
+				perviewCurrent: 1,
+				perviewImgs: [],
+				magTitle: ""
 			};
 		},
-		mounted() {
+		onLoad(option) {
+			this.magId = option.magId;
+			console.log(this.magId)
+			this.getMagInfo();
 			let that = this;
 			uni.getSystemInfo({
 				success: function(res) {
 					if (res.platform == 'ios') {
 						that.isIos = true;
 					}
-					// uni.showModal({
-					//     title: '提示',
-					//     content: that.isIos,
-					//     success: function (res) {
-					//         if (res.confirm) {
-					//             console.log('用户点击确定');
-					//         } else if (res.cancel) {
-					//             console.log('用户点击取消');
-					//         }
-					//     }
-					// });
 				}
 			})
 		},
 		methods: {
+			async getMagInfo() {
+				let res = await this.myRequest('/api/magazine/preview', {
+					magazine_id: this.magId
+				}, 'POST');
+				if (res.error_code == 0) {
+					this.isBuy = res.data.is_buy;
+					this.perviewImgs = res.data.preview_join;
+					this.magTitle = res.data.title;
+					uni.setNavigationBarTitle({
+						title: res.data.title
+					});
+				}
+			},
+			async clickBuy() {
+				let res = await this.myRequest('/common/getSpecs', {}, 'GET', false);
+				if (res.error_code == 0) {
+					console.log(res);
+					this.buyTypes = res.data;
+					this.$refs.buyCode.open()
+				}
+			},
+			onSwiperChange(e) {
+				console.log(e)
+				this.perviewCurrent = e.detail.current + 1
+			},
 			onReadcodeInputConfirm(content) {
 				if (content[0].content) {
 					console.log(content[0].content, '阅读码');
@@ -129,6 +146,36 @@
 			},
 			showDesc() {
 				this.showDescModal = true;
+			},
+			async goPay() {
+				let num = this.choosenIndex == 4 ? this.ordinaryNum : this.buyTypes[this.choosenIndex].price;
+				num = parseInt(num);
+				let res = await this.myRequest('/api/order/appletPay', {
+					magazine_id: this.magId,
+					buy_num: num
+				}, 'POST');
+				if (res.error_code == 0) {
+					uni.requestPayment({
+						timeStamp: String(new Date().getTime()),
+						nonceStr: res.data.nonce_str,
+						package: res.data.prepay_id,
+						signType: 'MD5',
+						paySign: res.data.sign,
+						success: (res) => {
+							uni.showToast({
+								title: "购买成功"
+							})
+						},
+						fail: (res) => {
+							uni.showModal({
+								content: "支付失败,原因为: " + res
+									.errMsg,
+								showCancel: false
+							})
+						},
+						complete: () => {}
+					})
+				}
 			}
 		},
 		computed: {
@@ -144,7 +191,7 @@
 					}
 					return this.ordinaryNum * single;
 				} else {
-					return this.buyTypes[this.choosenIndex].price;
+					return this.buyTypes[this.choosenIndex] && this.buyTypes[this.choosenIndex].price;
 				}
 			}
 		},
@@ -157,6 +204,26 @@
 
 <style lang="scss">
 	.magazine-first {
+		.swiper {
+			width: 100%;
+			height: 100vh;
+			background: white;
+			padding-bottom: 110rpx;
+			box-sizing: border-box;
+
+			.swiper-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+
+				.swiper-img {
+					// width: 750rpx;
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+
 		.cover-img {
 			width: 750rpx;
 			height: 100vh;

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/magazinefirst/magazinefirst",
     "pages/index/index",
+    "pages/magazinefirst/magazinefirst",
     "pages/userrank/userrank",
     "pages/readcodes/readcodes"
   ],
@@ -12,5 +12,6 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
 }

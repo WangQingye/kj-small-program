@@ -1,1 +1,1 @@
-<view class="magazine"><image class="cover-img" src="/static/2.jpg"></image><text class="title">雷嘉音-睿士ELLEMEN\n</text><text class="subscribe">5275订阅</text></view>
+<view class="magazine"><image class="cover-img" src="{{magData.cover_pic}}"></image><text class="title">{{magData.title+"\n"}}</text><text class="subscribe">{{magData.subscribe_num+"订阅"}}</text><block wx:if="{{!isLogin}}"><button class="userinfo-button" open-type="getUserInfo" lang="zh_CN" data-event-opts="{{[['getuserinfo',[['onGotUserInfo',['$event']]]]]}}" bindgetuserinfo="__e">开始阅读</button></block></view>

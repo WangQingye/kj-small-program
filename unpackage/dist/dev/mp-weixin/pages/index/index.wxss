@@ -27,6 +27,13 @@
 .content {
   background: #F0F3F5;
 }
+.content .start-img {
+    width: 750rpx;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    z-index: 99;
+}
 .head {
   padding-bottom: 60rpx;
   background: white;
@@ -80,6 +87,14 @@
   background: white;
   margin-top: 20rpx;
   padding: 0 30rpx;
+  position: relative;
+}
+.main .userinfo-button {
+    position: absolute;
+    top: 0;
+    left: 240rpx;
+    width: 500rpx;
+    opacity: 0;
 }
 .main .tab {
     text-align: center;
@@ -107,16 +122,9 @@
     padding-top: 30rpx;
     margin-top: -10rpx;
     width: 690rpx;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-        -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-    -webkit-justify-content: space-around;
-        -ms-flex-pack: distribute;
-            justify-content: space-around;
+}
+.main .magazines .sigle-mag:nth-child(odd) {
+      margin-right: 26rpx;
 }
 .main .readcodes {
     border-top: 1rpx solid #e6e6e6;

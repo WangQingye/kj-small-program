@@ -1,24 +1,30 @@
 <template>
 	<view class="content">
+		<image src="../../static/start.gif" class="start-img" v-if="startImgFlag"></image>
 		<view class="head">
-			<image class="bg" src="/static/1.png"></image>
+			<image class="bg" src="../../static/1.png"></image>
 			<view class="text-area">
-				<text class="title">{{title}}\n</text>
-				<text class="subscribe">已有 238472 订阅</text>
-				<image class="cover-img" src="/static/2.jpg"></image>
+				<text class="title">{{firstMagazine.title}}\n</text>
+				<text class="subscribe">已有 {{firstMagazine.subscribe_num}} 订阅</text>
+				<image class="cover-img" :src="firstMagazine.cover_pic"></image>
 				<view class="buttons">
-					<button class="button-1" type="default" plain="true">开始阅读</button>
+					<button v-if="isLogin" class="button-1" type="default" plain="true" @click="startRead(firstMagazine.id)">开始阅读</button>
+					<button v-else class="button-1" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">开始阅读</button>
 					<button class="button-1 button-2" type="default" plain="true" hover-class="button-2-hover" @click="goUserRank">读者排行榜</button>
 				</view>
 			</view>
 		</view>
 		<view class="main">
 			<wuc-tab :tab-list="tabList" :tabCur.sync="tabCur" @change="tabChange" tab-class="tab" select-class="tab-select"></wuc-tab>
+			<button v-if="!isLogin" class="userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
 			<view class="magazines" v-if="tabCur == 0">
-				<magazine v-for="(item,index) in magazines" :key="index"></magazine>
+				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" :isLogin="isLogin" @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
+			</view>
+			<view class="magazines" v-if="tabCur == 1">
+				<magazine class="sigle-mag" v-for="(item,index) in myMagazines" :key="index" :magData="item" :isLogin="isLogin" @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
 			</view>
 			<view class="readcodes" v-if="tabCur == 2">
-				<read-code-item v-for="(item,index) in readCodes" :key="index"></read-code-item>
+				<read-code-item v-for="(item,index) in readCodes" :key="index" :codeData="item"></read-code-item>
 			</view>
 			<load-more :status="status"></load-more>
 		</view>
@@ -44,35 +50,142 @@
 						name: '阅读码'
 					}
 				],
-				tabCur: 2,
-				magazines: 6,
+				tabCur: 0,
+				firstMagazine: null,
+				allMagazines: [],
+				myMagazines: [],
 				status: 'more',
-				readCodes: 6
+				readCodes: [],
+				startImgFlag: true,
+				allMagPage: 1,
+				myMagPage: 1,
+				readCodePage: 1,
+				loginInfo: {},
+				isLogin: false
 			}
 		},
 		onLoad() {
-
+			this.startImgFlag = false;
+			this.wxLogin();
+			// setTimeout(() => {}, 3000);
+			this.getAllMagList(this.allMagPage);
 		},
 		onReachBottom() {
-			console.log(444);
-			this.getMagList();
+			if (this.tabCur == 0) {
+				this.allMagPage++;
+				this.getAllMagList(this.allMagPage);
+			} else if (this.tabCur == 1) {
+				this.myMagPage++;
+				this.getMyMagList(this.myMagPage);
+			} else if (this.tabCur == 2) {
+				this.readCodePage++;
+				this.getReadCodeList(this.readCodePage);				
+			}
 		},
 		methods: {
 			tabChange(index) {
-				console.log(index)
-				this.tabCur = index;
+				console.log(this.tabCur,index)
+				console.log(this.tabCur,this.myMagazines.length)
+				console.log(this.tabCur,this.readCodes.length)
+				if (this.tabCur == 1 && !this.myMagazines.length) {
+					this.getMyMagList(1);
+				}
+				if (this.tabCur == 2 && !this.readCodes.length) {
+					this.getReadCodeList(1);
+				}
 			},
-			getMagList() {
-				this.status = 'loading';
-				setTimeout(() => {
-					this.status = 'more';
-					this.magazines += 6;
-				}, 1000)
+			async getAllMagList(page) {
+				if (page !== 1) this.status = 'loading';
+				let res = await this.myRequest('/api/magazine/index', {
+					page,
+					per_page: 6
+				}, 'POST', false);
+				if (res) {
+					if (!res.data.data.length) {
+						this.status = 'noMore';
+						this.allMagPage--;
+					} else {
+						this.allMagazines = this.allMagazines.concat(res.data.data);
+					}
+					if (page == 1) {
+						this.firstMagazine = this.allMagazines[0];
+						this.allMagazines = this.allMagazines.slice(1);
+					}
+				}
+			},
+			async getMyMagList(page) {
+				if (page !== 1) this.status = 'loading';
+				let res = await this.myRequest('/api/magazine/myMafazine', {
+					page,
+					per_page: 6
+				}, 'POST');
+				if (res) {
+					if (!res.data.data.length) {
+						this.status = 'noMore';
+						this.myMagPage--;
+					} else {
+						this.myMagazines = this.myMagazines.concat(res.data.data);
+					}
+				}
+			},
+			async getReadCodeList(page) {
+				if (page !== 1) this.status = 'loading';
+				let res = await this.myRequest('/api/magazine/readCode', {
+					page,
+					per_page: 6
+				}, 'POST');
+				if (res) {
+					if (!res.data.data.length) {
+						this.status = 'noMore';
+						this.readCodePage--;
+					} else {
+						this.readCodes = this.readCodes.concat(res.data.data);
+					}
+				}
 			},
 			goUserRank() {
 				uni.navigateTo({
-				    url: '/pages/userrank/userrank?id=1&name=uniapp'
+					url: `/pages/userrank/userrank?magId=${this.firstMagazine.id}`
 				});
+			},
+			startRead(id) {
+				uni.navigateTo({
+					url: `/pages/magazinefirst/magazinefirst?magId=${id}`
+				});
+			},
+			wxLogin() {
+				let that = this;
+				uni.login({
+					provider: 'weixin',
+					success: function(loginRes) {
+						that.loginInfo.code = loginRes.code;
+						uni.getUserInfo({
+							provider: 'weixin',
+							success: function(infoRes) {
+								that.loginInfo.encryptedData = infoRes.encryptedData;
+								that.loginInfo.iv = infoRes.iv;
+								that.myLogin();
+							},
+							fail: function() {
+							}
+						})
+					}
+				});
+			},
+			async myLogin() {
+				let res = await this.myRequest('/api/user/appletLogin', this.loginInfo, 'POST', false);
+				if (res && res.error_code == 0) {
+					this.$store.commit('saveToken', res.data.token)
+					this.$store.commit('saveIsLogin', true);
+					this.isLogin = true;
+				}
+				// console.log(this.$store.state.isLogin)
+			},
+			onGotUserInfo(res) {
+				let infoRes = res.detail
+				this.loginInfo.encryptedData = infoRes.encryptedData;
+				this.loginInfo.iv = infoRes.iv;
+				this.myLogin();
 			}
 		},
 		components: {
@@ -87,6 +200,14 @@
 <style lang="scss">
 	.content {
 		background: #F0F3F5;
+
+		.start-img {
+			width: 750rpx;
+			height: 100vh;
+			position: absolute;
+			top: 0;
+			z-index: 99;
+		}
 	}
 
 	.head {
@@ -146,6 +267,15 @@
 		background: white;
 		margin-top: 20rpx;
 		padding: 0 30rpx;
+		position: relative;
+
+		.userinfo-button {
+			position: absolute;
+			top: 0;
+			left: 240rpx;
+			width: 500rpx;
+			opacity: 0;
+		}
 
 		.tab {
 			text-align: center;
@@ -178,9 +308,13 @@
 			padding-top: 30rpx;
 			margin-top: -10rpx;
 			width: 690rpx;
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: space-around;
+
+			// display: flex;
+			// flex-wrap: wrap;
+			// justify-content: space-around;
+			.sigle-mag:nth-child(odd) {
+				margin-right: 26rpx
+			}
 		}
 
 		.readcodes {

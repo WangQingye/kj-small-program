@@ -32,10 +32,9 @@
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
     margin-top: 34rpx;
     border-bottom: 1rpx solid #E6E6E6;
     padding-bottom: 55rpx;
