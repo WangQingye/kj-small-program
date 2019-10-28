@@ -8400,7 +8400,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星光邦", "navigationBarBackgroundColor": "#000000", "navigationBarTextStyle": "white", "usingComponents": { "wuc-tab": "/components/wuc-tab/wuc-tab", "magazine": "/components/magazine", "load-more": "/components/uni-load-more/uni-load-more", "read-code-item": "/components/read-code-item" } }, "pages/magazinefirst/magazinefirst": { "navigationBarTitleText": "星光邦", "usingComponents": { "chun-lei-modal": "/components/chunLei-modal/chunLei-modal", "uni-popup": "/components/uni-popup/uni-popup" } }, "pages/userrank/userrank": { "navigationBarTitleText": "读者排行榜", "usingComponents": {} }, "pages/readcodes/readcodes": { "navigationBarTitleText": "阅读码", "navigationBarBackgroundColor": "white", "navigationBarTextStyle": "black", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "星光邦", "navigationBarBackgroundColor": "#000000", "navigationBarTextStyle": "white" }, "pages/magazinefirst/magazinefirst": { "navigationBarTitleText": "星光邦" }, "pages/userrank/userrank": { "navigationBarTitleText": "读者排行榜" }, "pages/readcodes/readcodes": { "navigationBarTitleText": "阅读码", "navigationBarBackgroundColor": "white", "navigationBarTextStyle": "black" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -9362,7 +9362,8 @@ _vue.default.use(_vuex.default);
 var store = new _vuex.default.Store({
   state: {
     token: '',
-    isLogin: false },
+    isLogin: false,
+    needFresh: false },
 
   mutations: {
     saveToken: function saveToken(state, token) {
@@ -9370,6 +9371,9 @@ var store = new _vuex.default.Store({
     },
     saveIsLogin: function saveIsLogin(state, isLogin) {
       state.isLogin = isLogin;
+    },
+    saveNeedFresh: function saveNeedFresh(state, needFresh) {
+      state.needFresh = needFresh;
     } },
 
   actions: {} });var _default =

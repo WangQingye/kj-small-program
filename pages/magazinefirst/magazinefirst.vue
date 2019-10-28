@@ -156,15 +156,21 @@
 				}, 'POST');
 				if (res.error_code == 0) {
 					uni.requestPayment({
-						timeStamp: String(new Date().getTime()),
-						nonceStr: res.data.nonce_str,
-						package: res.data.prepay_id,
+						timeStamp: res.data.timestamp,
+						nonceStr: res.data.nonceStr,
+						package: res.data.package,
 						signType: 'MD5',
-						paySign: res.data.sign,
+						paySign: res.data.paySign,
 						success: (res) => {
 							uni.showToast({
 								title: "购买成功"
 							})
+							this.$store.commit('saveNeedFresh', true);
+							setTimeout(() => {
+								uni.redirectTo({
+									url: `/pages/magazinefirst/magazinefirst?magId=${this.magId}`
+								})
+							},1500)
 						},
 						fail: (res) => {
 							uni.showModal({

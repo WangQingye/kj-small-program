@@ -160,6 +160,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 {
   data: function data() {
     return {
@@ -208,14 +210,23 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     tabChange: function tabChange(index) {
-      console.log(this.tabCur, index);
-      console.log(this.tabCur, this.myMagazines.length);
-      console.log(this.tabCur, this.readCodes.length);
-      if (this.tabCur == 1 && !this.myMagazines.length) {
-        this.getMyMagList(1);
+      if (this.tabCur == 1) {
+        // 如果有了新购买，那么每次都会刷新
+        if (this.$store.state.needFresh) {
+          this.myMagazines = [];
+          this.getMyMagList(1);
+        } else if (this.myMagazines.length == 0) {
+          this.getMyMagList(1);
+        }
       }
-      if (this.tabCur == 2 && !this.readCodes.length) {
-        this.getReadCodeList(1);
+      if (this.tabCur == 2) {
+        // 如果有了新购买，那么每次都会刷新
+        if (this.$store.state.needFresh) {
+          this.readCodes = [];
+          this.getReadCodeList(1);
+        } else if (this.readCodes.length == 0) {
+          this.getReadCodeList(1);
+        }
       }
     },
     getAllMagList: function () {var _getAllMagList = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page) {var res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
@@ -283,15 +294,16 @@ __webpack_require__.r(__webpack_exports__);
         provider: 'weixin',
         success: function success(loginRes) {
           that.loginInfo.code = loginRes.code;
+          console.log(loginRes);
           uni.getUserInfo({
             provider: 'weixin',
             success: function success(infoRes) {
+              console.log(infoRes);
               that.loginInfo.encryptedData = infoRes.encryptedData;
               that.loginInfo.iv = infoRes.iv;
               that.myLogin();
             },
-            fail: function fail() {
-            } });
+            fail: function fail() {} });
 
         } });
 

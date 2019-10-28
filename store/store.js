@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state: {
 		token: '',
-		isLogin: false
+		isLogin: false,
+		needFresh: false
 	},
 	mutations: {
 		saveToken(state, token) {
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
 		},
 		saveIsLogin(state, isLogin) {
 			state.isLogin = isLogin;
+		},
+		saveNeedFresh(state, needFresh) {
+			state.needFresh = needFresh;
 		}
 	},
 	actions: {

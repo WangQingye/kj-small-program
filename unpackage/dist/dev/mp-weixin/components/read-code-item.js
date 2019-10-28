@@ -128,9 +128,8 @@ var _default =
   methods: {
 
     goReadCode: function goReadCode() {
-      console.log(111);
       uni.navigateTo({
-        url: '/pages/readcodes/readcodes?id=1&name=uniapp' });
+        url: "/pages/readcodes/readcodes?orderId=".concat(this.codeData.id) });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

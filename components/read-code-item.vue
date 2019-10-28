@@ -1,11 +1,11 @@
 <template>
 	<view class="read-code-item">
-		<image class="cover-img" src="/static/2.jpg"></image>
+		<image class="cover-img" :src="codeData.magazine_join.cover_pic"></image>
 		<view class="info">
 
 			<text class="title">{{codeData.magazine_join.title}}\n</text>
 			<text class="subscribe">已购买<text class="text-red">{{codeData.buy_num}}</text>个，还剩<text class="text-red">{{codeData.surplus_num}}</text>个</text>
-			<button class="button-1 button-check-read-code" type="default" plain="true" @click="goReadCode(item)">查看阅读码</button>
+			<button class="button-1 button-check-read-code" type="default" plain="true" @click="goReadCode">查看阅读码</button>
 		</view>
 	</view>
 </template>
@@ -21,9 +21,8 @@
 		methods: {
 			
 			goReadCode() {
-				console.log(111)
 				uni.navigateTo({
-				    url: '/pages/readcodes/readcodes?id=1&name=uniapp'
+				    url: `/pages/readcodes/readcodes?orderId=${this.codeData.id}`
 				});
 			}
 		}

@@ -280,7 +280,7 @@ __webpack_require__.r(__webpack_exports__);
     showDesc: function showDesc() {
       this.showDescModal = true;
     },
-    goPay: function () {var _goPay = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var num, res;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
+    goPay: function () {var _goPay = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var _this = this;var num, res;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
                 num = this.choosenIndex == 4 ? this.ordinaryNum : this.buyTypes[this.choosenIndex].price;
                 num = parseInt(num);_context3.next = 4;return (
                   this.myRequest('/api/order/appletPay', {
@@ -289,15 +289,21 @@ __webpack_require__.r(__webpack_exports__);
                   'POST'));case 4:res = _context3.sent;
                 if (res.error_code == 0) {
                   uni.requestPayment({
-                    timeStamp: String(new Date().getTime()),
-                    nonceStr: res.data.nonce_str,
-                    package: res.data.prepay_id,
+                    timeStamp: res.data.timestamp,
+                    nonceStr: res.data.nonceStr,
+                    package: res.data.package,
                     signType: 'MD5',
-                    paySign: res.data.sign,
+                    paySign: res.data.paySign,
                     success: function success(res) {
                       uni.showToast({
                         title: "购买成功" });
 
+                      _this.$store.commit('saveNeedFresh', true);
+                      setTimeout(function () {
+                        uni.redirectTo({
+                          url: "/pages/magazinefirst/magazinefirst?magId=".concat(_this.magId) });
+
+                      }, 1500);
                     },
                     fail: function fail(res) {
                       uni.showModal({

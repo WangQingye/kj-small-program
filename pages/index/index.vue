@@ -18,10 +18,12 @@
 			<wuc-tab :tab-list="tabList" :tabCur.sync="tabCur" @change="tabChange" tab-class="tab" select-class="tab-select"></wuc-tab>
 			<button v-if="!isLogin" class="userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
 			<view class="magazines" v-if="tabCur == 0">
-				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" :isLogin="isLogin" @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
+				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" :isLogin="isLogin"
+				 @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
 			</view>
 			<view class="magazines" v-if="tabCur == 1">
-				<magazine class="sigle-mag" v-for="(item,index) in myMagazines" :key="index" :magData="item" :isLogin="isLogin" @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
+				<magazine class="sigle-mag" v-for="(item,index) in myMagazines" :key="index" :magData="item" :isLogin="isLogin"
+				 @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
 			</view>
 			<view class="readcodes" v-if="tabCur == 2">
 				<read-code-item v-for="(item,index) in readCodes" :key="index" :codeData="item"></read-code-item>
@@ -79,19 +81,28 @@
 				this.getMyMagList(this.myMagPage);
 			} else if (this.tabCur == 2) {
 				this.readCodePage++;
-				this.getReadCodeList(this.readCodePage);				
+				this.getReadCodeList(this.readCodePage);
 			}
 		},
 		methods: {
 			tabChange(index) {
-				console.log(this.tabCur,index)
-				console.log(this.tabCur,this.myMagazines.length)
-				console.log(this.tabCur,this.readCodes.length)
-				if (this.tabCur == 1 && !this.myMagazines.length) {
-					this.getMyMagList(1);
+				if (this.tabCur == 1) {
+					// 如果有了新购买，那么每次都会刷新
+					if (this.$store.state.needFresh) {
+						this.myMagazines = [];
+						this.getMyMagList(1);
+					} else if (this.myMagazines.length == 0) {
+						this.getMyMagList(1);
+					}
 				}
-				if (this.tabCur == 2 && !this.readCodes.length) {
-					this.getReadCodeList(1);
+				if (this.tabCur == 2) {
+					// 如果有了新购买，那么每次都会刷新
+					if (this.$store.state.needFresh) {
+						this.readCodes = [];
+						this.getReadCodeList(1);
+					} else if (this.readCodes.length == 0) {
+						this.getReadCodeList(1);
+					}
 				}
 			},
 			async getAllMagList(page) {
@@ -159,15 +170,16 @@
 					provider: 'weixin',
 					success: function(loginRes) {
 						that.loginInfo.code = loginRes.code;
+						console.log(loginRes)
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
+								console.log(infoRes)
 								that.loginInfo.encryptedData = infoRes.encryptedData;
 								that.loginInfo.iv = infoRes.iv;
 								that.myLogin();
 							},
-							fail: function() {
-							}
+							fail: function() {}
 						})
 					}
 				});
