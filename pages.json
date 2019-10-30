@@ -27,11 +27,18 @@
 				"navigationBarBackgroundColor": "white",
 				"navigationBarTextStyle": "black"
 			}
+		}, {
+			"path": "pages/read/read",
+			"style": {
+				"usingComponents": {
+					"magazine": "/wxcomponents/magazine/index"
+				}
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "星光邦",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	}

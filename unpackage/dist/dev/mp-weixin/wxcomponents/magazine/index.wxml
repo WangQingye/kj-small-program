@@ -1,0 +1,26 @@
+<view class="magazine_container">
+  <block wx:if="{{loaded}}">
+    <swiper class="swiper" skip-hidden-item-layout="true" bindtransition="onSwipe" bindanimationfinish="onFinish">
+      <block wx:for="{{pagesLocal}}" wx:key="{{index}}">
+        <swiper-item class="layout">
+          <layout1 wx:if="{{item.type===1}}" class="layout-{{index}}" config="{{item}}" />
+          <layout2 wx:elif="{{item.type===2}}" class="layout-{{index}}" config="{{item}}" />
+          <layout3 wx:elif="{{item.type===3}}" class="layout-{{index}}" config="{{item}}" playing="{{isVideoPlaying}}" bind:play="onVideoPlay" />
+          <layout4 wx:elif="{{item.type===4}}" class="layout-{{index}}" config="{{item}}" playing="{{isVideoPlaying}}" bind:play="onVideoPlay" />
+          <layout5 wx:elif="{{item.type===5}}" class="layout-{{index}}" config="{{item}}" />
+          <layout6 wx:elif="{{item.type===6}}" class="layout-{{index}}" config="{{item}}" />
+        </swiper-item>
+      </block>
+      <swiper-item>
+        <layout-backcover class="layout-{{pagesLocal.length}}" cover="{{cover}}" />
+      </swiper-item>
+    </swiper>
+    <block wx:if="{{hasVideo}}">
+      <video id="common-video" class="common-video" style="{{videoStyle}};width:{{windowWidth}}px;" src="{{videoSrc}}" show-progress show-fullscreen-btn="{{false}}" direction="{{0}}" object-fit="contain" bindpause="stopPlay" poster="{{videoCover}}" bindtap="stopPlay" />
+    </block>
+    <bgm-switch wx:if="{{bgmLocal}}" bgm="{{bgmLocal}}" video="{{isVideoPlaying}}" />
+  </block>
+  <block wx:else>
+    <loading-progress progress="{{progress}}" bind:loaded="onResLoaded" />
+  </block>
+</view>

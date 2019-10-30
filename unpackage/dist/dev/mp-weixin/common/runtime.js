@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/magazine":1,"components/read-code-item":1,"components/uni-load-more/uni-load-more":1,"components/wuc-tab/wuc-tab":1,"components/chunLei-modal/chunLei-modal":1,"components/uni-popup/uni-popup":1};
+/******/ 		var cssChunks = {"components/magazine-item":1,"components/read-code-item":1,"components/uni-load-more/uni-load-more":1,"components/wuc-tab/wuc-tab":1,"components/chunLei-modal/chunLei-modal":1,"components/uni-popup/uni-popup":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"components/magazine":"components/magazine","components/read-code-item":"components/read-code-item","components/uni-load-more/uni-load-more":"components/uni-load-more/uni-load-more","components/wuc-tab/wuc-tab":"components/wuc-tab/wuc-tab","components/chunLei-modal/chunLei-modal":"components/chunLei-modal/chunLei-modal","components/uni-popup/uni-popup":"components/uni-popup/uni-popup"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"components/magazine-item":"components/magazine-item","components/read-code-item":"components/read-code-item","components/uni-load-more/uni-load-more":"components/uni-load-more/uni-load-more","components/wuc-tab/wuc-tab":"components/wuc-tab/wuc-tab","components/chunLei-modal/chunLei-modal":"components/chunLei-modal/chunLei-modal","components/uni-popup/uni-popup":"components/uni-popup/uni-popup"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

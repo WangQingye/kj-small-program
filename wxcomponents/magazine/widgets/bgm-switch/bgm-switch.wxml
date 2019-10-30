@@ -1,0 +1,1 @@
+<cover-image class="switch {{shouldPlay?'playing':'mute'}}" src="{{imgSrc}}" bindtap="onTapSwitch" />

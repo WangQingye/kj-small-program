@@ -131,7 +131,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 81));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 88));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 87));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 94));};var _default =
 
 
 
@@ -220,7 +220,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   onLoad: function onLoad(option) {
     this.magId = option.magId;
-    console.log(this.magId);
     this.getMagInfo();
     var that = this;
     uni.getSystemInfo({
@@ -248,20 +247,24 @@ __webpack_require__.r(__webpack_exports__);
     clickBuy: function () {var _clickBuy = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var res;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return (
                   this.myRequest('/common/getSpecs', {}, 'GET', false));case 2:res = _context2.sent;
                 if (res.error_code == 0) {
-                  console.log(res);
                   this.buyTypes = res.data;
                   this.$refs.buyCode.open();
                 }case 4:case "end":return _context2.stop();}}}, _callee2, this);}));function clickBuy() {return _clickBuy.apply(this, arguments);}return clickBuy;}(),
 
     onSwiperChange: function onSwiperChange(e) {
-      console.log(e);
       this.perviewCurrent = e.detail.current + 1;
     },
-    onReadcodeInputConfirm: function onReadcodeInputConfirm(content) {
-      if (content[0].content) {
-        console.log(content[0].content, '阅读码');
-      }
-    },
+    onReadcodeInputConfirm: function () {var _onReadcodeInputConfirm = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(content) {var res;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:if (!
+                content[0].content) {_context3.next = 5;break;}_context3.next = 3;return (
+                  this.myRequest('/api/magazine/active', {
+                    magazine_id: this.magId,
+                    code: content[0].content },
+                  'POST'));case 3:res = _context3.sent;
+                if (res.error_code == 0) {
+                  this.goRead();
+                }case 5:case "end":return _context3.stop();}}}, _callee3, this);}));function onReadcodeInputConfirm(_x) {return _onReadcodeInputConfirm.apply(this, arguments);}return onReadcodeInputConfirm;}(),
+
+
     clickType: function clickType(index) {
       this.choosenIndex = index;
     },
@@ -280,13 +283,13 @@ __webpack_require__.r(__webpack_exports__);
     showDesc: function showDesc() {
       this.showDescModal = true;
     },
-    goPay: function () {var _goPay = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var _this = this;var num, res;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
+    goPay: function () {var _goPay = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {var _this = this;var num, res;return _regenerator.default.wrap(function _callee4$(_context4) {while (1) {switch (_context4.prev = _context4.next) {case 0:
                 num = this.choosenIndex == 4 ? this.ordinaryNum : this.buyTypes[this.choosenIndex].price;
-                num = parseInt(num);_context3.next = 4;return (
+                num = parseInt(num);_context4.next = 4;return (
                   this.myRequest('/api/order/appletPay', {
                     magazine_id: this.magId,
                     buy_num: num },
-                  'POST'));case 4:res = _context3.sent;
+                  'POST'));case 4:res = _context4.sent;
                 if (res.error_code == 0) {
                   uni.requestPayment({
                     timeStamp: res.data.timestamp,
@@ -314,8 +317,13 @@ __webpack_require__.r(__webpack_exports__);
                     },
                     complete: function complete() {} });
 
-                }case 6:case "end":return _context3.stop();}}}, _callee3, this);}));function goPay() {return _goPay.apply(this, arguments);}return goPay;}() },
+                }case 6:case "end":return _context4.stop();}}}, _callee4, this);}));function goPay() {return _goPay.apply(this, arguments);}return goPay;}(),
 
+    goRead: function goRead() {
+      uni.navigateTo({
+        url: "/pages/read/read?magId=".concat(this.magId) });
+
+    } },
 
   computed: {
     price: function price() {

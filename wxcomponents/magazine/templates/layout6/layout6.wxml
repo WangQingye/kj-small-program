@@ -1,0 +1,5 @@
+<view class="layout-container">
+  <block wx:for="{{config.pic_join}}" wx:key="{{index}}">
+    <image class="img" src="{{item.pic}}" mode="widthFix" show-menu-by-longpress></image>
+  </block>
+</view>

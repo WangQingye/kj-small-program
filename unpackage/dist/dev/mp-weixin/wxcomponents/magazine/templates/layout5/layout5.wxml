@@ -1,0 +1,13 @@
+<view class="layout-container">
+  <canvas canvas-id="base-{{config.id}}" class="canvas" style="width:{{baseSize[0]}}px;height:{{baseSize[1]}}px;" />
+  <canvas canvas-id="sign-{{config.id}}" class="canvas" style="{{signStyle}}" />
+  <view class="canvas-container" style="{{containerStyle}}" capture-catch:touchstart="onTouchStart" capture-catch:touchmove="onTouchMove" capture-catch:touchend="onTouchEnd">
+    <image class="base-img" src="{{baseUrl}}" style="{{containerStyle}}" mode="widthFix" />
+    <image class="sign-img" src="{{tempSignUrl}}" style="{{signStyle}}left:{{pos[0]}}px;top:{{pos[1]}}px;" mode="widthFix" />
+  </view>
+  <view class="panel" wx:if="{{showPanel}}">
+    <view class="panel-blank" bindtap="onSwitchPanel"></view>
+    <color-picker class="panel-picker" bind:color="onPickColor" />
+  </view>
+  <view class="save-btn" catchtap="onSaveImg">保存图片</view>
+</view>

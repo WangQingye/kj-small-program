@@ -1,0 +1,6 @@
+<view class="layout-container" wx:if="config" style="background-color:{{bg}}">
+  {{ config.title }}
+  <view class="test" style="top:{{top}}rpx">
+    <view>moving...</view>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+<view class="layout-container">
+  <image
+    class="bg-img"
+    src="{{config.pic_join[0].pic}}"
+    mode="widthFix"
+  />
+  <image
+    class="cover-img"
+    style="height:{{videoHeight}}px;{{imgStyle}}"
+    src="{{config.video_cover}}"
+    mode="scaleToFill"
+  />
+  <image
+    class="video-btn"
+    style="{{imgStyle}}"
+    bindtap="onTapImg"
+    src="../../assets/video.png"
+  />
+</view>

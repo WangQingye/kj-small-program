@@ -4,21 +4,21 @@
 			<view class="user user2" v-if="headUsers[1]">
 				<image class="hat1" src="../../static/hear-2.png"></image>
 				<image class="avatar1" :src="headUsers[1].user_join.avatar"></image>
-				<image class="girl1" src="../../static/girl.png"></image>
+				<!-- <image class="girl1" src="../../static/girl.png"></image> -->
 				<text class="name">{{headUsers[1].user_join.nickname}}\n</text>
 				<text class="subscribe">订阅量\t<text class="text-red">{{headUsers[1].subscribe_num}}</text></text>
 			</view>
 			<view class="user" v-if="headUsers[0]">
 				<image class="hat2" src="../../static/hear-1.png"></image>
 				<image class="avatar2" :src="headUsers[0].user_join.avatar"></image>
-				<image class="girl2" src="../../static/girl.png"></image>
+				<!-- <image class="girl2" src="../../static/girl.png"></image> -->
 				<text class="name">{{headUsers[0].user_join.nickname}}\n</text>
 				<text class="subscribe">订阅量\t<text class="text-red">{{headUsers[0].subscribe_num}}</text></text>
 			</view>
 			<view class="user user3" v-if="headUsers[2]">
 				<image class="hat3" src="../../static/hear-3.png"></image>
 				<image class="avatar3" :src="headUsers[2].user_join.avatar"></image>
-				<image class="girl3" src="../../static/girl.png"></image>
+				<!-- <image class="girl3" src="../../static/girl.png"></image> -->
 				<text class="name">{{headUsers[2].user_join.nickname}}\n</text>
 				<text class="subscribe">订阅量\t<text class="text-red">{{headUsers[2].subscribe_num}}</text></text>
 			</view>
@@ -28,7 +28,7 @@
 				<text class="rank">{{index+3}}</text>
 				<view class="avatars">
 					<image class="avatar" :src="item.user_join.avatar"></image>
-					<image class="gender" src="../../static/girl.png"></image>
+					<!-- <image class="gender" src="../../static/girl.png"></image> -->
 				</view>
 				<text class="name">{{item.user_join.nickname}}</text>
 				<text class="subscribe">订阅量\t<text class="text-red">{{item.subscribe_num}}</text></text>

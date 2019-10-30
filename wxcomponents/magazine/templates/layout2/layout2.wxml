@@ -1,0 +1,11 @@
+<view class="layout-container" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
+  <image class="bg-img" src="{{config.pic}}" style="{{parallaxAnim}}" mode="widthFix" show-menu-by-longpress />
+  <view class="pop" style="{{popStyle}}{{popAnim}}">
+    <view class="content-line" wx:for="{{contents}}" wx:key="*this">
+      {{item}}
+    </view>
+    <view class="arrow-pos" bindtap="onSwitchPop" style="{{arrowStyle}}">
+      <view class="arrow"></view>
+    </view>
+  </view>
+</view>

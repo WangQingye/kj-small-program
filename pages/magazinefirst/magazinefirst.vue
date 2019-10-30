@@ -12,12 +12,12 @@
 			</view>
 			<view class="button" v-if="isIos" @click="showReadcodeInput = true">
 				<text v-if="isBuy == 0">使用阅读码</text>
-				<text v-else>开始阅读</text>
+				<text v-else @click="goRead">开始阅读</text>
 			</view>
 			<view class="button" v-else>
 				<text v-if="isBuy == 0" class="use" @click="showReadcodeInput = true">使用阅读码</text>
 				<text v-if="isBuy == 0" class="buy" @click="clickBuy">购买阅读码</text>
-				<text v-if="isBuy == 1">开始阅读</text>
+				<text v-if="isBuy == 1" @click="goRead">开始阅读</text>
 			</view>
 		</view>
 		<chunLei-modal v-model="showReadcodeInput" :mData="mData" type="input" @onConfirm="onReadcodeInputConfirm" navMask>
@@ -87,7 +87,6 @@
 		},
 		onLoad(option) {
 			this.magId = option.magId;
-			console.log(this.magId)
 			this.getMagInfo();
 			let that = this;
 			uni.getSystemInfo({
@@ -115,18 +114,22 @@
 			async clickBuy() {
 				let res = await this.myRequest('/common/getSpecs', {}, 'GET', false);
 				if (res.error_code == 0) {
-					console.log(res);
 					this.buyTypes = res.data;
 					this.$refs.buyCode.open()
 				}
 			},
 			onSwiperChange(e) {
-				console.log(e)
 				this.perviewCurrent = e.detail.current + 1
 			},
-			onReadcodeInputConfirm(content) {
+			async onReadcodeInputConfirm(content) {
 				if (content[0].content) {
-					console.log(content[0].content, '阅读码');
+					let res = await this.myRequest('/api/magazine/active', {
+						magazine_id: this.magId,
+						code: content[0].content
+					}, 'POST');
+					if (res.error_code == 0) {
+						this.goRead()
+					}
 				}
 			},
 			clickType(index) {
@@ -182,6 +185,11 @@
 						complete: () => {}
 					})
 				}
+			},
+			goRead() {
+				uni.navigateTo({
+					url: `/pages/read/read?magId=${this.magId}`
+				});
 			}
 		},
 		computed: {

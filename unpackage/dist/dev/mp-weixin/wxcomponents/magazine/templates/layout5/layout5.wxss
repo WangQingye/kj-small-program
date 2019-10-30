@@ -1,0 +1,67 @@
+.layout-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.canvas {
+  visibility: hidden;
+  position: absolute;
+  left: 3000px;
+}
+
+.canvas-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.base-img {
+  position: absolute;
+  width: 100%;
+}
+
+.sign-img {
+  position: absolute;
+  /* opacity: 0.5; */
+}
+
+.save-btn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  text-align: center;
+  height: 110rpx;
+  line-height: 110rpx;
+  font-size: 34rpx;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 110rpx;
+}
+
+.panel-blank {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 620rpx;
+}
+
+.panel-picker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 620rpx;
+}

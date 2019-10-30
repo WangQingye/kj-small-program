@@ -1,0 +1,15 @@
+{
+  "component": true,
+  "disableScroll": true,
+  "usingComponents": {
+    "layout1": "./templates/layout1/layout1",
+    "layout2": "./templates/layout2/layout2",
+    "layout3": "./templates/layout3/layout3",
+    "layout4": "./templates/layout4/layout4",
+    "layout5": "./templates/layout5/layout5",
+    "layout6": "./templates/layout6/layout6",
+    "layout-backcover": "./templates/layout-backcover/layout-backcover",
+    "bgm-switch": "./widgets/bgm-switch/bgm-switch",
+    "loading-progress": "./widgets/loading-progress/loading-progress"
+  }
+}

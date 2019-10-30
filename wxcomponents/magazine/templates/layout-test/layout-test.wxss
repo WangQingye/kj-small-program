@@ -1,0 +1,17 @@
+/* components/magazine/templates/layout1/layout1.wxss */
+
+.layout-container {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: scroll;
+  position: relative;
+  color: #fff;
+  font-size: 50rpx;
+}
+
+.test {
+  position: absolute;
+  left: 0rpx;
+  width: 100%;
+  text-align: center;
+}

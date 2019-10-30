@@ -1,0 +1,5 @@
+<view class="picker-container">
+  <block wx:for="{{colors}}" wx:key="{{index}}">
+    <view class="color-block" bindtap="onPickColor" data-color="{{item}}" style="background-color:{{item}};"></view>
+  </block>
+</view>

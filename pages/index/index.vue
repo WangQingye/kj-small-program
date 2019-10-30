@@ -35,7 +35,7 @@
 
 <script>
 	import WucTab from '@/components/wuc-tab/wuc-tab.vue';
-	import Magazine from '@/components/magazine.vue';
+	import Magazine from '@/components/magazine-item.vue';
 	import ReadCodeItem from '@/components/read-code-item.vue';
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
@@ -67,9 +67,10 @@
 			}
 		},
 		onLoad() {
-			this.startImgFlag = false;
 			this.wxLogin();
-			// setTimeout(() => {}, 3000);
+			setTimeout(() => {
+				this.startImgFlag = false;
+			}, 3000);
 			this.getAllMagList(this.allMagPage);
 		},
 		onReachBottom() {

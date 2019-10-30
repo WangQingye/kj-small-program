@@ -44,7 +44,7 @@
 				let res = await this.myRequest('/api/magazine/showReadCode', {
 					order_id: this.orderId,
 					page,
-					per_page: 6
+					per_page: 10
 				}, 'POST');
 				if (res.error_code == 0) {
 					if (!res.data.data.length) {

@@ -1,0 +1,4 @@
+<view class="backcover-container">
+  <image class="cover-img" mode="widthFix" src="{{cover}}" />
+  <rank />
+</view>

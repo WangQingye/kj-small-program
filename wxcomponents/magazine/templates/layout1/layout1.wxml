@@ -1,0 +1,12 @@
+<view class="layout-container">
+  <image class="bg-img" src="{{config.pic}}" mode="widthFix" show-menu-by-longpress />
+  <view class="pop position-{{config.text_style}}">
+    <block wx:for="{{contents}}" wx:key="{{index}}">
+      <view class="content {{anims[index]}}" style="{{item.style}}">
+        <view style="{{floating[index]}}">
+          {{item.content}}
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

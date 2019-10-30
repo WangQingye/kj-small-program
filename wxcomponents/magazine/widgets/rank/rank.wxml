@@ -1,0 +1,15 @@
+<view class="rank" wx:if="{{rank.length}}">
+  <view class="rank-container">
+    <text class="title">人气排行</text>
+    <view class="list">
+      <view class="list-item" wx:for="{{rank}}" wx:key="{{index}}">
+        <image class="cover" src="{{item.img}}"></image>
+        <text class="name">{{item.title}}</text>
+        <text class="hot">{{item.hot}}人气值</text>
+        <image class="arrow" src="../../assets/hot.png"></image>
+        <text class="stamp">TOP{{index+1}}</text>
+      </view>
+      <view class="white"></view>
+    </view>
+  </view>
+</view>

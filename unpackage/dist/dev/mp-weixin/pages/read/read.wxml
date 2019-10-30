@@ -1,0 +1,1 @@
+<view><block wx:if="{{magId}}"><magazine vue-id="1" book="{{magId}}" data-com-type="wx" bind:__l="__l"></magazine></block></view>

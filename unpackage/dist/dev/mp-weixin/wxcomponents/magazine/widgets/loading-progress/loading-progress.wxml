@@ -1,0 +1,13 @@
+<view class="progress-container">
+  <view class="loading-center-absolute">
+    <view class="object object_one"></view>
+    <view class="object object_two"></view>
+    <view class="object object_three"></view>
+    <view class="object object_four"></view>
+    <view class="object object_five"></view>
+    <view class="object object_six"></view>
+    <view class="object object_seven"></view>
+    <view class="object object_eight"></view>
+  </view>
+  <view class="loading-text">{{ progress }} %</view>
+</view>

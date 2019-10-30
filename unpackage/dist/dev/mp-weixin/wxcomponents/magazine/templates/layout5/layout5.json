@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "color-picker": "../../widgets/color-picker/color-picker"
+  }
+}

@@ -3,15 +3,15 @@
     "pages/index/index",
     "pages/magazinefirst/magazinefirst",
     "pages/userrank/userrank",
-    "pages/readcodes/readcodes"
+    "pages/readcodes/readcodes",
+    "pages/read/read"
   ],
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "星光邦",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {}
 }

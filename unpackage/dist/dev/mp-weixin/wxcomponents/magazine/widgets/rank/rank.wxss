@@ -1,0 +1,96 @@
+.rank {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+}
+
+.rank-container {
+  width: 560rpx;
+  height: 800rpx;
+  margin-top: -25rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  height: 110rpx;
+  width: 100%;
+  text-align: center;
+  line-height: 109rpx;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 34rpx;
+}
+
+.list {
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.list-item {
+  width: 100%;
+  height: 196rpx;
+  position: relative;
+}
+
+.cover {
+  width: 120rpx;
+  height: 156rpx;
+  position: absolute;
+  top: 40rpx;
+  left: 40rpx;
+}
+
+.name {
+  width: 295rpx;
+  height: 80rpx;
+  position: absolute;
+  top: 51rpx;
+  left: 192rpx;
+  line-height: 35rpx;
+  font-weight: 500;
+  font-size: 27rpx;
+  text-align: left;
+}
+
+.hot {
+  position: absolute;
+  top: 160rpx;
+  left: 230rpx;
+  color: #ff1616;
+  font-size: 24rpx;
+  height: 24rpx;
+  line-height: 24rpx;
+}
+
+.arrow {
+  position: absolute;
+  width: 28rpx;
+  height: 28rpx;
+  top: 158rpx;
+  left: 190rpx;
+}
+
+.stamp {
+  background-color: #000;
+  width: 68rpx;
+  height: 36rpx;
+  position: absolute;
+  top: 30rpx;
+  left: 30rpx;
+  color: #fff;
+  text-align: center;
+  line-height: 36rpx;
+  font-size: 15rpx;
+}
+
+.white {
+  height: 40rpx;
+}

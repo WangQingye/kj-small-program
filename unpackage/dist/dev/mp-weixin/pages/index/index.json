@@ -4,7 +4,7 @@
   "navigationBarTextStyle": "white",
   "usingComponents": {
     "wuc-tab": "/components/wuc-tab/wuc-tab",
-    "magazine": "/components/magazine",
+    "magazine": "/components/magazine-item",
     "load-more": "/components/uni-load-more/uni-load-more",
     "read-code-item": "/components/read-code-item"
   }

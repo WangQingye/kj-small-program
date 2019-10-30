@@ -1,0 +1,24 @@
+/* components/magazine/widgets/bgm-switch/bgm-switch.wxss */
+
+.switch {
+  position: fixed;
+  right: 33rpx;
+  top: 33rpx;
+  width: 65rpx;
+  height: 65rpx;
+  /* z-index: 10; */
+}
+
+.playing {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
