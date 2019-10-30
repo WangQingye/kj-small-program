@@ -320,7 +320,41 @@ Component({
       })
       // 获取杂志信息
       this.getMagazineData()
-    }
+    },
+    detached() {
+      this.setData({
+        /** retry */
+        retry: 3,
+        /** 资源总数 */
+        totalResCount: 1,
+        /** 资源加载进度 */
+        progress: '0',
+        /** 资源是否加载完毕 */
+        loaded: false,
+        /** 是否存在video */
+        hasVideo: false,
+        /** 当前layout下标 */
+        current: 0,
+        /** 滑动函数节流标记 */
+        throttleFlag: 0,
+        /** 页面切换timeout标记 */
+        timeout: null,
+        /** bgm地址 */
+        bgm: '',
+        bgmLocal: '',
+        /** 封面地址 */
+        cover: '',
+        /** layout信息数组 */
+        pages: [],
+        pagesLocal: [],
+        /** 是否在播放视频 */
+        isVideoPlaying: false,
+        /** 视频样式 */
+        videoStyle: 'left:1000px;',
+        videoHeight: 300,
+        videoSrc: ''
+      })
+    },
   }
 
 })

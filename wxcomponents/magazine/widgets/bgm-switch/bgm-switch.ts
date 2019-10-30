@@ -22,7 +22,10 @@ Component({
   observers: {
     'bgm': function (url) {
       if (url) {
-        const audioContext = wx.createInnerAudioContext()
+        let audioContext = this.audioContext
+        if (!audioContext) {
+          audioContext = wx.createInnerAudioContext()
+        }
         audioContext.autoplay = true
         audioContext.loop = true
         audioContext.src = url
@@ -38,20 +41,18 @@ Component({
         else {
           audioContext.pause()
         }
-        this.setData({
-          audioContext
-        })
+        this.audioContext = audioContext
       }
     },
     'mute, video': function (mute, video) {
       let shouldPlay = (!mute) && (!video)
       const imgSrc = shouldPlay ? '../../assets/volume.png' : '../../assets/mute.png'
-      if (this.data.audioContext) {
+      if (this.audioContext) {
         if (shouldPlay) {
-          this.data.audioContext.play()
+          this.audioContext.play()
         }
         else {
-          this.data.audioContext.pause()
+          this.audioContext.pause()
         }
       }
       this.setData({
@@ -75,7 +76,14 @@ Component({
   },
 
   lifetimes: {
-    attached() { }
+    attached() { },
+    detached() {
+      if (this.audioContext) {
+        this.audioContext.pause()
+        this.audioContext.destroy()
+        this.audioContext = null
+      }
+    }
   }
 
 })

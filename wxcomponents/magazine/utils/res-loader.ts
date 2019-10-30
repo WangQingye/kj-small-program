@@ -9,10 +9,12 @@ let totalCount = 0
 
 function loadRes(resList: Array<string>, onProgressFun: Function, onResLoadedFun: Function, funCaller: any) {
   totalCount = resList.length
+  reqCount = 0
   loadList = resList
   onProgress = onProgressFun
   onResLoaded = onResLoadedFun
   caller = funCaller
+  loadedResList = []
   startLoad()
 }
 
@@ -29,6 +31,9 @@ function startLoad() {
         reqCount--
         console.warn('load res error path=' + url, err)
         loadList.push(url)
+        setTimeout(() => {
+          startLoad()
+        }, 10)
       })
   }
 }
@@ -59,6 +64,9 @@ function onLoadSuccess(origin, local) {
   else {
     if (onResLoaded && caller) {
       onResLoaded.call(caller, loadedResList)
+      onResLoaded = null
+      onProgress = null
+      caller = null
     }
   }
 }
