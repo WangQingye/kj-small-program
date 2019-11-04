@@ -90,15 +90,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  if (!_vm._isMounted) {
-    _vm.e0 = function($event) {
-      _vm.showReadcodeInput = true
-    }
-
-    _vm.e1 = function($event) {
-      _vm.showReadcodeInput = true
-    }
-  }
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -131,7 +122,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 87));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 94));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 87));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 94));};var LoginPage = function LoginPage() {return __webpack_require__.e(/*! import() | components/login-page */ "components/login-page").then(__webpack_require__.bind(null, /*! @/components/login-page.vue */ 110));};var _default =
+
+
 
 
 
@@ -215,7 +208,8 @@ __webpack_require__.r(__webpack_exports__);
       isBuy: false,
       perviewCurrent: 1,
       perviewImgs: [],
-      magTitle: "" };
+      magTitle: "",
+      showLoginPage: false };
 
   },
   onLoad: function onLoad(option) {
@@ -231,10 +225,17 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   methods: {
-    getMagInfo: function () {var _getMagInfo = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
+    getMagInfo: function () {var _getMagInfo = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:if (!
+
+                this.$store.state.token) {_context.next = 6;break;}_context.next = 3;return (
                   this.myRequest('/api/magazine/preview', {
                     magazine_id: this.magId },
-                  'POST'));case 2:res = _context.sent;
+                  'POST'));case 3:res = _context.sent;_context.next = 9;break;case 6:_context.next = 8;return (
+
+                  this.myRequest('/api/magazine/preview', {
+                    magazine_id: this.magId },
+                  'POST', false));case 8:res = _context.sent;case 9:
+
                 if (res.error_code == 0) {
                   this.isBuy = res.data.is_buy;
                   this.perviewImgs = res.data.preview_join;
@@ -242,14 +243,18 @@ __webpack_require__.r(__webpack_exports__);
                   uni.setNavigationBarTitle({
                     title: res.data.title });
 
-                }case 4:case "end":return _context.stop();}}}, _callee, this);}));function getMagInfo() {return _getMagInfo.apply(this, arguments);}return getMagInfo;}(),
+                }case 10:case "end":return _context.stop();}}}, _callee, this);}));function getMagInfo() {return _getMagInfo.apply(this, arguments);}return getMagInfo;}(),
 
-    clickBuy: function () {var _clickBuy = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var res;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:_context2.next = 2;return (
-                  this.myRequest('/common/getSpecs', {}, 'GET', false));case 2:res = _context2.sent;
+    clickBuy: function () {var _clickBuy = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var res;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!
+                this.$store.state.token) {_context2.next = 7;break;}_context2.next = 3;return (
+                  this.myRequest('/common/getSpecs', {}, 'GET', false));case 3:res = _context2.sent;
                 if (res.error_code == 0) {
                   this.buyTypes = res.data;
                   this.$refs.buyCode.open();
-                }case 4:case "end":return _context2.stop();}}}, _callee2, this);}));function clickBuy() {return _clickBuy.apply(this, arguments);}return clickBuy;}(),
+                }_context2.next = 8;break;case 7:
+
+                this.showLoginPage = true;case 8:case "end":return _context2.stop();}}}, _callee2, this);}));function clickBuy() {return _clickBuy.apply(this, arguments);}return clickBuy;}(),
+
 
     onSwiperChange: function onSwiperChange(e) {
       this.perviewCurrent = e.detail.current + 1;
@@ -261,6 +266,7 @@ __webpack_require__.r(__webpack_exports__);
                     code: content[0].content },
                   'POST'));case 3:res = _context3.sent;
                 if (res.error_code == 0) {
+                  this.$store.commit('saveNeedFresh', true);
                   this.goRead();
                 }case 5:case "end":return _context3.stop();}}}, _callee3, this);}));function onReadcodeInputConfirm(_x) {return _onReadcodeInputConfirm.apply(this, arguments);}return onReadcodeInputConfirm;}(),
 
@@ -309,20 +315,28 @@ __webpack_require__.r(__webpack_exports__);
                       }, 1500);
                     },
                     fail: function fail(res) {
-                      uni.showModal({
-                        content: "支付失败,原因为: " + res.
-                        errMsg,
-                        showCancel: false });
-
+                      console.log("支付失败,原因为: " + res.
+                      errMsg);
                     },
                     complete: function complete() {} });
 
                 }case 6:case "end":return _context4.stop();}}}, _callee4, this);}));function goPay() {return _goPay.apply(this, arguments);}return goPay;}(),
 
+    useReadCode: function useReadCode() {
+      if (this.$store.state.token) {
+        this.showReadcodeInput = true;
+      } else {
+        this.showLoginPage = true;
+      }
+    },
     goRead: function goRead() {
       uni.navigateTo({
         url: "/pages/read/read?magId=".concat(this.magId) });
 
+    },
+    loginOver: function loginOver() {
+      this.showLoginPage = false;
+      this.getMagInfo();
     } },
 
   computed: {
@@ -344,7 +358,8 @@ __webpack_require__.r(__webpack_exports__);
 
   components: {
     chunLeiModal: chunLeiModal,
-    uniPopup: uniPopup } };exports.default = _default;
+    uniPopup: uniPopup,
+    LoginPage: LoginPage } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

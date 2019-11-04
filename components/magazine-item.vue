@@ -1,9 +1,8 @@
 <template>
 	<view class="magazine">
-		<image class="cover-img" :src="magData.cover_pic"></image>
+		<image class="cover-img" :src="magData.cover_pic" mode="aspectFill"></image>
 		<text class="title">{{magData.title}}\n</text>
 		<text class="subscribe">{{magData.subscribe_num}}订阅</text>
-		<button v-if="!isLogin" class="userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">开始阅读</button>
 	</view>
 </template>
 
@@ -12,12 +11,8 @@
 		data() {
 			return {};
 		},
-		props: ['magData', 'isLogin'],
-		methods: {
-			onGotUserInfo(res) {
-				this.$emit('getUserInfo', res);
-			}
-		},
+		props: ['magData'],
+		methods: {},
 	}
 </script>
 

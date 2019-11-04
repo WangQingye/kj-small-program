@@ -1,5 +1,5 @@
 
-  !function(){try{var r=Function("return this")();r&&!r.Math&&Object.assign(r,{Array:Array,Date:Date,Error:Error,Function:Function,Math:Math,Object:Object,RegExp:RegExp,String:String,TypeError:TypeError,setTimeout:setTimeout,clearTimeout:clearTimeout,setInterval:setInterval,clearInterval:clearInterval})}catch(r){}}();
+  !function(){try{var a=Function("return this")();a&&!a.Math&&(Object.assign(a,{Array:Array,Date:Date,Error:Error,Function:Function,Math:Math,Object:Object,RegExp:RegExp,String:String,TypeError:TypeError,setTimeout:setTimeout,clearTimeout:clearTimeout,setInterval:setInterval,clearInterval:clearInterval}),"undefined"!=typeof Reflect&&(a.Reflect=Reflect))}catch(a){}}();
   /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/magazine-item":1,"components/read-code-item":1,"components/uni-load-more/uni-load-more":1,"components/wuc-tab/wuc-tab":1,"components/chunLei-modal/chunLei-modal":1,"components/uni-popup/uni-popup":1};
+/******/ 		var cssChunks = {"components/login-page":1,"components/magazine-item":1,"components/read-code-item":1,"components/uni-load-more/uni-load-more":1,"components/wuc-tab/wuc-tab":1,"components/chunLei-modal/chunLei-modal":1,"components/uni-popup/uni-popup":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"components/magazine-item":"components/magazine-item","components/read-code-item":"components/read-code-item","components/uni-load-more/uni-load-more":"components/uni-load-more/uni-load-more","components/wuc-tab/wuc-tab":"components/wuc-tab/wuc-tab","components/chunLei-modal/chunLei-modal":"components/chunLei-modal/chunLei-modal","components/uni-popup/uni-popup":"components/uni-popup/uni-popup"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"components/login-page":"components/login-page","components/magazine-item":"components/magazine-item","components/read-code-item":"components/read-code-item","components/uni-load-more/uni-load-more":"components/uni-load-more/uni-load-more","components/wuc-tab/wuc-tab":"components/wuc-tab/wuc-tab","components/chunLei-modal/chunLei-modal":"components/chunLei-modal/chunLei-modal","components/uni-popup/uni-popup":"components/uni-popup/uni-popup"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

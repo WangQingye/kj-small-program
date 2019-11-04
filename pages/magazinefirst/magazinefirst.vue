@@ -1,5 +1,5 @@
 <template>
-	<view class="magazine-first">
+	<view class="magazine-first" v-if="magTitle">
 		<swiper class="swiper" :interval="0" :duration="500" @change="onSwiperChange">
 			<swiper-item class="swiper-item" v-for="(item,index) in perviewImgs" :key="index">
 				<image class="swiper-img" :src="item.pic" mode="aspectFill"></image>
@@ -10,14 +10,14 @@
 			<view class="page">
 				<text>{{perviewCurrent}}/{{perviewImgs.length}}</text>
 			</view>
-			<view class="button" v-if="isIos" @click="showReadcodeInput = true">
-				<text v-if="isBuy == 0">使用阅读码</text>
+			<view class="button" v-if="isIos">
+				<text v-if="isBuy == 0" @click="useReadCode">使用阅读码</text>
 				<text v-else @click="goRead">开始阅读</text>
 			</view>
 			<view class="button" v-else>
-				<text v-if="isBuy == 0" class="use" @click="showReadcodeInput = true">使用阅读码</text>
-				<text v-if="isBuy == 0" class="buy" @click="clickBuy">购买阅读码</text>
-				<text v-if="isBuy == 1" @click="goRead">开始阅读</text>
+				<text v-if="isBuy == 0" class="use" @click="useReadCode">使用阅读码</text>
+				<text v-if="isBuy == 1" class="use" @click="goRead">开始阅读</text>
+				<text class="buy" @click="clickBuy">购买阅读码</text>
 			</view>
 		</view>
 		<chunLei-modal v-model="showReadcodeInput" :mData="mData" type="input" @onConfirm="onReadcodeInputConfirm" navMask>
@@ -50,12 +50,14 @@
 		</uni-popup>
 		<chunLei-modal v-model="showDescModal" :mData="descData" type="default" navMask>
 		</chunLei-modal>
+		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
 <script>
 	import chunLeiModal from '@/components/chunLei-modal/chunLei-modal.vue'
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import LoginPage from '@/components/login-page.vue';
 	export default {
 		data() {
 			return {
@@ -82,7 +84,8 @@
 				isBuy: false,
 				perviewCurrent: 1,
 				perviewImgs: [],
-				magTitle: ""
+				magTitle: "",
+				showLoginPage: false
 			};
 		},
 		onLoad(option) {
@@ -99,9 +102,16 @@
 		},
 		methods: {
 			async getMagInfo() {
-				let res = await this.myRequest('/api/magazine/preview', {
-					magazine_id: this.magId
-				}, 'POST');
+				let res;
+				if (this.$store.state.token) {
+					res = await this.myRequest('/api/magazine/preview', {
+						magazine_id: this.magId
+					}, 'POST');
+				} else {
+					res = await this.myRequest('/api/magazine/preview', {
+						magazine_id: this.magId
+					}, 'POST', false);
+				}
 				if (res.error_code == 0) {
 					this.isBuy = res.data.is_buy;
 					this.perviewImgs = res.data.preview_join;
@@ -112,10 +122,14 @@
 				}
 			},
 			async clickBuy() {
-				let res = await this.myRequest('/common/getSpecs', {}, 'GET', false);
-				if (res.error_code == 0) {
-					this.buyTypes = res.data;
-					this.$refs.buyCode.open()
+				if (this.$store.state.token) {
+					let res = await this.myRequest('/common/getSpecs', {}, 'GET', false);
+					if (res.error_code == 0) {
+						this.buyTypes = res.data;
+						this.$refs.buyCode.open()
+					}
+				} else {
+					this.showLoginPage = true;
 				}
 			},
 			onSwiperChange(e) {
@@ -128,7 +142,8 @@
 						code: content[0].content
 					}, 'POST');
 					if (res.error_code == 0) {
-						this.goRead()
+						this.$store.commit('saveNeedFresh', true);
+						this.goRead();
 					}
 				}
 			},
@@ -173,23 +188,31 @@
 								uni.redirectTo({
 									url: `/pages/magazinefirst/magazinefirst?magId=${this.magId}`
 								})
-							},1500)
+							}, 1500)
 						},
 						fail: (res) => {
-							uni.showModal({
-								content: "支付失败,原因为: " + res
-									.errMsg,
-								showCancel: false
-							})
+							console.log("支付失败,原因为: " + res
+								.errMsg)
 						},
 						complete: () => {}
 					})
+				}
+			},
+			useReadCode() {
+				if (this.$store.state.token) {
+					this.showReadcodeInput = true;
+				} else {
+					this.showLoginPage = true;
 				}
 			},
 			goRead() {
 				uni.navigateTo({
 					url: `/pages/read/read?magId=${this.magId}`
 				});
+			},
+			loginOver() {
+				this.showLoginPage = false;
+				this.getMagInfo()
 			}
 		},
 		computed: {
@@ -211,7 +234,8 @@
 		},
 		components: {
 			chunLeiModal,
-			uniPopup
+			uniPopup,
+			LoginPage
 		}
 	}
 </script>

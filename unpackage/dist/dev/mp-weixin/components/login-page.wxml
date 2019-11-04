@@ -1,0 +1,1 @@
+<view hidden="{{!(showFlag)}}" class="login-page"><image class="logo-img" src="../static/logo.png"></image><button class="get-userinfo-button" open-type="getUserInfo" lang="zh_CN" data-event-opts="{{[['getuserinfo',[['onGotUserInfo',['$event']]]]]}}" bindgetuserinfo="__e">微信登录</button></view>

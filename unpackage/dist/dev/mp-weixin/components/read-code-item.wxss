@@ -31,11 +31,26 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  position: relative;
 }
 .read-code-item .cover-img {
     width: 200rpx;
     height: 260rpx;
     margin-right: 30rpx;
+}
+.read-code-item .periods {
+    width: 82rpx;
+    height: 36rpx;
+    line-height: 36rpx;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 88;
+    padding: 8rpx 10rpx;
+    font-size: 24rpx;
+    text-align: center;
 }
 .read-code-item .info {
     text-align: left;

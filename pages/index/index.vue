@@ -6,30 +6,29 @@
 			<view class="text-area">
 				<text class="title">{{firstMagazine.title}}\n</text>
 				<text class="subscribe">已有 {{firstMagazine.subscribe_num}} 订阅</text>
-				<image class="cover-img" :src="firstMagazine.cover_pic"></image>
+				<image class="cover-img" :src="firstMagazine.cover_pic" mode="aspectFill"></image>
 				<view class="buttons">
-					<button v-if="isLogin" class="button-1" type="default" plain="true" @click="startRead(firstMagazine.id)">开始阅读</button>
-					<button v-else class="button-1" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">开始阅读</button>
+					<button class="button-1" type="default" plain="true" @click="startRead(firstMagazine.id)">开始阅读</button>
 					<button class="button-1 button-2" type="default" plain="true" hover-class="button-2-hover" @click="goUserRank">读者排行榜</button>
 				</view>
 			</view>
 		</view>
 		<view class="main">
 			<wuc-tab :tab-list="tabList" :tabCur.sync="tabCur" @change="tabChange" tab-class="tab" select-class="tab-select"></wuc-tab>
-			<button v-if="!isLogin" class="userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">获取用户信息</button>
 			<view class="magazines" v-if="tabCur == 0">
-				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" :isLogin="isLogin"
-				 @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
+				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" @getUserInfo="onGotUserInfo"
+				 @click.native="startRead(item.id)"></magazine>
 			</view>
 			<view class="magazines" v-if="tabCur == 1">
-				<magazine class="sigle-mag" v-for="(item,index) in myMagazines" :key="index" :magData="item" :isLogin="isLogin"
-				 @getUserInfo="onGotUserInfo" @click.native="startRead(item.id)"></magazine>
+				<magazine class="sigle-mag" v-for="(item,index) in myMagazines" :key="index" :magData="item" @getUserInfo="onGotUserInfo"
+				 @click.native="startRead(item.id)"></magazine>
 			</view>
 			<view class="readcodes" v-if="tabCur == 2">
 				<read-code-item v-for="(item,index) in readCodes" :key="index" :codeData="item"></read-code-item>
 			</view>
 			<load-more :status="status"></load-more>
 		</view>
+		<login-page :showFlag="showLoginPage" @login-over="showLoginPage = false"></login-page>
 	</view>
 </template>
 
@@ -38,12 +37,13 @@
 	import Magazine from '@/components/magazine-item.vue';
 	import ReadCodeItem from '@/components/read-code-item.vue';
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import LoginPage from '@/components/login-page.vue';
 	export default {
 		data() {
 			return {
 				title: '肖战-多面棱角蜕变锋芒',
 				tabList: [{
-						name: '全部杂志'
+						name: '全部杂志',
 					},
 					{
 						name: '我的杂志'
@@ -63,17 +63,22 @@
 				myMagPage: 1,
 				readCodePage: 1,
 				loginInfo: {},
-				isLogin: false
+				showLoginPage: false
 			}
 		},
 		onLoad() {
-			this.wxLogin();
 			setTimeout(() => {
 				this.startImgFlag = false;
 			}, 3000);
 			this.getAllMagList(this.allMagPage);
 		},
 		onReachBottom() {
+			if (this.tabCur == 1 || this.tabCur == 2) {
+				if (!this.$store.state.token) {
+					this.tabCur = 0;
+					return;
+				}
+			}
 			if (this.tabCur == 0) {
 				this.allMagPage++;
 				this.getAllMagList(this.allMagPage);
@@ -87,6 +92,14 @@
 		},
 		methods: {
 			tabChange(index) {
+				if (this.tabCur == 1 || this.tabCur == 2) {
+					if (!this.$store.state.token) {
+						this.showLoginPage = true;
+						this.tabCur = 0;
+						return;
+					}
+				}
+				console.log(222)
 				if (this.tabCur == 1) {
 					// 如果有了新购买，那么每次都会刷新
 					if (this.$store.state.needFresh) {
@@ -107,10 +120,15 @@
 				}
 			},
 			async getAllMagList(page) {
-				if (page !== 1) this.status = 'loading';
+				let perPage = 6;
+				if (page !== 1){
+					 this.status = 'loading';
+				} else {
+					perPage = 7;
+				}
 				let res = await this.myRequest('/api/magazine/index', {
 					page,
-					per_page: 6
+					per_page: perPage
 				}, 'POST', false);
 				if (res) {
 					if (!res.data.data.length) {
@@ -126,7 +144,9 @@
 				}
 			},
 			async getMyMagList(page) {
-				if (page !== 1) this.status = 'loading';
+				if (page !== 1){
+					 this.status = 'loading';
+				}
 				let res = await this.myRequest('/api/magazine/myMafazine', {
 					page,
 					per_page: 6
@@ -164,48 +184,14 @@
 				uni.navigateTo({
 					url: `/pages/magazinefirst/magazinefirst?magId=${id}`
 				});
-			},
-			wxLogin() {
-				let that = this;
-				uni.login({
-					provider: 'weixin',
-					success: function(loginRes) {
-						that.loginInfo.code = loginRes.code;
-						console.log(loginRes)
-						uni.getUserInfo({
-							provider: 'weixin',
-							success: function(infoRes) {
-								console.log(infoRes)
-								that.loginInfo.encryptedData = infoRes.encryptedData;
-								that.loginInfo.iv = infoRes.iv;
-								that.myLogin();
-							},
-							fail: function() {}
-						})
-					}
-				});
-			},
-			async myLogin() {
-				let res = await this.myRequest('/api/user/appletLogin', this.loginInfo, 'POST', false);
-				if (res && res.error_code == 0) {
-					this.$store.commit('saveToken', res.data.token)
-					this.$store.commit('saveIsLogin', true);
-					this.isLogin = true;
-				}
-				// console.log(this.$store.state.isLogin)
-			},
-			onGotUserInfo(res) {
-				let infoRes = res.detail
-				this.loginInfo.encryptedData = infoRes.encryptedData;
-				this.loginInfo.iv = infoRes.iv;
-				this.myLogin();
 			}
 		},
 		components: {
 			WucTab,
 			Magazine,
 			LoadMore,
-			ReadCodeItem
+			ReadCodeItem,
+			LoginPage
 		},
 	}
 </script>
@@ -219,7 +205,7 @@
 			height: 100vh;
 			position: absolute;
 			top: 0;
-			z-index: 99;
+			z-index: 98;
 		}
 	}
 
@@ -321,7 +307,7 @@
 			padding-top: 30rpx;
 			margin-top: -10rpx;
 			width: 690rpx;
-
+			min-height: 250rpx;
 			// display: flex;
 			// flex-wrap: wrap;
 			// justify-content: space-around;
@@ -335,6 +321,7 @@
 			padding-top: 30rpx;
 			margin-top: -10rpx;
 			width: 690rpx;
+			min-height: 150rpx;
 		}
 	}
 

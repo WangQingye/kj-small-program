@@ -6,6 +6,7 @@
     "wuc-tab": "/components/wuc-tab/wuc-tab",
     "magazine": "/components/magazine-item",
     "load-more": "/components/uni-load-more/uni-load-more",
-    "read-code-item": "/components/read-code-item"
+    "read-code-item": "/components/read-code-item",
+    "login-page": "/components/login-page"
   }
 }

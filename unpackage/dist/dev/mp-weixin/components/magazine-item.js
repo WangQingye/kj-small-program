@@ -113,17 +113,13 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 //
 //
 //
-//
 var _default =
 {
   data: function data() {
     return {};
   },
-  props: ['magData', 'isLogin'],
-  methods: {
-    onGotUserInfo: function onGotUserInfo(res) {
-      this.$emit('getUserInfo', res);
-    } } };exports.default = _default;
+  props: ['magData'],
+  methods: {} };exports.default = _default;
 
 /***/ }),
 

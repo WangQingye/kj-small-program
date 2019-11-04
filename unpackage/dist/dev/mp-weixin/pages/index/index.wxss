@@ -32,7 +32,7 @@
     height: 100vh;
     position: absolute;
     top: 0;
-    z-index: 99;
+    z-index: 98;
 }
 .head {
   padding-bottom: 60rpx;
@@ -122,6 +122,7 @@
     padding-top: 30rpx;
     margin-top: -10rpx;
     width: 690rpx;
+    min-height: 250rpx;
 }
 .main .magazines .sigle-mag:nth-child(odd) {
       margin-right: 26rpx;
@@ -131,6 +132,7 @@
     padding-top: 30rpx;
     margin-top: -10rpx;
     width: 690rpx;
+    min-height: 150rpx;
 }
 .button-1 {
   width: 320rpx;

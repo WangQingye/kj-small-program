@@ -8,9 +8,11 @@
 		"es6": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.7.0",
+	"libVersion": "2.9.1",
 	"appid": "wx0f86d31e3be456e1",
 	"projectname": "xgb",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
 	"condition": {
 		"search": {
 			"current": -1,

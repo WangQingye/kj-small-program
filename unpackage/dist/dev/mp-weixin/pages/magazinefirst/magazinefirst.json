@@ -2,6 +2,7 @@
   "navigationBarTitleText": "星光邦",
   "usingComponents": {
     "chun-lei-modal": "/components/chunLei-modal/chunLei-modal",
-    "uni-popup": "/components/uni-popup/uni-popup"
+    "uni-popup": "/components/uni-popup/uni-popup",
+    "login-page": "/components/login-page"
   }
 }
