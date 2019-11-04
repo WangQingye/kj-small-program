@@ -166,7 +166,7 @@
 				this.showDescModal = true;
 			},
 			async goPay() {
-				let num = this.choosenIndex == 4 ? this.ordinaryNum : this.buyTypes[this.choosenIndex].price;
+				let num = this.choosenIndex == 4 ? this.ordinaryNum : this.buyTypes[this.choosenIndex].num;
 				num = parseInt(num);
 				let res = await this.myRequest('/api/order/appletPay', {
 					magazine_id: this.magId,

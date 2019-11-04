@@ -99,7 +99,6 @@
 						return;
 					}
 				}
-				console.log(222)
 				if (this.tabCur == 1) {
 					// 如果有了新购买，那么每次都会刷新
 					if (this.$store.state.needFresh) {
@@ -321,7 +320,7 @@
 			padding-top: 30rpx;
 			margin-top: -10rpx;
 			width: 690rpx;
-			min-height: 150rpx;
+			min-height: 250rpx;
 		}
 	}
 

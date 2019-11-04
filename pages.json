@@ -32,7 +32,8 @@
 			"style": {
 				"usingComponents": {
 					"magazine": "/wxcomponents/magazine/index"
-				}
+				},
+				"disableScroll": true
 			}
 		}
 	],

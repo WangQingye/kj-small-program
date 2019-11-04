@@ -1,6 +1,6 @@
 <template>
 	<view class="read-code-item">
-		<image class="cover-img" :src="codeData.magazine_join.cover_pic"></image>
+		<image class="cover-img" :src="codeData.magazine_join.cover_pic" mode="aspectFill"></image>
 		<text class="periods">第{{codeData.magazine_join.periods_num}}期</text>
 		<view class="info">
 			<text class="title">{{codeData.magazine_join.title}}\n</text>

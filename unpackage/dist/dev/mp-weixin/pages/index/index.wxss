@@ -132,7 +132,7 @@
     padding-top: 30rpx;
     margin-top: -10rpx;
     width: 690rpx;
-    min-height: 150rpx;
+    min-height: 250rpx;
 }
 .button-1 {
   width: 320rpx;
