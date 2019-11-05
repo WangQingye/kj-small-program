@@ -218,46 +218,24 @@ Component({
     },
     /** onTouchStart */
     onTouchStart(e) {
-      const [posX, posY] = this.data.pos
       const { pageX, pageY } = e.touches[0]
-      const { offsetLeft, offsetTop } = e.currentTarget
-      const x = ~~(pageX - offsetLeft)
-      const y = ~~(pageY - offsetTop)
-      const [sdw, sdh] = this.data.signDisplaySize
-      let isMovingSign = false
-      if (
-        posX <= x &&
-        x <= posX + sdw &&
-        posY <= y &&
-        y <= posY + sdh
-      ) {
-        isMovingSign = true
-      }
-      const [offsetX, offsetY] = [x - posX, y - posY]
       this.setData({
-        isMovingSign,
-        offset: [offsetX, offsetY],
+        offset: [~~pageX, ~~pageY],
         touchTs: Date.now(),
-        touchPos: [pageX, pageY],
+        touchPos: [~~pageX, ~~pageY],
       })
     },
     /** onTouchMove */
     onTouchMove(e) {
-      if (!this.data.isMovingSign) {
-        return
-      }
+      let [posX, posY] = this.data.pos
       const [offsetX, offsetY] = this.data.offset
-      const x = ~~(e.touches[0].pageX - e.currentTarget.offsetLeft)
-      const y = ~~(e.touches[0].pageY - e.currentTarget.offsetTop)
-      const [sdw, sdh] = this.data.signDisplaySize
-      const [cw, ch] = this.data.containerSize
-      let [posX, posY] = [x - offsetX, y - offsetY]
-      posX = Math.max(0, posX)
-      posX = Math.min(cw - sdw, posX)
-      posY = Math.max(0, posY)
-      posY = Math.min(ch - sdh, posY)
+      const x = ~~(e.touches[0].pageX)
+      const y = ~~(e.touches[0].pageY)
+      posX = ~~(posX + x - offsetX)
+      posY = ~~(posY + y - offsetY)
       this.setData({
-        pos: [posX, posY]
+        pos: [posX, posY],
+        offset: [x, y]
       })
     },
     /** onTouchEnd */

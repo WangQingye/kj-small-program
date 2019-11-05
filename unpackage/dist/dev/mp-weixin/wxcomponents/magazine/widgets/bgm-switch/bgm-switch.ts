@@ -76,7 +76,13 @@ Component({
   },
 
   lifetimes: {
-    attached() { },
+    attached() {
+      wx.onAppHide(() => {
+        this.setData({
+          mute: true
+        })
+      })
+    },
     detached() {
       if (this.audioContext) {
         this.audioContext.pause()

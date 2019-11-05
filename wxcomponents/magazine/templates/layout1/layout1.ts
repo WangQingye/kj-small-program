@@ -21,14 +21,16 @@ Component({
         let weight = item.bold ? 'bold' : 'normal'
         let size = +item.word_size
         // let indent = ~~(Math.random() * 60)
+        let content = item.content
+        let spaceCount = Math.max(content.split(' ').length - 1, 0)
         let style = [
           `font-weight:${weight};`,
           `font-size:${size}px;`,
-          // `text-indent:${indent}px;`,
+          `text-indent:${size * spaceCount}px;`,
         ].join('')
         return {
           style,
-          content: item.content,
+          content,
           anim: item.cartoon_style
         }
       })

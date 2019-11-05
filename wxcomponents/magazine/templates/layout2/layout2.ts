@@ -40,7 +40,8 @@ Component({
       const posName = isBottom ? 'bottom' : 'top'
       const name = `${b ? 'show' : 'hide'}-${posName}`
       const popAnim = `animation: ${name} 0.5s ease 1 forwards;`
-      const parallaxAnim = `animation: parallax-${name} 0.5s ease 1 forwards;`
+      // const parallaxAnim = `animation: parallax-${name} 0.5s ease 1 forwards;`
+      const parallaxAnim = ``
       this.setData({
         popAnim,
         parallaxAnim

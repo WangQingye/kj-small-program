@@ -141,7 +141,7 @@ Component({
           'video_cover',
           'base_pic',
           'sign_pic',
-          'video_url',
+          // 'video_url',
         ].forEach(key => {
           if (page[key]) {
             resList.push(page[key])
@@ -184,7 +184,7 @@ Component({
           'video_cover',
           'base_pic',
           'sign_pic',
-          'video_url',
+          // 'video_url',
         ].forEach(key => {
           if (page[key]) {
             page[key] = getLocal(page[key])
