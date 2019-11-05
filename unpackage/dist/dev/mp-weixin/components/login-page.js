@@ -147,19 +147,23 @@ var _default =
     },
     myLogin: function () {var _myLogin = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var res;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
                   this.myRequest('/api/user/appletLogin', this.loginInfo, 'POST', false));case 2:res = _context.sent;
+                console.log('myloginres', res);
                 if (res && res.error_code == 0) {
+                  console.log('aaa');
                   this.$store.commit('saveToken', res.data.token);
                   this.$store.commit('saveIsLogin', true);
                   this.$emit('login-over');
-                }case 4:case "end":return _context.stop();}}}, _callee, this);}));function myLogin() {return _myLogin.apply(this, arguments);}return myLogin;}(),
+                }case 5:case "end":return _context.stop();}}}, _callee, this);}));function myLogin() {return _myLogin.apply(this, arguments);}return myLogin;}(),
 
     onGotUserInfo: function onGotUserInfo(res) {
       if (res.detail.errMsg == 'getUserInfo:ok') {
+        console.log('bbb');
         var infoRes = res.detail;
         this.loginInfo.encryptedData = infoRes.encryptedData;
         this.loginInfo.iv = infoRes.iv;
         this.myLogin();
       } else {
+        console.log('ccc');
         this.$emit('login-over');
       }
     } } };exports.default = _default;

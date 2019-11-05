@@ -199,6 +199,7 @@
 				}
 			},
 			useReadCode() {
+				console.log('usecodetoken', this.$store.state.token)
 				if (this.$store.state.token) {
 					this.showReadcodeInput = true;
 				} else {
@@ -242,6 +243,7 @@
 
 <style lang="scss">
 	.magazine-first {
+		overflow: hidden;
 		.swiper {
 			width: 100%;
 			height: 100vh;

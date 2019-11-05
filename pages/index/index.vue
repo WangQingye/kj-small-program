@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<image src="../../static/start.gif" class="start-img" v-if="startImgFlag"></image>
-		<view class="head">
+		<view class="head" v-if="!startImgFlag">
 			<image class="bg" src="../../static/1.png"></image>
 			<view class="text-area">
 				<text class="title">{{firstMagazine.title}}\n</text>
@@ -13,7 +13,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="main">
+		<view class="main" v-if="!startImgFlag">
 			<wuc-tab :tab-list="tabList" :tabCur.sync="tabCur" @change="tabChange" tab-class="tab" select-class="tab-select"></wuc-tab>
 			<view class="magazines" v-if="tabCur == 0">
 				<magazine class="sigle-mag" v-for="(item,index) in allMagazines" :key="index" :magData="item" @getUserInfo="onGotUserInfo"
@@ -72,6 +72,11 @@
 			}, 3000);
 			this.getAllMagList(this.allMagPage);
 		},
+		onShow() {
+			uni.setNavigationBarTitle({
+				title: '星光邦'
+			});
+		},
 		onReachBottom() {
 			if (this.tabCur == 1 || this.tabCur == 2) {
 				if (!this.$store.state.token) {
@@ -120,8 +125,8 @@
 			},
 			async getAllMagList(page) {
 				let perPage = 6;
-				if (page !== 1){
-					 this.status = 'loading';
+				if (page !== 1) {
+					this.status = 'loading';
 				} else {
 					perPage = 7;
 				}
@@ -143,8 +148,8 @@
 				}
 			},
 			async getMyMagList(page) {
-				if (page !== 1){
-					 this.status = 'loading';
+				if (page !== 1) {
+					this.status = 'loading';
 				}
 				let res = await this.myRequest('/api/magazine/myMafazine', {
 					page,
@@ -307,6 +312,7 @@
 			margin-top: -10rpx;
 			width: 690rpx;
 			min-height: 250rpx;
+
 			// display: flex;
 			// flex-wrap: wrap;
 			// justify-content: space-around;

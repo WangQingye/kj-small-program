@@ -24,164 +24,167 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.magazine-first {
+  overflow: hidden;
+}
 .magazine-first .swiper {
-  width: 100%;
-  height: 100vh;
-  background: white;
-  padding-bottom: 110rpx;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    padding-bottom: 110rpx;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
 }
 .magazine-first .swiper .swiper-item {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-justify-content: space-around;
-        -ms-flex-pack: distribute;
-            justify-content: space-around;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
+      -webkit-justify-content: space-around;
+          -ms-flex-pack: distribute;
+              justify-content: space-around;
 }
 .magazine-first .swiper .swiper-item .swiper-img {
-      width: 100%;
-      height: 100%;
+        width: 100%;
+        height: 100%;
 }
 .magazine-first .cover-img {
-  width: 750rpx;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  z-index: -1;
+    width: 750rpx;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    z-index: -1;
 }
 .magazine-first .bottom {
-  position: fixed;
-  bottom: 0;
+    position: fixed;
+    bottom: 0;
 }
 .magazine-first .bottom .page {
-    width: 80rpx;
-    height: 40rpx;
-    margin: 0 auto;
-    background: #000000;
-    line-height: 40rpx;
-    font-size: 24rpx;
-    color: white;
-    text-align: center;
-    margin-bottom: 20rpx;
+      width: 80rpx;
+      height: 40rpx;
+      margin: 0 auto;
+      background: #000000;
+      line-height: 40rpx;
+      font-size: 24rpx;
+      color: white;
+      text-align: center;
+      margin-bottom: 20rpx;
 }
 .magazine-first .bottom .button {
-    height: 110rpx;
-    width: 750rpx;
-    background: #000000;
-    color: white;
-    font-size: 36rpx;
-    text-align: center;
-    line-height: 110rpx;
+      height: 110rpx;
+      width: 750rpx;
+      background: #000000;
+      color: white;
+      font-size: 36rpx;
+      text-align: center;
+      line-height: 110rpx;
 }
 .magazine-first .bottom .button .use {
-      width: 374rpx;
-      line-height: 50rpx;
-      border-right: 1rpx solid #FFFFFF;
-      padding-right: 102rpx;
+        width: 374rpx;
+        line-height: 50rpx;
+        border-right: 1rpx solid #FFFFFF;
+        padding-right: 102rpx;
 }
 .magazine-first .bottom .button .buy {
-      padding-left: 102rpx;
+        padding-left: 102rpx;
 }
 .magazine-first .bottom .button text:hover {
-      color: #C8C7CC;
+        color: #C8C7CC;
 }
 .magazine-first .buy-wrapper {
-  color: #333333;
+    color: #333333;
 }
 .magazine-first .buy-wrapper .top {
-    margin-bottom: 50rpx;
+      margin-bottom: 50rpx;
 }
 .magazine-first .buy-wrapper .top .buy-text {
-      font-size: 28rpx;
-      margin-right: 420rpx;
+        font-size: 28rpx;
+        margin-right: 420rpx;
 }
 .magazine-first .buy-wrapper .top .buy-desc-icon {
-      width: 28rpx;
-      height: 28rpx;
-      vertical-align: middle;
-      margin-right: 6rpx;
+        width: 28rpx;
+        height: 28rpx;
+        vertical-align: middle;
+        margin-right: 6rpx;
 }
 .magazine-first .buy-wrapper .top .buy-desc {
-      font-size: 24rpx;
-      line-height: 28rpx;
-      color: #999999;
-}
-.magazine-first .buy-wrapper .top .title {
-      font-size: 32rpx;
-      margin-top: 20rpx;
-      font-weight: bold;
-}
-.magazine-first .buy-wrapper .content {
-    font-size: 28rpx;
-}
-.magazine-first .buy-wrapper .content .type {
-      margin-top: 30rpx;
-}
-.magazine-first .buy-wrapper .content .type .type-text {
-        display: inline-block;
-        width: 280rpx;
-        height: 64rpx;
-        text-align: center;
-        line-height: 64rpx;
-        border: 1px solid #E6E6E6;
-        margin-bottom: 30rpx;
+        font-size: 24rpx;
+        line-height: 28rpx;
         color: #999999;
 }
+.magazine-first .buy-wrapper .top .title {
+        font-size: 32rpx;
+        margin-top: 20rpx;
+        font-weight: bold;
+}
+.magazine-first .buy-wrapper .content {
+      font-size: 28rpx;
+}
+.magazine-first .buy-wrapper .content .type {
+        margin-top: 30rpx;
+}
+.magazine-first .buy-wrapper .content .type .type-text {
+          display: inline-block;
+          width: 280rpx;
+          height: 64rpx;
+          text-align: center;
+          line-height: 64rpx;
+          border: 1px solid #E6E6E6;
+          margin-bottom: 30rpx;
+          color: #999999;
+}
 .magazine-first .buy-wrapper .content .type .type-text-choosen {
+          border: 1px solid #1D1D1E;
+          color: black;
+}
+.magazine-first .buy-wrapper .content .type .type-text:nth-child(odd) {
+          margin-right: 30rpx;
+}
+.magazine-first .buy-wrapper .content .ordinary-type {
+        display: inline-block;
+        width: 440rpx;
+        height: 64rpx;
+        border: 1px solid #E6E6E6;
+        color: #999999;
+        line-height: 64rpx;
+        text-align: center;
+}
+.magazine-first .buy-wrapper .content .ordinary-type .input {
+          display: inline-block;
+          width: 80rpx;
+          height: 40rpx;
+          line-height: 40rpx;
+          vertical-align: middle;
+          margin: 0 20rpx;
+}
+.magazine-first .buy-wrapper .content .ordinary-type .icon {
+          display: inline-block;
+          vertical-align: middle;
+          color: white;
+          width: 40rpx;
+          height: 40rpx;
+          line-height: 35rpx;
+          font-size: 40rpx;
+          background: #C0C0C0;
+}
+.magazine-first .buy-wrapper .content .ordinary-type-choosen {
         border: 1px solid #1D1D1E;
         color: black;
 }
-.magazine-first .buy-wrapper .content .type .type-text:nth-child(odd) {
-        margin-right: 30rpx;
-}
-.magazine-first .buy-wrapper .content .ordinary-type {
-      display: inline-block;
-      width: 440rpx;
-      height: 64rpx;
-      border: 1px solid #E6E6E6;
-      color: #999999;
-      line-height: 64rpx;
-      text-align: center;
-}
-.magazine-first .buy-wrapper .content .ordinary-type .input {
-        display: inline-block;
-        width: 80rpx;
-        height: 40rpx;
-        line-height: 40rpx;
-        vertical-align: middle;
-        margin: 0 20rpx;
-}
-.magazine-first .buy-wrapper .content .ordinary-type .icon {
-        display: inline-block;
-        vertical-align: middle;
-        color: white;
-        width: 40rpx;
-        height: 40rpx;
-        line-height: 35rpx;
-        font-size: 40rpx;
-        background: #C0C0C0;
-}
-.magazine-first .buy-wrapper .content .ordinary-type-choosen {
-      border: 1px solid #1D1D1E;
-      color: black;
-}
 .magazine-first .buy-wrapper .content .ordinary-type-choosen .icon {
-        background: #000000;
+          background: #000000;
 }
 .magazine-first .buy-wrapper .buy-bottom {
-    margin-left: -30rpx;
-    margin-top: 30rpx;
-    font-size: 36rpx;
-    opacity: 0.8;
+      margin-left: -30rpx;
+      margin-top: 30rpx;
+      font-size: 36rpx;
+      opacity: 0.8;
 }
 .magazine-first .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box {
-  padding-bottom: 0rpx;
+    padding-bottom: 0rpx;
 }
 

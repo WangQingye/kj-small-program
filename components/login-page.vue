@@ -40,7 +40,9 @@
 			},
 			async myLogin() {
 				let res = await this.myRequest('/api/user/appletLogin', this.loginInfo, 'POST', false);
+				console.log('myloginres',res)
 				if (res && res.error_code == 0) {
+					console.log('aaa')
 					this.$store.commit('saveToken', res.data.token)
 					this.$store.commit('saveIsLogin', true);
 					this.$emit('login-over')
@@ -48,11 +50,13 @@
 			},
 			onGotUserInfo(res) {
 				if (res.detail.errMsg == 'getUserInfo:ok') {
+					console.log('bbb')
 					let infoRes = res.detail
 					this.loginInfo.encryptedData = infoRes.encryptedData;
 					this.loginInfo.iv = infoRes.iv;
 					this.myLogin();
 				} else {
+					console.log('ccc')
 					this.$emit('login-over');
 				}
 			}

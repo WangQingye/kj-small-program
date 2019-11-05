@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="read-page">
 		<magazine v-if="magId" :book="magId"></magazine>
 	</view>
 </template>
@@ -18,5 +18,7 @@
 </script>
 
 <style lang="scss">
-
+.read-page {
+	background: black;
+}
 </style>

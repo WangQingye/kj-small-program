@@ -75,6 +75,7 @@
 
 <style lang="scss">
 	.readcodes {
+		overflow-x: hidden;
 		.tip {
 			background: #FFF4F4;
 			height: 150rpx;

@@ -24,87 +24,90 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.readcodes {
+  overflow-x: hidden;
+}
 .readcodes .tip {
-  background: #FFF4F4;
-  height: 150rpx;
-  width: 750rpx;
-  color: #999999;
-  font-size: 25rpx;
-  padding: 26rpx 30rpx;
-  line-height: 50rpx;
-  margin-bottom: 20rpx;
+    background: #FFF4F4;
+    height: 150rpx;
+    width: 750rpx;
+    color: #999999;
+    font-size: 25rpx;
+    padding: 26rpx 30rpx;
+    line-height: 50rpx;
+    margin-bottom: 20rpx;
 }
 .readcodes .tip .tip-text {
-    display: block;
-    width: 690rpx;
+      display: block;
+      width: 690rpx;
 }
 .readcodes .readcodes-wrapper {
-  padding: 0 30rpx;
+    padding: 0 30rpx;
 }
 .readcodes .readcodes-wrapper .readcode-item {
-    height: 160rpx;
-    border-bottom: 1rpx solid #E6E6E6;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
-    -webkit-box-align: center;
-    -webkit-align-items: center;
-        -ms-flex-align: center;
-            align-items: center;
+      height: 160rpx;
+      border-bottom: 1rpx solid #E6E6E6;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: justify;
+      -webkit-justify-content: space-between;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+          -ms-flex-align: center;
+              align-items: center;
 }
 .readcodes .readcodes-wrapper .readcode-item .info .code {
-      display: block;
-      background: black;
-      color: white;
-      width: 330rpx;
-      text-align: center;
-      line-height: 36rpx;
-      height: 36rpx;
-      font-size: 32rpx;
-      margin-bottom: 10rpx;
+        display: block;
+        background: black;
+        color: white;
+        width: 330rpx;
+        text-align: center;
+        line-height: 36rpx;
+        height: 36rpx;
+        font-size: 32rpx;
+        margin-bottom: 10rpx;
 }
 .readcodes .readcodes-wrapper .readcode-item .info .date {
-      font-size: 20rpx;
-      color: #999999;
+        font-size: 20rpx;
+        color: #999999;
 }
 .readcodes .readcodes-wrapper .readcode-item .opacity {
-      opacity: 0.5;
+        opacity: 0.5;
 }
 .readcodes .readcodes-wrapper .readcode-item .button-copy-read-code {
-      width: 180rpx;
-      height: 64rpx;
-      line-height: 64rpx;
-      margin-top: 96rpx;
-      font-size: 27rpx;
-      text-align: center;
-      margin-left: 0rpx;
-      padding: 0 22rpx;
-      border-radius: 0;
-      margin: 0;
+        width: 180rpx;
+        height: 64rpx;
+        line-height: 64rpx;
+        margin-top: 96rpx;
+        font-size: 27rpx;
+        text-align: center;
+        margin-left: 0rpx;
+        padding: 0 22rpx;
+        border-radius: 0;
+        margin: 0;
 }
 .readcodes .readcodes-wrapper .readcode-item .user-avatar {
-      height: 100rpx;
-      width: 180rpx;
-      border-left: 1px solid #E6E6E6;
+        height: 100rpx;
+        width: 180rpx;
+        border-left: 1px solid #E6E6E6;
 }
 .readcodes .readcodes-wrapper .readcode-item .user-avatar .img {
-        width: 64rpx;
-        height: 64rpx;
-        border-radius: 50%;
-        display: block;
-        margin: 0 auto;
-        margin-bottom: 12rpx;
+          width: 64rpx;
+          height: 64rpx;
+          border-radius: 50%;
+          display: block;
+          margin: 0 auto;
+          margin-bottom: 12rpx;
 }
 .readcodes .readcodes-wrapper .readcode-item .user-avatar .name {
-        font-size: 23rpx;
-        color: #999999;
-        width: 100%;
-        display: block;
-        text-align: center;
+          font-size: 23rpx;
+          color: #999999;
+          width: 100%;
+          display: block;
+          text-align: center;
 }
 

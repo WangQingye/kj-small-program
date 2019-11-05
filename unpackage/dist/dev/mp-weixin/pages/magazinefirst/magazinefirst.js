@@ -323,6 +323,7 @@ __webpack_require__.r(__webpack_exports__);
                 }case 6:case "end":return _context4.stop();}}}, _callee4, this);}));function goPay() {return _goPay.apply(this, arguments);}return goPay;}(),
 
     useReadCode: function useReadCode() {
+      console.log('usecodetoken', this.$store.state.token);
       if (this.$store.state.token) {
         this.showReadcodeInput = true;
       } else {

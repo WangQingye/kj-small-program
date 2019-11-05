@@ -11,7 +11,8 @@
 		{
 			"path": "pages/magazinefirst/magazinefirst",
 			"style": {
-				"navigationBarTitleText": "星光邦"
+				"navigationBarTitleText": "星光邦",
+				"disableScroll": true
 			}
 		},
 		{
