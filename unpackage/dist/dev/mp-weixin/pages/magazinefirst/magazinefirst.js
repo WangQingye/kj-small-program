@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 94));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 101));};var LoginPage = function LoginPage() {return __webpack_require__.e(/*! import() | components/login-page */ "components/login-page").then(__webpack_require__.bind(null, /*! @/components/login-page.vue */ 87));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 16));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var chunLeiModal = function chunLeiModal() {return __webpack_require__.e(/*! import() | components/chunLei-modal/chunLei-modal */ "components/chunLei-modal/chunLei-modal").then(__webpack_require__.bind(null, /*! @/components/chunLei-modal/chunLei-modal.vue */ 96));};var uniPopup = function uniPopup() {return __webpack_require__.e(/*! import() | components/uni-popup/uni-popup */ "components/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @/components/uni-popup/uni-popup.vue */ 103));};var LoginPage = function LoginPage() {return __webpack_require__.e(/*! import() | components/login-page */ "components/login-page").then(__webpack_require__.bind(null, /*! @/components/login-page.vue */ 89));};var _default =
 
 
 
@@ -209,10 +209,15 @@ __webpack_require__.r(__webpack_exports__);
       perviewCurrent: 1,
       perviewImgs: [],
       magTitle: "",
-      showLoginPage: false };
+      showLoginPage: false,
+      isUnload: false };
 
   },
+  onUnload: function onUnload() {
+    this.isUnload = true;
+  },
   onLoad: function onLoad(option) {
+    this.isUnload = false;
     this.magId = option.magId;
     this.getMagInfo();
     var that = this;
@@ -240,9 +245,11 @@ __webpack_require__.r(__webpack_exports__);
                   this.isBuy = res.data.is_buy;
                   this.perviewImgs = res.data.preview_join;
                   this.magTitle = res.data.title;
-                  uni.setNavigationBarTitle({
-                    title: res.data.title });
+                  if (!this.isUnload) {
+                    uni.setNavigationBarTitle({
+                      title: res.data.title });
 
+                  }
                 }case 10:case "end":return _context.stop();}}}, _callee, this);}));function getMagInfo() {return _getMagInfo.apply(this, arguments);}return getMagInfo;}(),
 
     clickBuy: function () {var _clickBuy = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var res;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!

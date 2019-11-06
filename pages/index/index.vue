@@ -72,11 +72,6 @@
 			}, 3000);
 			this.getAllMagList(this.allMagPage);
 		},
-		onShow() {
-			uni.setNavigationBarTitle({
-				title: '星光邦'
-			});
-		},
 		onReachBottom() {
 			if (this.tabCur == 1 || this.tabCur == 2) {
 				if (!this.$store.state.token) {

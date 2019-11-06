@@ -85,10 +85,15 @@
 				perviewCurrent: 1,
 				perviewImgs: [],
 				magTitle: "",
-				showLoginPage: false
+				showLoginPage: false,
+				isUnload: false
 			};
 		},
+		onUnload() {
+			this.isUnload = true;
+		},
 		onLoad(option) {
+			this.isUnload = false;
 			this.magId = option.magId;
 			this.getMagInfo();
 			let that = this;
@@ -116,9 +121,11 @@
 					this.isBuy = res.data.is_buy;
 					this.perviewImgs = res.data.preview_join;
 					this.magTitle = res.data.title;
-					uni.setNavigationBarTitle({
-						title: res.data.title
-					});
+					if (!this.isUnload) {
+						uni.setNavigationBarTitle({
+							title: res.data.title
+						});
+					}
 				}
 			},
 			async clickBuy() {
@@ -244,6 +251,7 @@
 <style lang="scss">
 	.magazine-first {
 		overflow: hidden;
+
 		.swiper {
 			width: 100%;
 			height: 100vh;
