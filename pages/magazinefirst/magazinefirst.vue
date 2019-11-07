@@ -11,8 +11,8 @@
 				<text>{{perviewCurrent}}/{{perviewImgs.length}}</text>
 			</view>
 			<view class="button" v-if="isIos">
-				<text v-if="isBuy == 0" @click="useReadCode">使用阅读码</text>
-				<text v-else @click="goRead">开始阅读</text>
+				<text v-if="isBuy == 0" @click="useReadCode" class="single-buy">使用阅读码</text>
+				<text v-else @click="goRead" class="single-buy">开始阅读</text>
 			</view>
 			<view class="button" v-else>
 				<text v-if="isBuy == 0" class="use" @click="useReadCode">使用阅读码</text>
@@ -305,15 +305,26 @@
 				text-align: center;
 				line-height: 110rpx;
 
+				.single-buy {
+					width: 100%;
+					display: block;
+					text-align: center;
+				}
+
 				.use {
-					width: 374rpx;
+					width: 365rpx;
+					text-align: center;
+					display: inline-block;
 					line-height: 50rpx;
 					border-right: 1rpx solid #FFFFFF;
-					padding-right: 102rpx;
 				}
 
 				.buy {
-					padding-left: 102rpx;
+					margin-left: 20rpx;
+					line-height: 50rpx;
+					text-align: center;
+					width: 365rpx;
+					display: inline-block;
 				}
 
 				text:hover {

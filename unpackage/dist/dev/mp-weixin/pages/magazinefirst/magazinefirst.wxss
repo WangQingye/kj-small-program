@@ -83,14 +83,24 @@
       text-align: center;
       line-height: 110rpx;
 }
+.magazine-first .bottom .button .single-buy {
+        width: 100%;
+        display: block;
+        text-align: center;
+}
 .magazine-first .bottom .button .use {
-        width: 374rpx;
+        width: 365rpx;
+        text-align: center;
+        display: inline-block;
         line-height: 50rpx;
         border-right: 1rpx solid #FFFFFF;
-        padding-right: 102rpx;
 }
 .magazine-first .bottom .button .buy {
-        padding-left: 102rpx;
+        margin-left: 20rpx;
+        line-height: 50rpx;
+        text-align: center;
+        width: 365rpx;
+        display: inline-block;
 }
 .magazine-first .bottom .button text:hover {
         color: #C8C7CC;
