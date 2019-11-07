@@ -2,7 +2,7 @@
 	<view class="magazine-first" v-if="magTitle">
 		<swiper class="swiper" :interval="0" :duration="500" @change="onSwiperChange">
 			<swiper-item class="swiper-item" v-for="(item,index) in perviewImgs" :key="index">
-				<image class="swiper-img" :src="item.pic" mode="aspectFill"></image>
+				<image class="swiper-img" :src="item.pic" mode="widthFix"></image>
 				<!-- <image class="swiper-img" src="../../static/2.jpg" mode="aspectFill"></image> -->
 			</swiper-item>
 		</swiper>
