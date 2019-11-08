@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "阅读码",
-  "navigationBarBackgroundColor": "white",
+  "navigationBarBackgroundColor": "#fff",
   "navigationBarTextStyle": "black",
   "usingComponents": {
     "load-more": "/components/uni-load-more/uni-load-more"

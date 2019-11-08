@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/search/search-page/search-page",
     "pages/index/index",
     "pages/magazinefirst/magazinefirst",
     "pages/userrank/userrank",
@@ -9,10 +10,9 @@
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "星光邦",
+    "navigationBarTitleText": "凯杰电商",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap83.json"
+  "usingComponents": {}
 }
