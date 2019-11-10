@@ -18,7 +18,13 @@
 		},
 		methods: {
 			goSearch() {
-				this.$emit('goSearch', this.searchText);
+				if (this.needCancel) {
+					this.$emit('goSearch', this.searchText);
+				} else {
+					uni.navigateTo({
+						url: `/pages/search/search-page/search-page`
+					});
+				}
 			},
 			cancel() {
 				this.searchText = ""

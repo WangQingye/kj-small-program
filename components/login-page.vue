@@ -1,7 +1,7 @@
 <template>
 	<view v-show="showFlag" class="login-page">
 		<image src="../static/logo.png" class="logo-img"></image>
-		<button class="get-userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">微信登录</button>
+		<button class="get-userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">登录</button>
 	</view>
 </template>
 
@@ -15,7 +15,7 @@
 		props: ['showFlag'],
 		mounted() {
 			uni.hideTabBar();
-			this.wxLogin();
+			// this.wxLogin();
 		},
 		methods: {
 			wxLogin() {
@@ -52,7 +52,8 @@
 					let infoRes = res.detail
 					this.loginInfo.encryptedData = infoRes.encryptedData;
 					this.loginInfo.iv = infoRes.iv;
-					this.myLogin();
+					this.$emit('login-over');
+					// this.myLogin();
 				} else {
 					this.$emit('login-over');
 				}
@@ -72,21 +73,21 @@
 		z-index: 99;
 
 		.logo-img {
-			width: 542rpx;
-			height: 60rpx;
+			width: 240rpx;
+			height: 200rpx;
 			display: block;
 			margin: 0 auto;
-			margin-top: 240rpx;
-			margin-bottom: 311rpx;
+			margin-top: 180rpx;
+			margin-bottom: 228rpx;
 		}
 
 		.get-userinfo-button {
 			width: 640rpx;
 			height: 88rpx;
 			line-height: 88rpx;
-			border-radius: 0;
-			background: #070607;
-			color: white;
+			border-radius: 10rpx;
+			background: #006CB7;
+			color: white
 		}
 	}
 </style>

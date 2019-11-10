@@ -73,11 +73,16 @@
 					this.goodItems = this.goodItems.concat(res.data.data);
 					if (res.data.data.length < perPage) {
 						this.status = 'noMore'
+					} else {
+						this.status = 'more'
 					}
 				}
 			},
 			async getRecomend(page = 1) {
 				this.searchPage = page;
+				if (page != 1) {
+					this.status = 'loading';
+				}
 				let perPage = 8;
 				let res = await this.myRequest('/api/goods/list', {
 					page,
@@ -88,12 +93,13 @@
 					this.goodItems = this.goodItems.concat(res.data.data);
 					if (res.data.data.length < perPage) {
 						this.status = 'noMore'
+					} else {
+						this.status = 'more'
 					}
 				}
 				this.showFlag = 3;
 			},
 			onReachBottom() {
-				console.log(111);
 				if (this.status == 'more') {
 					this.searchPage++;
 					if (this.showFlag == 2) {
