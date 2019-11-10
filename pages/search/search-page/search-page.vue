@@ -18,35 +18,29 @@
 				<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item" :type="1"></good-item>
 			</view>
 		</view>
+		<load-more :status="status" v-if="showFlag != 1"></load-more>
 	</view>
 </template>
 <script>
 	import SearchInput from "@/components/search-input.vue";
 	import GoodItem from "@/components/good-item.vue";
+	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
 				// 当前正在搜索的字段，用于翻页
-				nowSearch:"",
+				nowSearch: "",
 				searchItems: [],
 				showFlag: 1,
-				goodItems: [{
-					name: 'QlAamp Circulating Nu-cleic Acide kit',
-					price: 13131,
-					img: ''
-				}, {
-					name: 'QlAamp Circulating Nu-cleic Acide kit',
-					price: 13131,
-					img: ''
-				}, {
-					name: 'QlAamp Circulating Nu-cleic Acide kit',
-					price: 13131,
-					img: ''
-				}]
+				showLoginPage: true,
+				goodItems: [],
+				status: 'more',
+				searchPage: 1
 			};
 		},
 		onLoad() {
 			this.getHotWord();
+			uni.hideTabBar();
 		},
 		methods: {
 			async getHotWord() {
@@ -55,20 +49,65 @@
 					this.searchItems = res.data;
 				}
 			},
-			async goSearch(searchText,page = 1) {
+			async goSearch(searchText, page = 1) {
+				this.searchPage = page;
+				if (page != 1) {
+					this.status = 'loading';
+				}
+				let perPage = 8;
 				this.$refs.searchInput.setSearchText(searchText);
+				this.nowSearch = searchText;
 				let res = await this.myRequest('/api/goods/list', {
-					keyword:searchText,
+					keyword: searchText,
 					page,
-					per_page:10
+					per_page: perPage,
+					sort_type: 1
 				}, 'GET');
-				console.log(res);
-			}
-
+				// 如果没数据并且请求的是第一页，那么展示推荐
+				if (!res.data.data.length && page == 1) {
+					this.getRecomend(1);
+					return;
+				} else {
+					// 如果有数据直接展示结果，并且判断是否还有下一页
+					this.showFlag = 2;
+					this.goodItems = this.goodItems.concat(res.data.data);
+					if (res.data.data.length < perPage) {
+						this.status = 'noMore'
+					}
+				}
+			},
+			async getRecomend(page = 1) {
+				this.searchPage = page;
+				let perPage = 8;
+				let res = await this.myRequest('/api/goods/list', {
+					page,
+					per_page: perPage,
+					sort_type: 1
+				}, 'GET');
+				if (res.data.data.length) {
+					this.goodItems = this.goodItems.concat(res.data.data);
+					if (res.data.data.length < perPage) {
+						this.status = 'noMore'
+					}
+				}
+				this.showFlag = 3;
+			},
+			onReachBottom() {
+				console.log(111);
+				if (this.status == 'more') {
+					this.searchPage++;
+					if (this.showFlag == 2) {
+						this.goSearch(this.nowSearch, this.searchPage);
+					} else if (this.showFlag == 3){
+						this.getRecomend(this.searchPage);
+					}
+				}
+			},
 		},
 		components: {
 			SearchInput,
-			GoodItem
+			GoodItem,
+			LoadMore
 		}
 	}
 </script>

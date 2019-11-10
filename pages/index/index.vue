@@ -17,7 +17,7 @@
 		methods: {
 			goSearch(searchText) {
 				uni.navigateTo({
-				    url: `/pages/search/search-page/search-page?searchText=${searchText}`
+				    url: `/pages/search/search-page/search-page`
 				});
 			}
 		},
