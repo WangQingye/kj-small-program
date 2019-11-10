@@ -47,8 +47,8 @@
 					<uniNumberBox :min="1" :max="9"  :value="subData.num" @change="bindChange"></uniNumberBox>
 				</view>
 			</view>
-			<!-- v-if="goodsInfo.attach_goods.length > 0" -->
-			<view class="m5" >
+		
+			<view class="m5" v-if="goodsInfo.attach_goods.length > 0">
 				<view class="m5-title">
 					组合商品
 				</view>
