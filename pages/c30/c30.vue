@@ -1,5 +1,6 @@
 <template>
 	<view class="main">
+		
 		<view class="body">
 			<!-- 轮播 -->
 			<view class="carousel">
@@ -53,15 +54,20 @@
 					奖励商品
 				</view>
 				<view class="goods-box">
-					<movable-area class="scroll-box">
-						<moveable-view direction="horizontal" class="scroll-item">
-							<view class="s-imgbox">
-								<!-- <image src="" class="s-img"></image> -->
+						<scroll-view class="s-box" scroll-x="true" >
+							<view class="s-item">
+								<view class="s-imgbox">
+									<image src="" mode="" class="s-img"></image>
+								</view>
+								<view class="s-p">
+									100积分
+								</view>
 							</view>
-							<view class="s-price"></view>
-						</moveable-view>
-					</movable-area>
+							
+						</scroll-view>
 				</view>
+				
+				
 			</view>
 			<view class="goods-details"></view>
 		</view>
@@ -81,16 +87,24 @@
 				</view>
 			</view>
 			<view class="f-r">
-				<view class="addCar">{{'加入购物车'}}</view>
+				<view class="addCar" @click="openMc">{{'加入购物车'}}</view>
 				<view class="order">{{'预约下单'}}</view>
 			</view>
-			
 		</view>
+		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
+			<cbd></cbd>
+		</uniPopup>
 	</view>
 </template>
 
 <script>
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	import cbd from '@/components/cbd.vue'
 	export default {
+		components:{
+			uniPopup,
+			cbd
+		},
 		data() {
 			return {
 				imgList:[
@@ -111,6 +125,9 @@
 			},
 			swiperChange (e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current ;
+			},
+			openMc () {
+				this.$refs['buyCode'].open()
 			}
 		},
 	}
@@ -232,7 +249,7 @@
 			.goods{
 				width:100%;
 				height:202rpx;
-				padding:20 0rpx;
+				padding:20rpx 0rpx;
 				box-sizing: border-box;;
 				background-color: #FFFFFF;
 				display: flex;
@@ -251,13 +268,44 @@
 					color:rgba(51,51,51,1);
 				}
 				.goods-box{
-						flex: 1;
-						height: 100%;
-						overflow-x: hidden;;
-						.scroll-box{
+					flex: 1;
+					height: 100%;
+					overflow: hidden;
+					.s-box{
+						width:100%;
+						height:100%;
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						white-space: nowrap;
+						.s-item{
+							width: 120rpx;
 							height: 100%;
-							width: 100%;
+							margin-right: 60rpx;;
+							box-sizing: border-box;
+							display: inline-block;
+							.s-imgbox{
+								width:100%;
+								height: 120rpx;
+								background-color: #F6F6F6;
+								padding:20rpx 15rpx;
+								box-sizing: border-box;
+								margin-bottom: 10rpx;
+								.s-img{
+									width: 100%;
+									height: 100%;
+									background: red;
+								}
+							}
+							.s-p{
+								font-size:24rpx;
+								font-family:PingFang SC;
+								font-weight:400;
+								text-align: center;
+								color:rgba(51,51,51,1);
+							}
 						}
+					}
 				}
 			}
 		
