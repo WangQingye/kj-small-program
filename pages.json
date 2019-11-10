@@ -8,7 +8,9 @@
 		}, {
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "凯杰电商"
+				"navigationBarTitleText": "凯杰电商",
+				"navigationBarBackgroundColor": "#000000",
+				"navigationBarTextStyle": "#fff"
 			}
 		},
 		{
