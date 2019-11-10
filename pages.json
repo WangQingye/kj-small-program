@@ -1,52 +1,41 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "凯杰电商"
+			}
+		}, {
 			"path": "pages/search/search-page/search-page",
 			"style": {
 				"navigationBarTitleText": "搜索"
 			}
 		}, {
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "凯杰电商"
-			}
-		},
-		{
-			"path": "pages/magazinefirst/magazinefirst",
-			"style": {
-				"navigationBarTitleText": "凯杰电商",
-				"disableScroll": true
-			}
-		},
-		{
-			"path": "pages/userrank/userrank",
-			"style": {
-				"navigationBarTitleText": "读者排行榜"
-			}
-		},
-		{
-			"path": "pages/readcodes/readcodes",
-			"style": {
-				"navigationBarTitleText": "阅读码",
-				"navigationBarBackgroundColor": "#fff",
-				"navigationBarTextStyle": "black"
-			}
-		}, {
-			"path": "pages/read/read",
-			"style": {
-				"usingComponents": {
-					"magazine": "/wxcomponents/magazine/index"
-				},
-				"disableScroll": true
-			}
-		}, {
 			"path": "pages/car/good-car/good-car",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "购物车"
+			}
+		}, {
+			"path": "pages/good/good-list/good-list",
+			"style": {
+				"navigationBarTitleText": "商品列表"
+			}
+		}, {
+			"path": "pages/good/good-type/good-type",
+			"style": {
+				"navigationBarTitleText": "分类"
+			}
 		}, {
 			"path": "pages/car/confirm-order/confirm-order",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/my/my-main/my-main",
+            "style" : {
+							"navigationBarTitleText": "我的"
+						}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "凯杰电商",
@@ -62,7 +51,7 @@
 			"iconPath": "static/main.png",
 			"selectedIconPath": "static/main-1.png"
 		}, {
-			"pagePath": "pages/search/search-page/search-page",
+			"pagePath": "pages/good/good-type/good-type",
 			"text": "分类",
 			"iconPath": "static/sort.png",
 			"selectedIconPath": "static/sort-1.png"
@@ -72,7 +61,7 @@
 			"iconPath": "static/car.png",
 			"selectedIconPath": "static/car-1.png"
 		}, {
-			"pagePath": "pages/index/index",
+			"pagePath": "pages/my/my-main/my-main",
 			"text": "我的",
 			"iconPath": "static/my.png",
 			"selectedIconPath": "static/my-1.png"

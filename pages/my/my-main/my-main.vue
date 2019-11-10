@@ -1,6 +1,6 @@
 <template>
 	<view>
-		购物车
+		我的
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
