@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view @click="goGoodDesc">
 		<view class="good-item" v-if="!type">
 			<image class="good-img" :src="goodData.cover_pic" mode="aspectFill"></image>
 			<text class="good-name">{{goodData.title}}\n</text>
@@ -22,6 +22,14 @@
 			return {
 
 			};
+		},
+		methods: {
+			goGoodDesc() {
+				let goodId = this.goodData.id
+				uni.navigateTo({
+					url: `/pages/good/good-desc/good-desc?goodId=${goodId}`
+				});
+			}
 		}
 	}
 </script>

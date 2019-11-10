@@ -116,17 +116,16 @@
 				listData:{},
 				swiperCurrent: 0,
 				swiperLength: 0,
+				goodId: 0
 			};
 		},
-		onLoad () {
-			
-		},
-		mounted () {
+		onLoad(option) {
+			this.goodId = option.goodId;
 			this.getList()
 		},
 		methods:{
 			async getList () { 
-				let res = await this.myRequest('/api/goods/show', {goods_id:1}, 'GET', false);
+				let res = await this.myRequest('/api/goods/show', {goods_id:this.goodId}, 'GET', false);
 				console.log(res)
 				if(res.message == "success"){
 					this.listData = {...res.data};
