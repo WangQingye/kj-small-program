@@ -14,6 +14,7 @@
 		},
 		props: ['showFlag'],
 		mounted() {
+			uni.hideTabBar();
 			this.wxLogin();
 		},
 		methods: {
@@ -28,7 +29,8 @@
 							success: function(infoRes) {
 								that.loginInfo.encryptedData = infoRes.encryptedData;
 								that.loginInfo.iv = infoRes.iv;
-								that.myLogin();
+								that.$emit('login-over')
+								// that.myLogin();
 							},
 							fail: function() {
 								console.log('无授权');

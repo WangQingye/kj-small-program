@@ -1,15 +1,15 @@
 <template>
 	<view>
 		<view class="good-item" v-if="!type">
-			<image class="good-img" src="../static/2.jpg" mode="aspectFill"></image>
-			<text class="good-name">{{goodData.name}}\n</text>
-			<text class="good-price">¥{{goodData.price}}<text style="font-size: 22rpx;font-weight: normal;">起</text></text>
+			<image class="good-img" :src="goodData.cover_pic" mode="aspectFill"></image>
+			<text class="good-name">{{goodData.title}}\n</text>
+			<text class="good-price">¥{{goodData.show_price}}<text style="font-size: 22rpx;font-weight: normal;">起</text></text>
 		</view>
 		<view class="good-item-1" v-if="type == 1">
-			<image class="good-img" src="../static/2.jpg" mode="aspectFill"></image>
+			<image class="good-img" :src="goodData.cover_pic" mode="aspectFill"></image>
 			<view class="good-info">
-				<text class="good-name">{{goodData.name}}\n</text>
-				<text class="good-price">¥{{goodData.price}}<text style="font-size: 22rpx;font-weight: normal;">起</text></text>
+				<text class="good-name">{{goodData.title}}\n</text>
+				<text class="good-price">¥{{goodData.show_price}}<text style="font-size: 22rpx;font-weight: normal;">起</text></text>
 			</view>
 		</view>
 	</view>
@@ -67,6 +67,7 @@
 			display: block;
 			font-size: 28rpx;
 			margin-bottom:20rpx;
+			min-height: 70rpx;
 		}
 
 		.good-price {

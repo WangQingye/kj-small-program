@@ -8,9 +8,7 @@
 		}, {
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "凯杰电商",
-				"navigationBarBackgroundColor": "#000000",
-				"navigationBarTextStyle": "#fff"
+				"navigationBarTitleText": "凯杰电商"
 			}
 		},
 		{
@@ -41,6 +39,12 @@
 				},
 				"disableScroll": true
 			}
+		}, {
+			"path": "pages/car/good-car/good-car",
+			"style": {}
+		}, {
+			"path": "pages/car/confirm-order/confirm-order",
+			"style": {}
 		}
 	],
 	"globalStyle": {
@@ -48,5 +52,30 @@
 		"navigationBarTitleText": "凯杰电商",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#006CB7",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"text": "首页",
+			"iconPath": "static/main.png",
+			"selectedIconPath": "static/main-1.png"
+		}, {
+			"pagePath": "pages/search/search-page/search-page",
+			"text": "分类",
+			"iconPath": "static/sort.png",
+			"selectedIconPath": "static/sort-1.png"
+		}, {
+			"pagePath": "pages/car/good-car/good-car",
+			"text": "购物车",
+			"iconPath": "static/car.png",
+			"selectedIconPath": "static/car-1.png"
+		}, {
+			"pagePath": "pages/index/index",
+			"text": "我的",
+			"iconPath": "static/my.png",
+			"selectedIconPath": "static/my-1.png"
+		}]
 	}
 }
