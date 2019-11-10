@@ -47,13 +47,13 @@
 					<uniNumberBox :min="1" :max="9"  :value="subData.num" @change="bindChange"></uniNumberBox>
 				</view>
 			</view>
-		
-			<view class="m5" v-if="goodsInfo.attach_goods.length > 0">
+		<!-- v-if="goodsInfo.attach_goods.length > 0" -->
+			<view class="m5" >
 				<view class="m5-title">
 					组合商品
 				</view>
 				<view class="m5-box">
-					<view class="m5-item">
+				<!-- 	<view class="m5-item">
 						<label class="m5-checkbox">
 								<checkbox class="m5-cb" />
 						</label>
@@ -64,7 +64,7 @@
 									QIAamp Circulating Nucleic Acid Kit Acid Kit             
 								</view>
 								<view class="m5-d2">
-									<xflSelect style_Container="height: 100%;">
+									<xflSelect style_Container="height: 100%;" :list="[{value:'1',b:2}]">
 										
 									</xflSelect>
 								</view>
@@ -75,24 +75,27 @@
 								</view>
 							</view>
 						</view>
-					</view>
-					<view class="m5-item">
+					</view> -->
+					<view class="m5-item" v-for="(item,index) in goodsInfo.attach_goods" :key="index">
 						<label class="m5-checkbox">
 								<checkbox class="m5-cb" />
 						</label>
 						<view class="m5-goods">
-							<view class="m5-imgbox"></view>
+							<view class="m5-imgbox">
+								<image :src="item.goods_attach_join.cover_pic" mode=""></image>
+							</view>
 							<view class="m5-ds">
 								<view class="m5-d1">
-									QIAamp Circulating Nucleic Acid Kit Acid Kit             
+									{{item.goods_attach_join.title}}            
 								</view>
 								<view class="m5-d2">
-									<xflSelect style_Container="height:100%">	
+									<xflSelect style_Container="height: 100%;" :list="['1']" >
+										
 									</xflSelect>
 								</view>
 								<view class="m5-d3">
 									<text>组合价：</text>
-									<text class="m5-sj">¥19807 </text>
+									<text class="m5-sj">¥{{item.goods_attach_join.show_price}} </text>
 									<text class="m5-yj">￥2000</text>
 								</view>
 							</view>

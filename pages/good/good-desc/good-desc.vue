@@ -48,18 +48,18 @@
 				<image src="/static/c/c30gg.png" mode="" class="toRight"></image>
 			</view>
 			<!-- 奖励商品 -->
-			<view class="goods">
+			<view class="goods" v-if="listData.gift_join.length > 0">
 				<view class="g-t">
 					奖励商品
 				</view>
-				<view class="goods-box">
+				<view class="goods-box" >
 						<scroll-view class="s-box" scroll-x="true" >
-							<view class="s-item">
+							<view class="s-item" v-for="(item,key) in listData.gift_join">
 								<view class="s-imgbox">
-									<image :src="listData.gift_join.cover_pic" mode="" class="s-img"></image>
+									<image :src="item.cover_pic" mode="" class="s-img"></image>
 								</view>
 								<view class="s-p">
-									{{listData.gift_join.title}}
+									{{item.title}}
 								</view>
 							</view>
 							
