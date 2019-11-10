@@ -1,14 +1,13 @@
 <template>
 	<view class="main">
-		
 		<view class="body">
 			<!-- 轮播 -->
 			<view class="carousel">
-				<swiper  circular=true duration="400" @change="swiperChange">
-					<swiper-item class="swiper-item" v-for="(item,index) in imgList" :key="index">
+				<swiper  circular=true duration="400" class="carousel-box" @change="swiperChange">
+					<swiper-item class="swiper-item" v-for="(item,index) in listData.pic_join" :key="index">
 						<view class="image-wrapper">
 							<image
-								:src="item" 
+								:src="item.pic" 
 								class="w100" 
 							></image>
 						</view>
@@ -22,10 +21,10 @@
 			<!-- 价格详情 -->
 			<view class="goods-price">
 				<view class="t1">
-					QIAsymphony SP for FFPE sample prepa-ration Print
+					{{listData.title}}
 				</view>
 				<view class="t2">
-					For automated, high throughput DNA prep from
+					{{listData.depict}}
 				</view>
 				<view class="t3">
 					<text>货号：</text>
@@ -34,17 +33,17 @@
 				<view class="t4">
 					<view class="price">
 						<text>￥</text>
-						<text class="num">980</text>
+						<text class="num">{{listData.show_price}}</text>
 						<text>起</text>
 					</view>
 					<view class="person">
-						<text>2097</text>
+						<text>{{listData.sales}}</text>
 						<text>人购买</text>
 					</view>
 				</view>
 			</view>
 			<!-- 选择规格 -->
-			<view class="gg">
+			<view class="gg" @click="openMc">
 				<text>选择规格</text>
 				<image src="/static/c/c30gg.png" mode="" class="toRight"></image>
 			</view>
@@ -57,10 +56,10 @@
 						<scroll-view class="s-box" scroll-x="true" >
 							<view class="s-item">
 								<view class="s-imgbox">
-									<image src="" mode="" class="s-img"></image>
+									<image :src="listData.gift_join.cover_pic" mode="" class="s-img"></image>
 								</view>
 								<view class="s-p">
-									100积分
+									{{listData.gift_join.title}}
 								</view>
 							</view>
 							
@@ -69,7 +68,14 @@
 				
 				
 			</view>
-			<view class="goods-details"></view>
+			<view class="goods-details">
+				<view class="goodsDetails-title">
+					商品详情
+				</view>
+				<view class="gd-content">
+					{{listData.content}}
+				</view>
+			</view>
 		</view>
 		<view class="footer">
 			<view class="f-l">
@@ -88,52 +94,61 @@
 			</view>
 			<view class="f-r">
 				<view class="addCar" @click="openMc">{{'加入购物车'}}</view>
-				<view class="order">{{'预约下单'}}</view>
+				<view class="order" @click="openMc">{{'预约下单'}}</view>
 			</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
-			<cbd></cbd>
+			<specification :listData="listData" @closeWin="closeWin"></specification>
 		</uniPopup>
 	</view>
 </template>
 
 <script>
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
-	import cbd from '@/components/cbd.vue'
+	import specification from '@/components/specification.vue'
 	export default {
 		components:{
 			uniPopup,
-			cbd
+			specification
 		},
 		data() {
 			return {
-				imgList:[
-					'/static/hear-1.png',
-					'/static/hear-2.png',
-					'/static/hear-3.png',
-				],
+				listData:{},
 				swiperCurrent: 0,
 				swiperLength: 0,
 			};
 		},
 		onLoad () {
+			
+		},
+		mounted () {
 			this.getList()
 		},
 		methods:{
-			getList () { 
-				this.swiperLength = this.imgList.length;
+			async getList () { 
+				let res = await this.myRequest('/api/goods/show', {goods_id:1}, 'GET', false);
+				console.log(res)
+				if(res.message == "success"){
+					this.listData = {...res.data};
+				}
+				console.log(this.listData)
+				this.swiperLength = this.listData.pic_join.length;
 			},
 			swiperChange (e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current ;
 			},
 			openMc () {
 				this.$refs['buyCode'].open()
+			},
+			closeWin () {
+				this.$refs['buyCode'].close()
 			}
 		},
 	}
 </script>
 
 <style lang="scss" scoped>
+	
 	.main{
 		width: 100%;
 		height: 100vh;
@@ -148,7 +163,16 @@
 				width: 100%;
 				height: 425rpx;
 				position: relative;
-				background-color:#007AFF;
+				.carousel-box{
+					height: 100%;
+					.swiper-item{
+						width:100%;
+						height: 100%;
+						.w100{
+							width: 100%;
+						}
+					}
+				}
 				.pages{
 					position: absolute;
 					right: 20rpx;
@@ -164,13 +188,7 @@
 					text-align: center;
 					line-height: 32rpx;
 				}
-				.swiper-item{
-					width:100%;
-					height: 100%;
-					.w100{
-						width: 100%;
-					}
-				}
+				
 			}
 			.goods-price{
 				width:100%;
@@ -294,7 +312,7 @@
 								.s-img{
 									width: 100%;
 									height: 100%;
-									background: red;
+									
 								}
 							}
 							.s-p{
@@ -308,7 +326,25 @@
 					}
 				}
 			}
-		
+			.goods-details{
+				width: 100%;
+				padding: 0 30rpx;
+				box-sizing: border-box;
+				background: #fff;
+				.goodsDetails-title{
+					width: 100%;
+					height: 96rpx;
+					border-bottom: 1rpx solid #E6E6E6;
+					box-sizing: border-box;
+					font-size:28rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					line-height: 96rpx;
+					margin-bottom: 27rpx;
+				}
+				
+			}
 		}
 		.footer{
 			width: 100%;
