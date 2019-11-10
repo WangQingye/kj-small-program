@@ -1,24 +1,33 @@
 <template>
 	<view class="search-input-wrapper">
-		<icon type="search" size="14" />
-		<input class="search-input" type="text" v-model="searchText" placeholder="输入关键词进行搜索" placeholder-class="placeholder" @confirm="goSearch"/>
-		<text class="cancel-text" v-if="searchText" @click="cancel">取消</text>
+		<icon type="search" size="13" />
+		<input v-if="needCancel" class="search-input" type="text" v-model="searchText" placeholder="输入关键词进行搜索"
+		 placeholder-class="placeholder" @confirm="goSearch" />
+		<text v-else class="search-input-text" @click="goSearch">输入关键词进行搜索</text>
+		<text class="cancel-text" v-if="needCancel" @click="cancel">取消</text>
 	</view>
 </template>
 
 <script>
 	export default {
+		props: ['needCancel'],
 		data() {
 			return {
 				searchText: ""
 			};
 		},
-		methods:{
+		methods: {
 			goSearch() {
-				console.log(this.searchText)
+				this.$emit('goSearch', this.searchText);
 			},
 			cancel() {
 				this.searchText = ""
+				uni.navigateBack({
+					delta: 1
+				});
+			},
+			setSearchText(text) {
+				this.searchText = text;
 			}
 		}
 	}
@@ -42,9 +51,16 @@
 			width: 510rpx;
 		}
 
+		.search-input-text {
+			margin-left: 12rpx;
+			width: 510rpx;
+			color: #CCCCCC;
+		}
+
 		.placeholder {
 			color: #CCCCCC;
 		}
+
 		.cancel-text {
 			font-size: 28rpx;
 			color: #007AFF;

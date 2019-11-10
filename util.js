@@ -1,13 +1,15 @@
 import store from './store/store.js'
-const BaseUrl = "https://xgbapi.zcoming.com";
+const BaseUrl = "https://kjapi.sinmore.vip";
 async function myRequest(api,data,method,needToken = true) {
-		if (needToken) data.token = store.state.token
 		let [ err, res ] = await uni.request({
 			url: BaseUrl + api,
 			method,
 			data,
+			header: {
+				'Authorization': 'Bearer ' + store.state.token
+			}
 		});
-		if (!err && res.data.error_code == 0) {
+		if (!err && res.statusCode == 200) {
 			return res.data;
 		} else {
 			uni.showToast({
