@@ -26,10 +26,10 @@
 				<view class="t2">
 					{{listData.depict}}
 				</view>
-				<view class="t3">
+				<!-- <view class="t3">
 					<text>货号：</text>
 					<text>DP362-01</text>
-				</view>
+				</view> -->
 				<view class="t4">
 					<view class="price">
 						<text>￥</text>
@@ -54,7 +54,7 @@
 				</view>
 				<view class="goods-box" >
 						<scroll-view class="s-box" scroll-x="true" >
-							<view class="s-item" v-for="(item,key) in listData.gift_join">
+							<view class="s-item" v-for="(item,key) in listData.gift_join" :key="key">
 								<view class="s-imgbox">
 									<image :src="item.cover_pic" mode="" class="s-img"></image>
 								</view>
@@ -72,9 +72,8 @@
 				<view class="goodsDetails-title">
 					商品详情
 				</view>
-				<view class="gd-content">
-					{{listData.content}}
-				</view>
+				<rich-text class="gd-content" :nodes="listData.content">
+				</rich-text>
 			</view>
 		</view>
 		<view class="footer">
@@ -97,8 +96,8 @@
 				<view class="order" @click="openMc">{{'预约下单'}}</view>
 			</view>
 		</view>
-		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
-			<specification :listData="listData" @closeWin="closeWin"></specification>
+		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" >
+			<specification :listData="listData" @closeWin="closeWin" v-if="showTc"></specification>
 		</uniPopup>
 	</view>
 </template>
@@ -116,7 +115,8 @@
 				listData:{},
 				swiperCurrent: 0,
 				swiperLength: 0,
-				goodId: 0
+				goodId: 0,
+				showTc:false
 			};
 		},
 		onLoad(option) {
@@ -126,23 +126,27 @@
 		methods:{
 			async getList () { 
 				let res = await this.myRequest('/api/goods/show', {goods_id:this.goodId}, 'GET', false);
-				console.log(res)
 				if(res.message == "success"){
 					this.listData = {...res.data};
+					this.swiperLength = this.listData.pic_join.length;
 				}
-				console.log(this.listData)
-				this.swiperLength = this.listData.pic_join.length;
+				
 			},
 			swiperChange (e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current ;
 			},
 			openMc () {
+				this.showTc =true;
 				this.$refs['buyCode'].open()
 			},
 			closeWin () {
+				this.showTc = false;
 				this.$refs['buyCode'].close()
 			}
 		},
+		onPullDownRefresh : function() { //下拉刷新
+			this.getList()
+		}
 	}
 </script>
 

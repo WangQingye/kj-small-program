@@ -173,8 +173,6 @@
 					width: 100%;
 					height: 130rpx;
 					margin-bottom: 20rpx;
-					background: red;
-
 					.small-type-img {
 						width: 450rpx;
 						height: 130rpx;

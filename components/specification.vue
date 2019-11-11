@@ -143,11 +143,16 @@
 				return this.subData.colorTitle +" " + this.subData.models 
 			}
 		},
+		onLoad (option) {
+		},
+		onShow () {
+			this.getInfo()
+		},
 		methods:{
 			async getInfo () { //获取列表
-				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:1}, 'GET', false);
-				console.log(res)
+				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:this.listData.id}, 'GET', false);
 				if(res.message == "success"){
+					
 					this.goodsInfo = {...res.data};
 					this.changeColor(this.goodsInfo.specs[0])
 				}
@@ -178,6 +183,7 @@
 			
 		},
 		mounted () {
+			console.log(this.listData)
 			this.getInfo()
 		}
 	}
