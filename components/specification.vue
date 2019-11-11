@@ -1,21 +1,21 @@
 <template>
 	<view class="main">
-		<view class="body">
-			<view class="m1">
-				<view class="m1-imgbox">
-					<image :src="subData.cover_pic" mode="" class="w100"></image>
-				</view>
-				<view class="m1-price">
-					<view class="m1-p">
-						¥{{subData.show_price}}
-					</view>
-					<view class="m1-d" v-if="chooseStr">
-						已选：{{chooseStr}}
-					</view>
-					
-				</view>
-				<image src="../static/c/c31close.png" mode="" class="m1-close" @click="close"></image>
+		<view class="m1">
+			<view class="m1-imgbox">
+				<image :src="subData.cover_pic" mode="" class="w100"></image>
 			</view>
+			<view class="m1-price">
+				<view class="m1-p">
+					¥{{subData.show_price}}
+				</view>
+				<view class="m1-d" v-if="chooseStr">
+					已选：{{chooseStr}}
+				</view>
+				
+			</view>
+			<image src="../static/c/c31close.png" mode="" class="m1-close" @click="close"></image>
+		</view>
+		<view class="body">
 			<view class="m2" v-if="goodsInfo.specs.length > 0">
 				<view class="m2-title">
 					{{listData.one_specs}}
@@ -65,13 +65,13 @@
 								<view class="m5-d1">
 									{{item.goods_attach_join.title}}            
 								</view>
-								<view class="m5-d2">
+								<view class="m5-d2" @click="openMc(item)">
 									{{item.discription}}
 								</view>
 								<view class="m5-d3">
 									<text>组合价：</text>
 									<text class="m5-sj">¥{{item.price}} </text>
-									<text class="m5-yj">￥2000</text>
+									<text class="m5-yj">￥{{item.yPrice}}</text>
 								</view>
 							</view>
 						</view>
@@ -80,16 +80,42 @@
 			</view>
 		</view>
 		<view class="footer">确认</view>
+		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" >
+			<view class="m2" v-if="zhgoods.goods_attach_join.one_specs_join.length > 0">
+				<view class="m2-title">
+					{{listData.one_specs}}
+				</view>
+				<viwe class="m2-box">  
+					<view class="m2-item" :class="{active:zhgoods.Oid == item.id}" v-for="(item,index) in zhgoods.goods_attach_join.one_specs_join" :key="index" @click="changeOne(item)">
+						{{item.title}}
+					</view>
+				</viwe>
+				
+			</view>
+			<view class="m3">
+				<view class="m3-title" >
+					{{listData.two_specs}}
+				</view>
+				<viwe class="m3-box">  
+					<view class="m3-item" :class="{active:zhgoods.Tid == item.id}" v-for="(val,index) in zht_goods" :key="index" @click="changeTwo(val,zhgoods)">
+						{{val.title}}
+					</view>
+				</viwe>
+			</view>
+			
+		</uniPopup>
 	</view>
 </template>
 
 <script>
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	export default {
 		props:['listData'],
 		name: 'specification',
 		components: {
 			uniNumberBox,
+			uniPopup
 		},
 		data() {
 			return {
@@ -106,6 +132,8 @@
 				goodsInfo:{ //页面回显信息
 					
 				},
+				zhgoods:[],
+				zht_goods:[]
 				
 			};
 		},
@@ -127,9 +155,11 @@
 					this.changeColor(this.goodsInfo.specs[0]);
 					this.goodsInfo.attach_goods.map(item=>{
 						item.img = '' ; 
-						item.price = '';
-						item.discription = '';
-						item.id = '';
+						item.price = ''; //现价
+						item.yPrice = '';//原价
+						item.discription = ''; 
+						item.Oid = ''; //一级id
+						item.Tid =''; //二级id
 						this.changeOne(item)
 					})
 				}
@@ -145,15 +175,17 @@
 				}
 			},
 			changeOne (item) { //组合商品 一级
-			
 				item.discription = item.goods_attach_join.one_specs_join[0].title;
-				this.changeTwo(item.goods_attach_join.one_specs_join[0],item)
+				item.Oid =  item.goods_attach_join.one_specs_join[0].id;
+				this.zht_goods = item.goods_attach_join.one_specs_join[0].two_specs_join;
+				this.changeTwo(item.goods_attach_join.one_specs_join[0].two_specs_join,item)
 			},
 			changeTwo (item,data) { //组合商品 二级
-				data.price = item.two_specs_join[0].attach_price;
-				data.img = item.two_specs_join[0].cover_pic;
-				data.discription = data.discription + ";" + item.two_specs_join[0].title
-				console.log(this.goodsInfo.attach_goods)
+				data.price = item[0].attach_price;
+				data.yPrice = item[0].price;
+				data.img = item[0].cover_pic;
+				data.Tid = item[0].id;
+				data.discription = data.discription + ";" + item[0].title
 			},
 			changeColor (item) { //选择颜色
 				this.subData.colorTitle = item.title
@@ -167,9 +199,16 @@
 				this.subData.show_price = item.price;
 				this.subData.cover_pic = item.cover_pic;
 				
+			},
+			openMc (item) {
+				this.zhgoods = item;
+				this.$refs['buyCode'].open()
+			},
+			closeMc () {
+				this.$refs['buyCode'] && this.$refs['buyCode'].close();
 			}
-			
 		},
+		
 		mounted () {
 			this.getInfo()
 		}
@@ -188,62 +227,70 @@
 		display: flex;
 		flex-direction: column;;
 		position: relative;
+		overflow: hidden;
+		padding-top:173rpx;
+		background: #fff;
 		padding-bottom:96rpx;
+		.m1{
+			width: 100%;
+			height: 173rpx;
+			display: flex;
+			margin-bottom: 60rpx;
+			position: fixed;
+			top:0;left:0;
+			background: #fff;
+			padding:30rpx;
+			box-sizing: border-box;
+			z-index: 99;
+			.m1-close{
+				width:28rpx;
+				height: 28rpx;
+				position: absolute;
+				top:30rpx;
+				right: 30rpx;
+				z-index: 66;
+			}
+			.m1-imgbox{
+				width:200rpx;
+				height: 100%;
+				margin-right: 30rpx;
+			}
+			.m1-price{
+				flex:1;			
+				.m1-p{
+					font-size:38rpx;
+					font-family:PingFang SC;
+					font-weight:500;
+					color:rgba(237,25,58,1);
+					margin-top:10rpx;
+					line-height: 1;
+					margin-bottom: 20rpx;
+				}
+				.m1-d{
+					font-size:28rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					line-height:1;
+				}
+			}
+			
+		}
 		.body{
 			flex: 1;
 			overflow: auto;
 			width:100%;
-			
 			box-sizing: border-box;
-			.m1{
-				width: 100%;
-				height: 113rpx;
-				display: flex;
-				margin-bottom: 60rpx;
-				position: relative;
-				.m1-close{
-					width:28rpx;
-					height: 28rpx;
-					position: absolute;
-					top:0rpx;
-					right: 0rpx;
-					z-index: 66;
-				}
-				.m1-imgbox{
-					width:200rpx;
-					height: 100%;
-					margin-right: 30rpx;
-				}
-				.m1-price{
-					flex:1;			
-					.m1-p{
-						font-size:38rpx;
-						font-family:PingFang SC;
-						font-weight:500;
-						color:rgba(237,25,58,1);
-						margin-top:10rpx;
-						line-height: 1;
-						margin-bottom: 20rpx;
-					}
-					.m1-d{
-						font-size:28rpx;
-						font-family:PingFang SC;
-						font-weight:400;
-						color:rgba(51,51,51,1);
-						line-height:1;
-					}
-				}
-				
-			}
 			.m2{
 				width: 100%;
 				margin-bottom: 40rpx;
 				.m2-title{
 					font-size:28rpx;
+					margin-bottom: 20rpx;
 					font-family:PingFang SC;
 					font-weight:400;
 					color:rgba(51,51,51,1);
-					margin-bottom: 20rpx;
+					
 				}
 				.m2-box{
 					width: 100%;
@@ -255,6 +302,7 @@
 						border:1px solid rgba(205,205,205,1);
 						color:#999999;
 						border-radius:10rpx;
+						margin-bottom: 30rpx;
 						font-size: 28rpx;
 						text-align: center;
 						line-height: 1;
@@ -282,9 +330,10 @@
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
-					margin-bottom: 20rpx;
+					
 					.m3-item{
 						padding:20rpx 40rpx; 
+						margin-bottom: 30rpx;
 						background:rgba(255,255,255,1);
 						border:1px solid rgba(205,205,205,1);
 						color:#999999;
@@ -394,7 +443,7 @@
 										top:0;
 										bottom:0;
 										margin:auto;
-										background: url('../static/down.png') no-repeat;
+										//background: url('../static/down.png') no-repeat;
 										background-size: cover;
 									}
 								}
@@ -432,6 +481,85 @@
 			position:fixed;
 			left:0;bottom:0;
 			z-index: 665;
+		}
+		.buy-wrapper{
+			.m2{
+				width: 100%;
+				margin-bottom: 40rpx;
+				.m2-title{
+					font-size:28rpx;
+					margin-bottom: 20rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					
+				}
+				.m2-box{
+					width: 100%;
+					display: flex;
+					flex-wrap: wrap;
+					.m2-item{
+						padding:20rpx 40rpx; 
+						background:rgba(255,255,255,1);
+						border:1px solid rgba(205,205,205,1);
+						color:#999999;
+						border-radius:10rpx;
+						margin-bottom: 30rpx;
+						font-size: 28rpx;
+						text-align: center;
+						line-height: 1;
+						box-sizing: border-box;
+						margin-right: 30rpx;
+						&.active{
+							color:#006CB7;
+							border:1px solid rgba(0,108,183,1);
+						}
+					}
+				}
+				
+			}
+			.m3{
+				width: 100%;
+				margin-bottom: 40rpx;
+				.m3-title{
+					font-size:28rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					margin-bottom: 20rpx;
+				}
+				.m3-box{
+					width: 100%;
+					display: flex;
+					flex-wrap: wrap;
+					
+					.m3-item{
+						padding:20rpx 40rpx; 
+						margin-bottom: 30rpx;
+						background:rgba(255,255,255,1);
+						border:1px solid rgba(205,205,205,1);
+						color:#999999;
+						border-radius:10rpx;
+						font-size: 28rpx;
+						margin-right: 30rpx;;
+						text-align: center;
+						line-height: 1;
+						box-sizing: border-box;
+						&.active{
+							color:#006CB7;
+							border:1px solid rgba(0,108,183,1);
+						}
+					}
+				}
+				.m3-tips{
+					font-size:24rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(153,153,153,1);
+					line-height:1;
+					margin-bottom: 40rpx;
+				}
+			}
 		}
 	}
 </style>

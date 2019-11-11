@@ -57,6 +57,7 @@
 							<view class="s-item" v-for="(item,key) in listData.gift_join" :key="key">
 								<view class="s-imgbox">
 									<image :src="item.cover_pic" mode="" class="s-img"></image>
+									
 								</view>
 								<view class="s-p">
 									{{item.title}}
@@ -212,7 +213,6 @@
 					font-family:PingFang SC;
 					font-weight:400;
 					color:rgba(153,153,153,1);
-					line-height: 1;
 					margin-bottom: 20rpx;;
 				}
 				.t3{
@@ -308,8 +308,8 @@
 							.s-imgbox{
 								width:100%;
 								height: 120rpx;
-								background-color: #F6F6F6;
-								padding:20rpx 15rpx;
+								// background-color: #F6F6F6;
+								// padding:20rpx 15rpx;
 								box-sizing: border-box;
 								margin-bottom: 10rpx;
 								.s-img{
@@ -332,6 +332,7 @@
 			.goods-details{
 				width: 100%;
 				padding: 0 30rpx;
+				overflow: hidden;
 				box-sizing: border-box;
 				background: #fff;
 				.goodsDetails-title{
