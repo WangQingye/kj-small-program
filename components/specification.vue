@@ -82,7 +82,7 @@
 						</label>
 						<view class="m5-goods">
 							<view class="m5-imgbox">
-								<image :src="item.goods_attach_join.cover_pic" mode=""></image>
+								<image :src="item.goods_attach_join.cover_pic" mode="" class="w100"></image>
 							</view>
 							<view class="m5-ds">
 								<view class="m5-d1">
