@@ -18,7 +18,7 @@
 			</view>
 			<view class="m2" v-if="goodsInfo.specs.length > 0">
 				<view class="m2-title">
-					颜色
+					{{listData.one_specs}}
 				</view>
 				<viwe class="m2-box">  
 					<view class="m2-item" :class="{active:subData.colorId == item.id}" v-for="(item,index) in goodsInfo.specs" :key="index" @click="changeColor(item)">
@@ -28,7 +28,7 @@
 			</view>
 			<view class="m3">
 				<view class="m3-title" >
-					编号
+					{{listData.two_specs}}
 				</view>
 				<viwe class="m3-box">  
 					<view class="m3-item" :class="{active:subData.mId == item.id}" v-for="(item,index) in subData.mlist" :key="index" @click="changeSize(item)">
@@ -53,49 +53,24 @@
 					组合商品
 				</view>
 				<view class="m5-box">
-				<!-- 	<view class="m5-item">
-						<label class="m5-checkbox">
-								<checkbox class="m5-cb" />
-						</label>
-						<view class="m5-goods">
-							<view class="m5-imgbox"></view>
-							<view class="m5-ds">
-								<view class="m5-d1">
-									QIAamp Circulating Nucleic Acid Kit Acid Kit             
-								</view>
-								<view class="m5-d2">
-									<xflSelect style_Container="height: 100%;" :list="[{value:'1',b:2}]">
-										
-									</xflSelect>
-								</view>
-								<view class="m5-d3">
-									<text>组合价：</text>
-									<text class="m5-sj">¥19807 </text>
-									<text class="m5-yj">￥2000</text>
-								</view>
-							</view>
-						</view>
-					</view> -->
 					<view class="m5-item" v-for="(item,index) in goodsInfo.attach_goods" :key="index">
 						<label class="m5-checkbox">
 								<checkbox class="m5-cb" />
 						</label>
 						<view class="m5-goods">
 							<view class="m5-imgbox">
-								<image :src="item.goods_attach_join.cover_pic" mode="" class="w100"></image>
+								<image :src="item.img" mode="" class="w100"></image>
 							</view>
 							<view class="m5-ds">
 								<view class="m5-d1">
 									{{item.goods_attach_join.title}}            
 								</view>
 								<view class="m5-d2">
-									<xflSelect style_Container="height: 100%;" :list="['1']" >
-										
-									</xflSelect>
+									{{item.discription}}
 								</view>
 								<view class="m5-d3">
 									<text>组合价：</text>
-									<text class="m5-sj">¥{{item.goods_attach_join.show_price}} </text>
+									<text class="m5-sj">¥{{item.price}} </text>
 									<text class="m5-yj">￥2000</text>
 								</view>
 							</view>
@@ -109,14 +84,12 @@
 </template>
 
 <script>
-	import xflSelect from '@/components/xfl-select/xfl-select.vue'; 
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	export default {
 		props:['listData'],
 		name: 'specification',
 		components: {
 			uniNumberBox,
-			xflSelect
 		},
 		data() {
 			return {
@@ -129,8 +102,6 @@
 					mlist:[],
 					show_price:'',
 					cover_pic:''
-					
-					
 				},
 				goodsInfo:{ //页面回显信息
 					
@@ -152,9 +123,15 @@
 			async getInfo () { //获取列表
 				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:this.listData.id}, 'GET', false);
 				if(res.message == "success"){
-					
 					this.goodsInfo = {...res.data};
-					this.changeColor(this.goodsInfo.specs[0])
+					this.changeColor(this.goodsInfo.specs[0]);
+					this.goodsInfo.attach_goods.map(item=>{
+						item.img = '' ; 
+						item.price = '';
+						item.discription = '';
+						item.id = '';
+						this.changeOne(item)
+					})
 				}
 			},
 			close () {
@@ -166,6 +143,17 @@
 				}else{
 					this.num = e;
 				}
+			},
+			changeOne (item) { //组合商品 一级
+			
+				item.discription = item.goods_attach_join.one_specs_join[0].title;
+				this.changeTwo(item.goods_attach_join.one_specs_join[0],item)
+			},
+			changeTwo (item,data) { //组合商品 二级
+				data.price = item.two_specs_join[0].attach_price;
+				data.img = item.two_specs_join[0].cover_pic;
+				data.discription = data.discription + ";" + item.two_specs_join[0].title
+				console.log(this.goodsInfo.attach_goods)
 			},
 			changeColor (item) { //选择颜色
 				this.subData.colorTitle = item.title
@@ -183,13 +171,12 @@
 			
 		},
 		mounted () {
-			console.log(this.listData)
 			this.getInfo()
 		}
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 	.w100{
 		max-width:100%;
 		max-height: 100%;
@@ -389,16 +376,26 @@
 									line-height:36rpx;
 								}
 								.m5-d2{
-									width: 240rpx;
-									height: 40rpx;
+									padding:8rpx 42rpx 11px;
+									line-height: 1;
 									margin-bottom: 20rpx;
 									font-size: 24rpx;
 									color:rgba(153,153,153,1);
 									background:rgba(246,246,246,1);
 									margin-top: 20rpx;
-									/deep/.show-box{
-										width: 100%;
-										height: 100% !important;
+									position: relative;
+									display: inline-block;
+									&:after{
+										content: '';
+										width:15rpx;
+										height: 8rpx;
+										position: absolute;
+										right: 13rpx;
+										top:0;
+										bottom:0;
+										margin:auto;
+										background: url('../static/down.png') no-repeat;
+										background-size: cover;
 									}
 								}
 								.m5-d3{
