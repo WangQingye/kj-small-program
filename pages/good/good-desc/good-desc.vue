@@ -1,15 +1,12 @@
 <template>
-	<view class="main">
+	<view class="good-desc">
 		<view class="body">
 			<!-- 轮播 -->
 			<view class="carousel">
-				<swiper  circular=true duration="400" class="carousel-box" @change="swiperChange">
+				<swiper circular=true duration="400" class="carousel-box" @change="swiperChange">
 					<swiper-item class="swiper-item" v-for="(item,index) in listData.pic_join" :key="index">
 						<view class="image-wrapper">
-							<image
-								:src="item.pic" 
-								class="w100" 
-							></image>
+							<image :src="item.pic" class="w100"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -52,28 +49,28 @@
 				<view class="g-t">
 					奖励商品
 				</view>
-				<view class="goods-box" >
-						<scroll-view class="s-box" scroll-x="true" >
-							<view class="s-item" v-for="(item,key) in listData.gift_join" :key="key">
-								<view class="s-imgbox">
-									<image :src="item.cover_pic" mode="" class="s-img"></image>
-									
-								</view>
-								<view class="s-p">
-									{{item.title}}
-								</view>
+				<view class="goods-box">
+					<scroll-view class="s-box" scroll-x="true">
+						<view class="s-item" v-for="(item,key) in listData.gift_join" :key="key">
+							<view class="s-imgbox">
+								<image :src="item.cover_pic" mode="" class="s-img"></image>
+
 							</view>
-							
-						</scroll-view>
+							<view class="s-p">
+								{{item.title}}
+							</view>
+						</view>
+
+					</scroll-view>
 				</view>
-				
-				
+
+
 			</view>
 			<view class="goods-details">
 				<view class="goodsDetails-title">
 					商品详情
 				</view>
-				<rich-text class="gd-content" :nodes="listData.content">
+				<rich-text :nodes="listData.content">
 				</rich-text>
 			</view>
 		</view>
@@ -97,7 +94,7 @@
 				<view class="order" @click="openMc">{{'预约下单'}}</view>
 			</view>
 		</view>
-		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" >
+		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
 			<specification :listData="listData" @closeWin="closeWin" v-if="showTc"></specification>
 		</uniPopup>
 	</view>
@@ -107,310 +104,368 @@
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import specification from '@/components/specification.vue'
 	export default {
-		components:{
+		components: {
 			uniPopup,
 			specification
 		},
 		data() {
 			return {
-				listData:{},
+				listData: {},
 				swiperCurrent: 0,
 				swiperLength: 0,
 				goodId: 0,
-				showTc:false
+				showTc: false
 			};
 		},
 		onLoad(option) {
 			this.goodId = option.goodId;
 			this.getList()
 		},
-		methods:{
-			async getList () { 
-				let res = await this.myRequest('/api/goods/show', {goods_id:this.goodId}, 'GET', false);
-				if(res.message == "success"){
-					this.listData = {...res.data};
+		methods: {
+			async getList() {
+				let res = await this.myRequest('/api/goods/show', {
+					goods_id: this.goodId
+				}, 'GET', false);
+				if (res.message == "success") {
+					res.data.content = res.data.content.replace(/\<img/gi,
+						"<img class='rich-text-img'");
+					this.listData = { ...res.data
+					};
+					console.log(this.listData.content)
 					this.swiperLength = this.listData.pic_join.length;
 				}
-				
+
 			},
-			swiperChange (e) { //获取swiper Index
-				this.swiperCurrent = e.detail.current ;
+			swiperChange(e) { //获取swiper Index
+				this.swiperCurrent = e.detail.current;
 			},
-			openMc () {
-				this.showTc =true;
+			openMc() {
+				this.showTc = true;
 				this.$refs['buyCode'].open()
 			},
-			closeWin () {
+			closeWin() {
 				this.showTc = false;
 				this.$refs['buyCode'].close()
 			}
 		},
-		onPullDownRefresh : function() { //下拉刷新
+		onPullDownRefresh: function() { //下拉刷新
 			this.getList()
 		}
 	}
 </script>
 
-<style lang="scss" scoped>
-	
-	.main{
+<style lang="scss">
+	.rich-text-img {
+		max-width: 100%;
+	}
+	.good-desc {
 		width: 100%;
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
-		.body{
+
+		.body {
 			flex: 1;
 			width: 100%;
 			background: #eee;
 			overflow: auto;
-			.carousel{
+
+			.carousel {
 				width: 100%;
 				height: 425rpx;
 				position: relative;
-				.carousel-box{
+
+				.carousel-box {
 					height: 100%;
-					.swiper-item{
-						width:100%;
+
+					.swiper-item {
+						width: 100%;
 						height: 100%;
-						.w100{
+
+						.w100 {
 							width: 100%;
 						}
 					}
 				}
-				.pages{
+
+				.pages {
 					position: absolute;
 					right: 20rpx;
 					bottom: 20rpx;
 					width: 70rpx;
 					height: 32rpx;
 					border-radius: 16rpx;
-					background:rgba(0,0,0,0.6);
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(255,255,255,1);
+					background: rgba(0, 0, 0, 0.6);
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(255, 255, 255, 1);
 					font-size: 24rpx;
 					text-align: center;
 					line-height: 32rpx;
 				}
-				
+
 			}
-			.goods-price{
-				width:100%;
-				padding:30rpx;
-				box-sizing: border-box;;
+
+			.goods-price {
+				width: 100%;
+				padding: 30rpx;
+				box-sizing: border-box;
+				;
 				background-color: #fff;
-				margin-bottom: 20rpx;;
-				.t1{
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:500;
-					color:rgba(51,51,51,1);
-					line-height:40rpx;
-					margin-bottom: 20rpx;;
+				margin-bottom: 20rpx;
+				;
+
+				.t1 {
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 500;
+					color: rgba(51, 51, 51, 1);
+					line-height: 40rpx;
+					margin-bottom: 20rpx;
+					;
 				}
-				.t2{
-					font-size:24rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(153,153,153,1);
-					margin-bottom: 20rpx;;
+
+				.t2 {
+					font-size: 24rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(153, 153, 153, 1);
+					margin-bottom: 20rpx;
+					;
 				}
-				.t3{
-					padding:8rpx 28rpx;
+
+				.t3 {
+					padding: 8rpx 28rpx;
 					box-sizing: border-box;
-					background:rgba(246,246,246,1);
-					font-size:24rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(153,153,153,1);
+					background: rgba(246, 246, 246, 1);
+					font-size: 24rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(153, 153, 153, 1);
 					display: inline-block;
-					margin-bottom: 30rpx;;
+					margin-bottom: 30rpx;
+					;
 				}
-				.t4{
-					width:100%;
-					display: flex;;
+
+				.t4 {
+					width: 100%;
+					display: flex;
+					;
 					justify-content: space-between;
-					align-items: center;;
-					.price{
-						font-size:32rpx;
-						font-family:PingFang SC;
-						font-weight:500;
-						color:rgba(237,25,58,1);
-						.num{
+					align-items: center;
+					;
+
+					.price {
+						font-size: 32rpx;
+						font-family: PingFang SC;
+						font-weight: 500;
+						color: rgba(237, 25, 58, 1);
+
+						.num {
 							font-size: 40rpx;
 						}
 					}
-					.person{
-						font-size:24rpx;
-						font-family:PingFang SC;
-						font-weight:400;
-						color:rgba(153,153,153,1);
+
+					.person {
+						font-size: 24rpx;
+						font-family: PingFang SC;
+						font-weight: 400;
+						color: rgba(153, 153, 153, 1);
 					}
 				}
 			}
-			.gg{
+
+			.gg {
 				display: flex;
-				width:100%;
+				width: 100%;
 				height: 96rpx;
 				background-color: #fff;
 				align-items: center;
-				padding:0 30rpx;
+				padding: 0 30rpx;
 				box-sizing: border-box;
 				justify-content: space-between;
-				font-size:28rpx;
-				font-family:PingFang SC;
-				font-weight:400;
-				color:rgba(51,51,51,1);
-				margin-bottom: 20rpx;;
-				.toRight{
-					width:16rpx;
+				font-size: 28rpx;
+				font-family: PingFang SC;
+				font-weight: 400;
+				color: rgba(51, 51, 51, 1);
+				margin-bottom: 20rpx;
+				;
+
+				.toRight {
+					width: 16rpx;
 					height: 26rpx;
 				}
 			}
-			.goods{
-				width:100%;
-				height:202rpx;
-				padding:20rpx 0rpx;
-				box-sizing: border-box;;
+
+			.goods {
+				width: 100%;
+				height: 202rpx;
+				padding: 20rpx 0rpx;
+				box-sizing: border-box;
+				;
 				background-color: #FFFFFF;
 				display: flex;
-				margin-bottom: 20rpx;;
-				.g-t{
-					width:180rpx;
+				margin-bottom: 20rpx;
+				;
+
+				.g-t {
+					width: 180rpx;
 					height: 100%;
 					display: flex;
 					align-items: center;
-					padding-left:30rpx;
+					padding-left: 30rpx;
 					box-sizing: border-box;
-					padding-bottom:82rpx;
-					font-size:28rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+					padding-bottom: 82rpx;
+					font-size: 28rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 				}
-				.goods-box{
+
+				.goods-box {
 					flex: 1;
 					height: 100%;
 					overflow: hidden;
-					.s-box{
-						width:100%;
-						height:100%;
+
+					.s-box {
+						width: 100%;
+						height: 100%;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
 						white-space: nowrap;
-						.s-item{
+
+						.s-item {
 							width: 120rpx;
 							height: 100%;
-							margin-right: 60rpx;;
+							margin-right: 60rpx;
+							;
 							box-sizing: border-box;
 							display: inline-block;
-							.s-imgbox{
-								width:100%;
+
+							.s-imgbox {
+								width: 100%;
 								height: 120rpx;
 								// background-color: #F6F6F6;
 								// padding:20rpx 15rpx;
 								box-sizing: border-box;
 								margin-bottom: 10rpx;
-								.s-img{
+
+								.s-img {
 									width: 100%;
 									height: 100%;
-									
+
 								}
 							}
-							.s-p{
-								font-size:24rpx;
-								font-family:PingFang SC;
-								font-weight:400;
+
+							.s-p {
+								font-size: 24rpx;
+								font-family: PingFang SC;
+								font-weight: 400;
 								text-align: center;
-								color:rgba(51,51,51,1);
+								color: rgba(51, 51, 51, 1);
 							}
 						}
 					}
 				}
 			}
-			.goods-details{
+
+			.goods-details {
 				width: 100%;
 				padding: 0 30rpx;
-				overflow: hidden;
+				// overflow: hidden;
 				box-sizing: border-box;
 				background: #fff;
-				.goodsDetails-title{
+
+				.goodsDetails-title {
 					width: 100%;
 					height: 96rpx;
 					border-bottom: 1rpx solid #E6E6E6;
 					box-sizing: border-box;
-					font-size:28rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+					font-size: 28rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 					line-height: 96rpx;
 					margin-bottom: 27rpx;
 				}
-				
+
 			}
 		}
-		.footer{
+
+		.footer {
 			width: 100%;
-			height:96rpx;
+			height: 96rpx;
 			display: flex;
-			.f-l{
-				width:350rpx;
+
+			.f-l {
+				width: 350rpx;
 				height: 100%;
-				padding:14rpx 0 8rpx 35rpx;
-				box-sizing: border-box;;
+				padding: 14rpx 0 8rpx 35rpx;
+				box-sizing: border-box;
+				;
 				display: flex;
 				font-size: 22rpx;
-				font-family:PingFang SC;
-				font-weight:400;
-				color:rgba(153,153,153,1);
-				.p-b-btn{
+				font-family: PingFang SC;
+				font-weight: 400;
+				color: rgba(153, 153, 153, 1);
+
+				.p-b-btn {
 					display: flex;
 					flex-direction: column;
 					justify-content: space-between;
-					align-items: center;	
+					align-items: center;
 					width: 70rpx;
 					height: 100%;
-					margin-right: 30rpx;;
-					.p-b-car{
-						width:42rpx;
+					margin-right: 30rpx;
+					;
+
+					.p-b-car {
+						width: 42rpx;
 						height: 38rpx;
 					}
-					.p-b-zx{
-						width:40rpx;
-						height: 40rpx;;
+
+					.p-b-zx {
+						width: 40rpx;
+						height: 40rpx;
+						;
 					}
 				}
 			}
-			.f-r{
+
+			.f-r {
 				width: 400rpx;
 				height: 100%;
 				display: flex;
-				.addCar{
+
+				.addCar {
 					width: 50%;
 					height: 100%;
 					text-align: center;
-					line-height: 96rpx;;
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(255,255,255,1);
-					background:rgba(237,25,58,1);
+					line-height: 96rpx;
+					;
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(255, 255, 255, 1);
+					background: rgba(237, 25, 58, 1);
 				}
-				.order{
+
+				.order {
 					width: 50%;
 					height: 100%;
 					text-align: center;
-					line-height: 96rpx;;
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(255,255,255,1);
-					background:rgba(0,108,183,1);
+					line-height: 96rpx;
+					;
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(255, 255, 255, 1);
+					background: rgba(0, 108, 183, 1);
 				}
 			}
-			
+
 		}
-		
+
 	}
 </style>

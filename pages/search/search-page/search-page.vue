@@ -53,6 +53,8 @@
 				this.searchPage = page;
 				if (page != 1) {
 					this.status = 'loading';
+				} else {
+					this.goodItems = [];
 				}
 				let perPage = 8;
 				this.$refs.searchInput.setSearchText(searchText);

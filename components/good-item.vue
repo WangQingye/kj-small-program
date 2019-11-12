@@ -45,7 +45,9 @@
 		}
 
 		.good-name {
+			display: block;
 			font-size: 28rpx;
+			min-height: 78rpx;
 		}
 
 		.good-price {

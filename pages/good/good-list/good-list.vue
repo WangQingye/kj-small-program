@@ -76,7 +76,7 @@
 <style lang="scss">
 	.main {
 		width: 100%;
-		height: 100vh;
+		// height: 100vh;
 		overflow: hidden;
 		font-family: PingFang SC;
 		box-sizing: border-box;

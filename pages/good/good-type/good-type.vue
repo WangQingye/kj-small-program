@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<search-input />
+	<view class="good-type">
+		<search-input/>
 
 		<view class="main">
 			<scroll-view scroll-y="true" class="left-aside">
@@ -38,6 +38,9 @@
 				bigTypeTile: ""
 			};
 		},
+		onPullDownRefresh() {
+			this.getSmallType(this.bigType[this.activeIndex]);
+		},
 		methods: {
 			clickBigType(item, index) {
 				this.activeIndex = index;
@@ -67,7 +70,7 @@
 					page: 1,
 					per_page: 1000
 				}, 'GET', false);
-				console.log(res)
+				uni.stopPullDownRefresh();
 				if (res.data.data.length) {
 					this.smallType = res.data.data;
 				}
@@ -83,15 +86,18 @@
 </script>
 
 <style lang="scss">
+	.good-type {
+	}
 	.main {
 		width: 100%;
-		height: 100vh;
+		min-height: 91.5vh;
 		display: flex;
 		border-top: 1rpx solid #E6E6E6;
 		margin-top: 20rpx;
+
 		.left-aside {
 			width: 240rpx;
-			height: 100%;
+			min-height: 91.5vh;
 			background: rgba(245, 245, 245, 1);
 
 			.aside-item {
@@ -146,6 +152,7 @@
 					display: flex;
 					align-items: center;
 					font-size: 28rpx;
+
 					&:after {
 						content: '';
 						width: 20rpx;
@@ -173,6 +180,7 @@
 					width: 100%;
 					height: 130rpx;
 					margin-bottom: 20rpx;
+
 					.small-type-img {
 						width: 450rpx;
 						height: 130rpx;
