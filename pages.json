@@ -13,7 +13,8 @@
 		}, {
 			"path": "pages/car/good-car/good-car",
 			"style": {
-				"navigationBarTitleText": "购物车"
+				"navigationBarTitleText": "购物车",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/good/good-type/good-type",

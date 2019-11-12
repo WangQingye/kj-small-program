@@ -81,24 +81,24 @@
 		</view>
 		<view class="footer">确认</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" >
-			<view class="m2" v-if="zhgoods.goods_attach_join.one_specs_join.length > 0">
+			<view class="m2" v-if=" showTwo ">
 				<view class="m2-title">
 					{{listData.one_specs}}
 				</view>
 				<viwe class="m2-box">  
-					<view class="m2-item" :class="{active:zhgoods.Oid == item.id}" v-for="(item,index) in zhgoods.goods_attach_join.one_specs_join" :key="index" @click="changeOne(item)">
+					<view class="m2-item" :class="{active:zhgoods.Oid == item.id}" v-for="(item,index) in zhgoods.goods_attach_join.one_specs_join" :key="index" @click="changeOne(item,zhgoods)">
 						{{item.title}}
 					</view>
 				</viwe>
-				
 			</view>
 			<view class="m3">
 				<view class="m3-title" >
 					{{listData.two_specs}}
 				</view>
 				<viwe class="m3-box">  
-					<view class="m3-item" :class="{active:zhgoods.Tid == item.id}" v-for="(val,index) in zht_goods" :key="index" @click="changeTwo(val,zhgoods)">
+					<view class="m3-item" :class="{active:zhgoods.Tid == val.id}" v-for="(val,index) in zht_goods" :key="index" @click="changeTwo(val,zhgoods)">
 						{{val.title}}
+						<!-- {{'a' + zhgoods.Tid +"b" +val.id }} -->
 					</view>
 				</viwe>
 			</view>
@@ -133,7 +133,8 @@
 					
 				},
 				zhgoods:[],
-				zht_goods:[]
+				zht_goods:[],
+				showTwo :false
 				
 			};
 		},
@@ -160,7 +161,8 @@
 						item.discription = ''; 
 						item.Oid = ''; //一级id
 						item.Tid =''; //二级id
-						this.changeOne(item)
+						this.zhgoods = item;
+						this.changeOne(item.goods_attach_join.one_specs_join[0],item)
 					})
 				}
 			},
@@ -174,18 +176,18 @@
 					this.num = e;
 				}
 			},
-			changeOne (item) { //组合商品 一级
-				item.discription = item.goods_attach_join.one_specs_join[0].title;
-				item.Oid =  item.goods_attach_join.one_specs_join[0].id;
-				this.zht_goods = item.goods_attach_join.one_specs_join[0].two_specs_join;
-				this.changeTwo(item.goods_attach_join.one_specs_join[0].two_specs_join,item)
+			changeOne (data,item) { //组合商品 一级
+				item.discription = data.title;
+				item.Oid =  data.id;
+				this.zht_goods = data.two_specs_join;
+				this.changeTwo(data.two_specs_join[0],item)
 			},
 			changeTwo (item,data) { //组合商品 二级
-				data.price = item[0].attach_price;
-				data.yPrice = item[0].price;
-				data.img = item[0].cover_pic;
-				data.Tid = item[0].id;
-				data.discription = data.discription + ";" + item[0].title
+				data.price = item.attach_price;
+				data.yPrice = item.price;
+				data.img = item.cover_pic;
+				data.Tid = item.id;
+				data.discription = data.discription + ";" + item.title
 			},
 			changeColor (item) { //选择颜色
 				this.subData.colorTitle = item.title
@@ -202,15 +204,18 @@
 			},
 			openMc (item) {
 				this.zhgoods = item;
+				this.showTwo =true
 				this.$refs['buyCode'].open()
 			},
 			closeMc () {
 				this.$refs['buyCode'] && this.$refs['buyCode'].close();
+				this.showTwo =false;
 			}
 		},
 		
 		mounted () {
 			this.getInfo()
+			
 		}
 	}
 </script>
