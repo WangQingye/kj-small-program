@@ -281,6 +281,7 @@
 			overflow: auto;
 			width:100%;
 			box-sizing: border-box;
+			background: white;
 			.m2{
 				width: 100%;
 				margin-bottom: 40rpx;
@@ -481,6 +482,7 @@
 			position:fixed;
 			left:0;bottom:0;
 			z-index: 665;
+			display: block;
 		}
 		.buy-wrapper{
 			.m2{

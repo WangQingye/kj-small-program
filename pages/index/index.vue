@@ -1,6 +1,8 @@
 <template>
 	<view class="index-content">
-		<search-input />
+		<view class="search-input">
+			<search-input />
+		</view>
 		<view class="swiper-warpper">
 			<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" indicator-color='rgb(139,187,218)'
 			 indicator-active-color='#006CB7'>
@@ -139,10 +141,15 @@
 <style lang="scss">
 	.index-content {
 		background: #F6F6F6;
-
+		.search-input {
+			background: white;
+			padding-bottom: 20rpx;
+		}
 		.swiper-warpper {
+			margin-top: -20rpx;
 			background: white;
 			padding-bottom: 28rpx;
+
 			.swiper {
 				margin-top: 20rpx;
 				width: 100%;

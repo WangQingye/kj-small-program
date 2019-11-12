@@ -127,7 +127,7 @@
 					goods_id: this.goodId
 				}, 'GET', false);
 				if (res.message == "success") {
-					res.data.content = res.data.content.replace(/\<img/gi,
+					if (res.data.content) res.data.content = res.data.content.replace(/\<img/gi,
 						"<img class='rich-text-img'");
 					this.listData = { ...res.data
 					};
