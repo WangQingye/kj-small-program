@@ -18,7 +18,8 @@
 		}, {
 			"path": "pages/good/good-type/good-type",
 			"style": {
-				"navigationBarTitleText": "分类"
+				"navigationBarTitleText": "分类",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/good/good-list/good-list",
@@ -38,6 +39,9 @@
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
+		}, {
+			"path": "pages/good/good-activity/good-activity",
+			"style": {}
 		}
 	],
 	"globalStyle": {

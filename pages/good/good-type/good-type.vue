@@ -39,7 +39,7 @@
 			};
 		},
 		onPullDownRefresh() {
-			this.getSmallType(this.bigType[this.activeIndex]);
+			this.pageInfo();
 		},
 		methods: {
 			clickBigType(item, index) {
@@ -58,8 +58,13 @@
 					per_page: 1000
 				}, 'GET', false);
 				if (res.data.data.length) {
+					// 如果新请求小于原大类数，说明删除了大类，将激活index改为0
+					if (res.data.data.length < this.bigType.length) {
+						this.activeIndex = 0;
+					}
 					this.bigType = res.data.data;
-					this.getSmallType(this.bigType[0]);
+					// 默认请求小类
+					this.getSmallType(this.bigType[this.activeIndex]);
 				}
 			},
 			async getSmallType(bigType) {

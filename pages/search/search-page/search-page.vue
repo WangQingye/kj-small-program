@@ -86,10 +86,9 @@
 					this.status = 'loading';
 				}
 				let perPage = 8;
-				let res = await this.myRequest('/api/goods/list', {
+				let res = await this.myRequest('/api/goods/starGoods', {
 					page,
-					per_page: perPage,
-					sort_type: 1
+					per_page: perPage
 				}, 'GET');
 				if (res.data.data.length) {
 					this.goodItems = this.goodItems.concat(res.data.data);
