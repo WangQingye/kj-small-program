@@ -183,6 +183,7 @@
 				this.changeTwo(data.two_specs_join[0],item)
 			},
 			changeTwo (item,data) { //组合商品 二级
+				console.log(1321)
 				data.price = item.attach_price;
 				data.yPrice = item.price;
 				data.img = item.cover_pic;
@@ -204,6 +205,7 @@
 			},
 			openMc (item) {
 				this.zhgoods = item;
+				this.changeOne(item.goods_attach_join.one_specs_join[0],item)
 				this.showTwo =true
 				this.$refs['buyCode'].open()
 			},
@@ -418,7 +420,7 @@
 								width:200rpx;
 								height: 113rpx;
 								margin-right: 20rpx;
-								background: red;
+								// background: red;
 							}
 							.m5-ds{
 								flex: 1;

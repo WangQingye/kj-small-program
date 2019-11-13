@@ -1,8 +1,7 @@
 <template>
 	<view class="main">
 		<view class="body">
-			
-			<uni-Swipe-Action :option="option">
+			<uni-Swipe-Action :options="option" @click="bindClick()">
 				<view class="goods-item">
 						<label class='goods-check'>
 							<checkbox class="check-box"/>
@@ -27,9 +26,6 @@
 						<uniNumberBox :min="1" :max="99"  :value="1" @change="bindChange" class="num-box"></uniNumberBox>
 				</view>
 			</uni-Swipe-Action>
-			<uni-swipe-action :options="options"  @change="change">
-			    <view class='cont'>SwipeAction 基础使用场景</view>
-			</uni-swipe-action>
 		</view>
 		<view class="footer">
 			<view class="action">
@@ -42,7 +38,7 @@
 					<view class="t-price">￥4056</view>
 				</view>
 			</view>
-			<view class="confirm">提交订单</view>
+			<view class="confirm" @click="confirm">提交订单</view>
 		</view>
 		
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
@@ -58,18 +54,13 @@
 			return {
 				showLoginPage: true,
 				option:[
-						{
-							text: '取消',
-							style: {
-								backgroundColor: '#007aff'
-							}
-						},{
-							text: '取消',
-							style: {
-								backgroundColor: '#007aff'
-							}
+					{
+						text: '删除',
+						style: {
+							backgroundColor: '#ED193A'
 						}
-					]				
+					}
+				]				
 			}
 		},
 		
@@ -89,6 +80,17 @@
 			},
 			bindChange (e) {
 				
+			},
+			change () {
+				
+			},
+			bindClick (e) {
+				console.log(e)
+			},
+			confirm () {
+				uni.navigateTo({
+					url: `/pages/car/confirm-order/confirm-order`
+				});
 			}
 		},
 		components: {
@@ -244,4 +246,6 @@
 			
 		}
 	}
+	
+	
 </style>
