@@ -36,13 +36,56 @@
 			"path": "pages/car/confirm-order/confirm-order",
 			"style": {}
 		}, {
+			"path": "pages/good/good-activity/good-activity",
+			"style": {
+				"navigationBarTitleText": "专题详情"
+			}
+		}, {
+			"path": "pages/score/score-mall/score-mall",
+			"style": {
+				"navigationBarTitleText": "积分商城"
+			}
+		}, {
+			"path": "pages/score/score-desc/score-desc",
+			"style": {
+				"navigationBarTitleText": "积分说明"
+			}
+		}, {
+			"path": "pages/score/score-detail/score-detail",
+			"style": {
+				"navigationBarTitleText": "积分明细"
+			}
+		}, {
 			"path": "pages/my/my-main/my-main",
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
 		}, {
-			"path": "pages/good/good-activity/good-activity",
-			"style": {}
+			"path": "pages/my/my-info/my-info",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		}, {
+			"path": "pages/my/question-list/question-list",
+			"style": {
+				"navigationBarTitleText": "问题咨询"
+			}
+
+		}, {
+			"path": "pages/my/question-desc/question-desc",
+			"style": {
+				"navigationBarTitleText": "问题列表"
+			}
+		}, {
+			"path": "pages/my/my-address/my-address",
+			"style": {
+				"navigationBarTitleText": "我的地址"
+			}
+		}, {
+			"path": "pages/my/add-address/add-address",
+			"style": {
+				"navigationBarTitleText": "新建收获地址"
+			}
 		}
 	],
 	"globalStyle": {

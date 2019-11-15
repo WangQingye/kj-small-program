@@ -1,5 +1,5 @@
 <template>
-	<view v-show="showFlag" class="login-page">
+	<view v-if="showFlag" class="login-page">
 		<image src="../static/logo.png" class="logo-img"></image>
 		<button class="get-userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">登录</button>
 	</view>
@@ -15,6 +15,7 @@
 		props: ['showFlag'],
 		mounted() {
 			uni.hideTabBar();
+			console.log(312231)
 			// this.wxLogin();
 		},
 		methods: {

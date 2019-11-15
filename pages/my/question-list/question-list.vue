@@ -1,19 +1,19 @@
 <template>
 	<view>
-		<view class="my-list">
-			<view class="list-item">
+		<view class="question-list">
+			<view class="list-item" @click="goDesc">
 				<view class="list-text">使用帮助</view>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
-			<view class="list-item">
+			<view class="list-item" @click="goDesc">
 				<view class="list-text">下单流程</view>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
-			<view class="list-item">
+			<view class="list-item" @click="goDesc">
 				<view class="list-text">商务合作</view>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
-			<view class="list-item">
+			<view class="list-item" @click="goDesc">
 				<view class="list-text">常见问题</view>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
@@ -42,12 +42,19 @@
 			return {
 
 			};
+		},
+		methods: {
+			goDesc() {
+				uni.navigateTo({
+					url: `/pages/my/question-desc/question-desc`
+				});
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.my-list {
+	.question-list {
 		width: 690rpx;
 		height: 442rpx;
 		background: white;
