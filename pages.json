@@ -87,7 +87,44 @@
 				"navigationBarTitleText": "新建收获地址"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/my/my-collect/my-collect/my-collect",
+            "style" : {
+				"navigationBarTitleText": "我的收藏"
+			}
+        }
+        ,{
+            "path" : "pages/my/my-order/my-order/my-order",
+            "style" : {
+            	"navigationBarTitleText": "订单列表"
+            }
+        }
+        ,{
+            "path" : "pages/good/integral-det/integral-det/integral-det",
+            "style" : {
+				"navigationBarTitleText": "商品详情"
+			}
+        }
+        ,{
+            "path" : "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
+            "style" : {
+				"navigationBarTitleText": "确认订单"
+			}
+        }
+        ,{
+            "path" : "pages/my/order-list/order-list/order-list",
+            "style" : {
+				"navigationBarTitleText": "订单列表"
+			}
+        }
+        
+        ,{
+            "path" : "pages/my/order-des/order-des/order-des",
+            "style" : {
+				"navigationBarTitleText": "订单详情"
+			}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "凯杰电商",

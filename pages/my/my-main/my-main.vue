@@ -10,8 +10,8 @@
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
 			<view class="my-button">
-				<view class="subscribe">我的收藏</view>
-				<view class="subscribe">我的订单</view>
+				<view class="subscribe" @click="goCollect">我的收藏</view>
+				<view class="subscribe" @click="goOrder">我的订单</view>
 			</view>
 		</view>
 		<view class="my-list">
@@ -72,6 +72,16 @@
 					url: `/pages/my/my-info/my-info`
 				});
 			},
+			goOrder () {
+				uni.navigateTo({
+					url: `/pages/my/my-order/my-order/my-order`
+				});
+			},
+			goCollect() { //我的收藏
+				uni.navigateTo({
+					url: `/pages/my/my-collect/my-collect/my-collect`
+				});
+			},
 			goList(index) {
 				let url;
 				switch (index) {
@@ -85,8 +95,8 @@
 						url = '/pages/score/score-mall/score-mall'
 						break;
 					case 4:
+						url = '/pages/my/order-list/order-list/order-list'
 						break;
-
 					case 5:
 						url = '/pages/score/score-desc/score-desc'
 						break;

@@ -16,12 +16,12 @@
 			<image src="../static/c/c31close.png" mode="" class="m1-close" @click="close"></image>
 		</view>
 		<view class="body">
-			<view class="m2" v-if="goodsInfo.specs.length > 0">
+			<view class="m2" v-if="goodsInfo.length > 0">
 				<view class="m2-title">
 					{{listData.one_specs}}
 				</view>
 				<viwe class="m2-box">  
-					<view class="m2-item" :class="{active:subData.colorId == item.id}" v-for="(item,index) in goodsInfo.specs" :key="index" @click="changeColor(item)">
+					<view class="m2-item" :class="{active:subData.colorId == item.id}" v-for="(item,index) in goodsInfo" :key="index" @click="changeColor(item)">
 						{{item.title}}
 					</view>
 				</viwe>
@@ -129,9 +129,7 @@
 					show_price:'',
 					cover_pic:''
 				},
-				goodsInfo:{ //页面回显信息
-					
-				},
+				goodsInfo:[], //页面回显信息,
 				zhgoods:[],
 				zht_goods:[],
 				showTwo :false
@@ -146,24 +144,49 @@
 		onLoad (option) {
 		},
 		onShow () {
-			this.getInfo()
+			this.getInfo();
+			console.log(1321321)
+			this.goodsGroup();
 		},
 		methods:{
 			async getInfo () { //获取列表
 				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:this.listData.id}, 'GET', false);
 				if(res.message == "success"){
-					this.goodsInfo = {...res.data};
-					this.changeColor(this.goodsInfo.specs[0]);
-					this.goodsInfo.attach_goods.map(item=>{
-						item.img = '' ; 
-						item.price = ''; //现价
-						item.yPrice = '';//原价
-						item.discription = ''; 
-						item.Oid = ''; //一级id
-						item.Tid =''; //二级id
-						this.zhgoods = item;
-						this.changeOne(item.goods_attach_join.one_specs_join[0],item)
-					})
+					this.goodsInfo = [...res.data];
+					
+					this.changeColor(this.goodsInfo[0]);
+					// this.goodsInfo.attach_goods.map(item=>{
+					// 	item.img = '' ; 
+					// 	item.price = ''; //现价
+					// 	item.yPrice = '';//原价
+					// 	item.discription = ''; 
+					// 	item.Oid = ''; //一级id
+					// 	item.Tid =''; //二级id
+					// 	this.zhgoods = item;
+					// 	this.changeOne(item.goods_attach_join.one_specs_join[0],item)
+					// })
+				}
+			},
+			async goodsGroup () { //获取列表
+				console.log(1321321)
+				let res = await this.myRequest('/api/goods/attachGoods', {goods_id:this.listData.id}, 'GET', false);
+				console.log(res)
+				if(res.message == "success"){
+					console.log(res)
+					return;
+					this.goodsInfo = [...res.data];
+					
+					this.changeColor(this.goodsInfo[0]);
+					// this.goodsInfo.attach_goods.map(item=>{
+					// 	item.img = '' ; 
+					// 	item.price = ''; //现价
+					// 	item.yPrice = '';//原价
+					// 	item.discription = ''; 
+					// 	item.Oid = ''; //一级id
+					// 	item.Tid =''; //二级id
+					// 	this.zhgoods = item;
+					// 	this.changeOne(item.goods_attach_join.one_specs_join[0],item)
+					// })
 				}
 			},
 			close () {
