@@ -1,5 +1,5 @@
 <template>
-	<view v-if="showFlag" class="login-page">
+	<view v-show="showFlag" class="login-page">
 		<image src="../static/logo.png" class="logo-img"></image>
 		<button class="get-userinfo-button" open-type="getUserInfo" lang="zh_CN" @getuserinfo="onGotUserInfo">登录</button>
 	</view>
@@ -12,15 +12,14 @@
 				loginInfo: {},
 			};
 		},
-		props: ['showFlag'],
+		props: ['showFlag', 'isTabBar'],
 		mounted() {
-			uni.hideTabBar();
-			console.log(312231)
-			// this.wxLogin();
+			this.wxLogin();
 		},
 		methods: {
 			wxLogin() {
 				let that = this;
+				console.log(222);
 				uni.login({
 					provider: 'weixin',
 					success: function(loginRes) {
@@ -28,35 +27,40 @@
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
+								// console.log(infoRes)
+								// console.log(JSON.parse(infoRes.rawData));
 								that.loginInfo.encryptedData = infoRes.encryptedData;
 								that.loginInfo.iv = infoRes.iv;
-								that.$emit('login-over')
-								// that.myLogin();
+								// that.$emit('login-over')
+								that.myLogin();
 							},
 							fail: function() {
-								console.log('无授权');
+								that.$store.commit('saveIsLogin', false);
+								that.$emit('login-over', 1);
 							}
 						})
 					}
 				});
 			},
 			async myLogin() {
-				let res = await this.myRequest('/api/user/appletLogin', this.loginInfo, 'POST', false);
-				if (res && res.error_code == 0) {
-					this.$store.commit('saveToken', res.data.token)
+				let res = await this.myRequest('/api/user/applet-login', this.loginInfo, 'POST', false);
+				if (res) {
+					this.$store.commit('saveUserToken', res.data)
 					this.$store.commit('saveIsLogin', true);
 					this.$emit('login-over')
+				} else {
+					this.$emit('login-over', true);
 				}
 			},
 			onGotUserInfo(res) {
+				console.log(res);
 				if (res.detail.errMsg == 'getUserInfo:ok') {
 					let infoRes = res.detail
 					this.loginInfo.encryptedData = infoRes.encryptedData;
 					this.loginInfo.iv = infoRes.iv;
-					this.$emit('login-over');
-					// this.myLogin();
+					this.myLogin();
 				} else {
-					this.$emit('login-over');
+					this.$emit('login-over', true);
 				}
 			}
 		}

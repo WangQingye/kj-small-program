@@ -91,6 +91,9 @@
 			this.getStarGoods();
 			this.getRecomGoods(1);
 		},
+		onShow() {
+			uni.showTabBar();
+		},
 		onReachBottom() {
 			if (this.status == 'more') {
 				this.recommendPage++;
@@ -141,10 +144,12 @@
 <style lang="scss">
 	.index-content {
 		background: #F6F6F6;
+
 		.search-input {
 			background: white;
 			padding-bottom: 20rpx;
 		}
+
 		.swiper-warpper {
 			margin-top: -20rpx;
 			background: white;

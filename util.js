@@ -10,7 +10,7 @@ async function myRequest(api,data,method,needToken = true) {
 			method,
 			data,
 			header: {
-				'Authorization': 'Bearer ' + store.state.token
+				'Authorization': 'Bearer ' + store.state.userToken.api_token
 			}
 		});
 		if (!err && res.statusCode == 200) {

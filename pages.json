@@ -61,9 +61,9 @@
 				"navigationBarTitleText": "我的"
 			}
 		}, {
-			"path": "pages/my/my-info/my-info",
+			"path": "pages/my/my-phone/my-phone",
 			"style": {
-				"navigationBarTitleText": "个人信息"
+				"navigationBarTitleText": "绑定手机"
 			}
 		}, {
 			"path": "pages/my/question-list/question-list",
@@ -86,45 +86,44 @@
 			"style": {
 				"navigationBarTitleText": "新建收获地址"
 			}
-		}
-	    ,{
-            "path" : "pages/my/my-collect/my-collect/my-collect",
-            "style" : {
+		}, {
+			"path": "pages/my/my-collect/my-collect/my-collect",
+			"style": {
 				"navigationBarTitleText": "我的收藏"
 			}
-        }
-        ,{
-            "path" : "pages/my/my-order/my-order/my-order",
-            "style" : {
-            	"navigationBarTitleText": "订单列表"
-            }
-        }
-        ,{
-            "path" : "pages/good/integral-det/integral-det/integral-det",
-            "style" : {
-				"navigationBarTitleText": "商品详情"
-			}
-        }
-        ,{
-            "path" : "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
-            "style" : {
-				"navigationBarTitleText": "确认订单"
-			}
-        }
-        ,{
-            "path" : "pages/my/order-list/order-list/order-list",
-            "style" : {
+		}, {
+			"path": "pages/my/my-order/my-order/my-order",
+			"style": {
 				"navigationBarTitleText": "订单列表"
 			}
-        }
-        
-        ,{
-            "path" : "pages/my/order-des/order-des/order-des",
-            "style" : {
+		}, {
+			"path": "pages/good/integral-det/integral-det/integral-det",
+			"style": {
+				"navigationBarTitleText": "商品详情"
+			}
+		}, {
+			"path": "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
+			"style": {
+				"navigationBarTitleText": "确认订单"
+			}
+		}, {
+			"path": "pages/my/order-list/order-list/order-list",
+			"style": {
+				"navigationBarTitleText": "订单列表"
+			}
+		}
+		, {
+			"path": "pages/my/order-des/order-des/order-des",
+			"style": {
 				"navigationBarTitleText": "订单详情"
 			}
-        }
-    ],
+		}, {
+			"path": "pages/my/my-info/my-info",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "凯杰电商",
