@@ -72,6 +72,11 @@
 			if (this.$store.state.userInfo) {
 				this.nickName = this.$store.state.userInfo.nickname;
 			}
+			uni.$on('updateName',
+				() => {
+					console.log(111);
+					this.nickName = this.$store.state.userInfo.nickname;
+				})
 		},
 		methods: {
 			loginOver(err) {

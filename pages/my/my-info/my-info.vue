@@ -2,26 +2,26 @@
 	<view class="info-list">
 		<view class="list-item">
 			<view class="list-label">{{nameLabel}}</view>
-			<input class="list-input" type="text" v-model="name" placeholder-style="color:#999999" placeholder="请输入姓名" />
+			<input class="list-input" @blur="onNameBlur" type="text" v-model="name" placeholder-style="color:#999999" placeholder="请输入姓名" />
 		</view>
 		<view class="list-item" @click="goBindPhone">
 			<view class="list-label">绑定手机</view>
 			<!-- <input class="list-input" type="text" v-model="phone" placeholder-style="color:#999999" placeholder="请输入绑定手机" /> -->
 			<view class="list-input">{{phone}}</view>
 		</view>
-		<view class="list-item" v-if="orgType">
+		<view class="list-item">
 			<view class="list-label">机构类型</view>
-			<input class="list-input" type="text" v-model="orgType" placeholder-style="color:#999999" />
+			<view class="list-input" style="color:#999999">{{orgType}}</view>
 		</view>
-		<view class="list-item" v-if="orgName">
+		<view class="list-item">
 			<view class="list-label">所属机构</view>
-			<input class="list-input" type="text" v-model="orgName" placeholder-style="color:#999999" />
+			<view class="list-input" style="color:#999999">{{orgName}}</view>
 		</view>
 		<view class="list-item">
 			<view class="list-label">业务经理</view>
-			<input class="list-input" type="text" v-model="bussinessMan" placeholder-style="color:#999999" placeholder="等待后台分配" />
+			<view class="list-input" style="color:#999999">{{bussinessMan || '等待后台分配'}}</view>
 		</view>
-		<view class="save-button" @click="saveName">保存</view>
+		<!-- <view class="save-button" @click="saveName">保存</view> -->
 	</view>
 </template>
 
@@ -38,6 +38,7 @@
 			};
 		},
 		onShow() {
+			console.log(333);
 			uni.hideTabBar();
 			this.name = this.$store.state.userInfo.nickname;
 			this.phone = this.$store.state.userInfo.mobile;
@@ -49,32 +50,38 @@
 					.business_join.name
 			}
 		},
+		onUnload() {
+		},
 		methods: {
 			goBindPhone() {
 				uni.navigateTo({
 					url: `/pages/my/my-phone/my-phone?from=${1}`
 				});
 			},
+			onNameBlur() {
+				this.saveName();
+			},
 			async saveName() {
 				if (this.name != this.$store.state.userInfo.nickname) {
 					let res = await this.myRequest('/api/user/upNickname', {
 						nickname: this.name
-					}, 'POST');
+					}, 'POST', true, false);
 					console.log(res);
 					if (res) {
 						let userInfo = this.$store.state.userInfo;
 						userInfo.nickname = this.name;
 						this.$store.commit('saveUserInfo', userInfo);
-						uni.showToast({
-							title: '保存成功',
-							duration: 1500,
-							icon: 'none'
-						});
-						setTimeout(() => {
-							uni.switchTab({
-								url: '/pages/my/my-main/my-main'
-							});
-						}, 1500)
+						uni.$emit('updateName',{})
+						// uni.showToast({
+						// 	title: '保存成功',
+						// 	duration: 1500,
+						// 	icon: 'none'
+						// });
+						// setTimeout(() => {
+						// 	uni.switchTab({
+						// 		url: '/pages/my/my-main/my-main'
+						// 	});
+						// }, 1500)
 					}
 				} else {
 					uni.switchTab({
