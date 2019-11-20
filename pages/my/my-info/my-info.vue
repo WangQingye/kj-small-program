@@ -2,7 +2,7 @@
 	<view class="info-list">
 		<view class="list-item">
 			<view class="list-label">{{nameLabel}}</view>
-			<input class="list-input" @blur="onNameBlur" type="text" v-model="name" placeholder-style="color:#999999" placeholder="请输入姓名" />
+			<input class="list-input-1" @blur="onNameBlur" type="text" v-model="name" placeholder-style="color:#999999" placeholder="请输入姓名" />
 		</view>
 		<view class="list-item" @click="goBindPhone">
 			<view class="list-label">绑定手机</view>
@@ -100,25 +100,39 @@
 		padding: 0 30rpx;
 
 		.list-item {
-			height: 110rpx;
+			min-height: 110rpx;
 			border-bottom: 1px solid #E6E6E6;
 
 			.list-label {
 				color: #333333;
 				width: 150rpx;
 				line-height: 110rpx;
+				min-height: 110rpx;
 				text-align: left;
 				display: inline-block;
-				vertical-align: middle;
+				vertical-align: top;
 				font-size: 32rpx;
 			}
 
 			.list-input {
-				display: inline-block;
+				display: inline-flex;
+				align-items: center;
 				vertical-align: middle;
 				font-size: 32rpx;
-				line-height: 110rpx;
+				min-height: 110rpx;
 				width: 500rpx;
+				line-height: 60rpx;
+			}
+			
+			
+			.list-input-1 {
+				display: inline-block;
+				align-items: center;
+				vertical-align: middle;
+				font-size: 32rpx;
+				width: 500rpx;
+				line-height: 110rpx;
+				min-height: 110rpx;
 			}
 		}
 

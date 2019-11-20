@@ -2,33 +2,51 @@
 	<view class="score-detail">
 		<view v-for="(item,index) in detailList" :key="index" class="detail-item">
 			<view class="left">
-				<view class="left-top">{{item.title}}</view>
-				<view class="left-bottom">{{item.time}}</view>
+				<view class="left-top">{{item.type == 1 ? '奖励' : item.type == 2 ? '订单抵扣' : '消费'}}</view>
+				<view class="left-bottom">{{item.created_at}}</view>
 			</view>
-			<view class="right" :style="'color:' + (item.num > 0 ? '#ED193A' : '#333333')">{{(item.num > 0 ? '+' : '') + item.num}}
+			<view class="right" :style="'color:' + (item.type == 1 ? '#ED193A' : '#333333')">{{(item.type == 1 ? '+' : '-') + item.score}}
 			</view>
 		</view>
+		<load-more :status="status"></load-more>
 	</view>
 </template>
 
 <script>
+	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		data() {
 			return {
-				detailList: [{
-					title: '奖励',
-					time: '2019-06-24 09:25',
-					num: 300
-				}, {
-					title: '消费',
-					time: '2019-06-24 09:25',
-					num: -300
-				}, {
-					title: '奖励',
-					time: '2019-06-24 09:25',
-					num: 300
-				}]
+				detailList: [],
+				status: 'more'
 			};
+		},
+		onShow() {
+			this.getScoreDetail(1);
+		},
+		methods: {
+			async getScoreDetail(page) {
+				if (page != 1) {
+					this.status = 'loading';
+				} else {
+					this.detailList = [];
+				}
+				let perPage = 10;
+				let res = await this.myRequest('/api/integral/log', {}, 'GET');
+				if (res.data.data.length) {
+					this.detailList = this.detailList.concat(res.data.data);
+					if (res.data.data.length < perPage) {
+						this.status = 'noMore'
+					} else {
+						this.status = 'more'
+					}
+				} else {
+					this.status = 'noMore'
+				}
+			},
+		},
+		components: {
+			LoadMore
 		}
 	}
 </script>

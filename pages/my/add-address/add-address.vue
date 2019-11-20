@@ -18,8 +18,9 @@
 				<input class="list-input" type="text" value="" placeholder-style="color:#999999" placeholder="请输入绑定手机" />
 			</view>
 			<view class="list-item">
-				<view class="list-label">机构类型</view>
-				<input class="list-input" type="text" value="" placeholder-style="color:#999999" placeholder="请输入机构类型" />
+				<view class="list-label">省市区</view>
+				<picker mode="region" @change="bindRegionChange" :value="region">
+				</picker>
 			</view>
 			<view class="list-item">
 				<view class="list-label">所属机构</view>
@@ -44,11 +45,16 @@
 	export default {
 		data() {
 			return {
-
+region:[]
 			};
 		},
 		onLoad() {
 			uni.hideTabBar();
+		},
+		methods: {
+			bindRegionChange() {
+				
+			}
 		}
 	}
 </script>

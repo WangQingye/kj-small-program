@@ -6,12 +6,12 @@
 				<text class="score-desc-text" @click="goScoreDesc">积分说明</text>
 			</view>
 			<view class="score-title">当前积分</view>
-			<view class="score-wrapper">
-				<view class="score-num">5061</view>
+			<view class="score-wrapper" v-if="score !== null">
+				<view class="score-num">{{score}}</view>
 				<button class="score-button" @click="goScoreDetail">明细</button>
 			</view>
 		</view>
-		<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
+		<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" @update:value="onTabChange" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
 		<view class="score-items">
 			<view class="item-wrapper" @click="goDetail" v-for="(item,index) in goodItems" :key="index" :style="'margin-right:' + ((index+1) % 3 == 0 ? 0 : 30) + 'rpx'">
 				<image class="item-img" :src="item.cover_pic" mode=""></image>
@@ -31,24 +31,53 @@
 		data() {
 			return {
 				tabIndex: 0,
-				tabList: ['周边产品', '选项1', '选项1', '选项1', '选项1', '选项1', '选项1', '选项1'],
+				tabList: [],
+				typeId: [],
+				nowTypeId: 0,
 				goodPage: 1,
 				goodItems: [],
-				status: 'more'
+				status: 'more',
+				score: null
 			};
 		},
-		onLoad() {
-			this.getActivityGoods(1);
+		onShow() {
+			this.getScore();
+			this.getGoodType();
 		},
 		methods: {
+			async getScore() {
+				let res = await this.myRequest('/api/integral/my', {}, 'GET');
+				if (res) {
+					this.score = res.data.usable_integral;
+				}
+			},
+			async getGoodType() {
+				let res = await this.myRequest('/api/integral/goodstype', {}, 'GET');
+				if (res) {
+					let data = res.data.sort((a,b) => {
+						return a.sort - b.sort;
+					})
+					this.tabList = data.map(item => {
+						return item.title;
+					})
+					this.typeId = data.map(item => {
+						return item.id;
+					})
+					this.nowTypeId = this.typeId[0];
+					this.getActivityGoods(1);
+				}
+			},
 			async getActivityGoods(page) {
 				if (page != 1) {
 					this.status = 'loading';
+				} else {
+					this.goodItems = [];
 				}
 				let perPage = 12;
-				let res = await this.myRequest('/api/goods/newestGoods', {
+				let res = await this.myRequest('/api/integral/goods', {
 					page,
-					per_page: perPage
+					per_page: perPage,
+					goods_type_id: this.nowTypeId
 				}, 'GET');
 				if (res.data.data.length) {
 					this.goodItems = this.goodItems.concat(res.data.data);
@@ -58,6 +87,10 @@
 						this.status = 'more'
 					}
 				}
+			},
+			onTabChange(index) {
+				this.nowTypeId = this.typeId[index];
+				this.getActivityGoods(1);
 			},
 			goScoreDesc() {
 				uni.navigateTo({
@@ -69,7 +102,7 @@
 					url: `/pages/score/score-detail/score-detail`
 				});
 			},
-			goDetail () {
+			goDetail() {
 				uni.navigateTo({
 					url: `/pages/good/integral-det/integral-det/integral-det`
 				});
@@ -150,6 +183,7 @@
 
 		.score-items {
 			padding: 30rpx 24rpx;
+
 			// display: flex;
 			// justify-content: space-between;
 			// flex-wrap: wrap;
@@ -158,6 +192,7 @@
 				height: 250rpx;
 				display: inline-block;
 				margin-bottom: 50rpx;
+
 				.item-img {
 					width: 212rpx;
 					height: 120rpx;
