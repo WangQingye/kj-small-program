@@ -1,6 +1,46 @@
 <template>
-	<view>
-		
+	<view class="main">
+		<view class="body">
+			<view class="add-address">
+				<view class="full">
+					请填写收货地址
+				</view>
+				
+			</view>
+			<view class="goods-box">
+				<view class="goods-item" v-for="item in 2" :key="item">
+						<view class="goods-content">
+							<view class="goods-imgbox">
+								<image class="w100"></image>
+							</view>
+							<view class="goods-dis">
+								<view class="g1">
+									GeneRead DNA FFPE Kit2019 款
+								</view>
+								<view class="g2" >
+									干血斑;DP362-01
+								</view>
+								<view class="g3">
+									<text class="gx-p">¥980</text>
+									<!-- <text class="gy-p" v-show="tabIndex == 0">￥1999</text> -->
+								</view>
+								<!-- <view class="logistics" v-show="tabIndex == 1">
+									物流信息:1543265486545
+								</view> -->
+								
+							</view>
+						</view>
+						<text class="num" > x2</text>
+				</view>
+				
+			</view>
+			<view class="xiye">
+				<checkbox /><text>我已阅读并同意</text><text style="color:#006CB7">《用户协议》</text>
+			</view>
+		</view>
+		<view class="footer">
+			{{Ftitle}}
+		</view>
 	</view>
 </template>
 
@@ -8,12 +48,157 @@
 	export default {
 		data() {
 			return {
-				
+				Ftitle:'确认预订'
 			};
 		}
 	}
 </script>
 
 <style lang="scss">
-
+	.main{
+		width:100%;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		background: #eee;
+		.body{
+			width: 100%;
+			flex:1;
+			overflow: auto;
+			.add-address{
+				width:100%;
+				height:163rpx;
+				background: #fff;
+				padding: 0 46rpx 0 30rpx;
+				box-sizing: border-box;
+				position:relative;
+				margin-bottom:20rpx ;
+				&:before{
+					content: "";
+					width:16rpx;
+					height: 25rpx;
+					background: url(../../../../static/c/c30gg.png) no-repeat;
+					background-size: cover;
+					position:absolute;
+					top:0;bottom:0;right: 30rpx;
+					margin:auto;
+				}
+				.full{
+					width:100%;
+					height: 100%;
+					font-size:32rpx;
+					font-family:PingFang SC;
+					font-weight:500;
+					color:rgba(153,153,153,1);
+					line-height: 163rpx;
+				}
+				
+			}
+			.goods-box{
+				width: 100%;
+				background: #fff;
+				margin-bottom: 30rpx;;
+				padding: 0 30rpx;
+				box-sizing: border-box;
+				.goods-item{
+					width: 100%;
+					padding:30rpx 0;
+					min-height: 210rpx;
+					box-sizing: border-box;
+					display: flex;
+					background: #fff;
+					position: relative;
+					border-bottom: 1rpx solid #E6E6E6;
+					&:last-child{
+						border-bottom: 0;
+					}
+					.goods-content{
+						flex: 1;
+						display: flex;
+						.goods-imgbox{
+							width:240rpx;
+							height: 135rpx;
+							background:red;
+							margin-right: 20rpx;
+						}
+						.goods-dis{
+							flex: 1;
+							.g1{
+								font-size:28rpx;
+								font-family:PingFang SC;
+								font-weight:400;
+								color:rgba(51,51,51,1);
+								line-height:38rpx;
+								margin-bottom: 10rpx;
+							}
+							.g2{
+								font-size:24rpx;
+								font-family:PingFang SC;
+								font-weight:400;
+								color:rgba(153,153,153,1);
+								line-height:44rpx;
+								margin-bottom: 10rpx;
+							}
+							.g3{
+								.gx-p{
+									font-size:28rpx;
+									font-family:PingFang SC;
+									font-weight:500;
+									color:rgba(237,25,58,1);
+									line-height:44rpx;
+								}
+								.gy-p{
+									font-size:20rpx;
+									font-family:PingFang SC;
+									font-weight:400;
+									text-decoration:line-through;
+									color:rgba(153,153,153,1);
+									line-height:44rpx;
+								}
+							}
+							.logistics{
+								font-size:24rpx;
+								font-family:PingFang SC;
+								font-weight:400;
+								color:rgba(153,153,153,1);
+								margin-top:10rpx;
+							}
+						}
+					}
+					.num{
+						position:absolute;
+						right:0rpx;
+						bottom:30rpx;
+						font-size:24rpx;
+						font-family:PingFang SC;
+						font-weight:400;
+						color:rgba(153,153,153,1);
+					}	
+				}
+			}
+			.xiye{
+				width:100%;
+				font-size:24rpx;
+				font-family:PingFang SC;
+				font-weight:400;
+				color:rgba(153,153,153,1);
+				line-height:44rpx;
+				padding:0 30rpx;
+				display: flex;
+				align-items: center;
+			}
+		}
+		.footer{
+			width:100%;
+			height: 96rpx;
+			text-align: center;;
+			line-height: 96rpx;
+			font-size:32rpx;
+			font-family:PingFang SC;
+			font-weight:400;
+			color:rgba(255,255,255,1);
+			background: #006CB7;
+		}
+	}
 </style>
