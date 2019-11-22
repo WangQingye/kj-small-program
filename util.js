@@ -24,6 +24,19 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 		})
 	}
 }
+function myToast(text, time = 2000, finish) {
+	uni.showToast({
+		title: text,
+		duration: time,
+		icon: 'none'
+	})
+	if (finish) {
+		setTimeout(()=>{
+			return finish();
+		}, time)
+	}
+}
 export default {
-	myRequest
+	myRequest,
+	myToast
 }

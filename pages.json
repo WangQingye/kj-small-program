@@ -111,8 +111,7 @@
 			"style": {
 				"navigationBarTitleText": "订单列表"
 			}
-		}
-		, {
+		}, {
 			"path": "pages/my/order-des/order-des/order-des",
 			"style": {
 				"navigationBarTitleText": "订单详情"
@@ -121,6 +120,12 @@
 			"path": "pages/my/my-info/my-info",
 			"style": {
 				"navigationBarTitleText": "个人信息"
+			}
+		}, {
+
+			"path": "pages/score/score-address/score-address",
+			"style": {
+				"navigationBarTitleText": "新建收货地址"
 			}
 		}
 	],

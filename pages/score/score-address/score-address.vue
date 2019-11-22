@@ -40,24 +40,7 @@
 		},
 		methods: {
 			ararChange(region) {
-				console.log(region);
 				this.areaId = region[3];
-			},
-			async getOrgs() {
-				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
-				console.log(res);
-				if (res) {
-					this.orgs = res.data.map(item => {
-						return item.zh_name;
-					});
-					// this.showPicker = false;
-					// this.$nextTick(() =>{
-					// 	this.showPicker = true;
-					// })
-				}
-			},
-			orgChange(e) {
-				console.log(e.detail.value);
 			},
 			async saveAddress() {
 				if (!this.name.length) {

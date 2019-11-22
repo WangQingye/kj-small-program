@@ -1,11 +1,11 @@
 <template>
 	<view class="my-address">
-		<uni-swipe-action v-for="(item,index) in detailList" :key="index" class="detail-item" :options="options">
+		<uni-swipe-action v-if="addressList.length" v-for="(item,index) in addressList" :key="index" class="detail-item" :options="options" @click="clickDelete(index)">
 			<view class="left">
-				<view class="left-top"><text class="address-name">公司地址</text>{{item.title}}</view>
-				<view class="left-bottom">{{item.time}}</view>
+				<view class="left-top"><text class="address-name">{{addType[item.type]}}</text>{{item.addressee + ' ' + item.mobile}}</view>
+				<view class="left-bottom">{{item.area_join.city_join.zh_name + item.area_join.zh_name + item.site}}</view>
 			</view>
-			<image src="../../../static/edit.png" class="right" mode=""></image>
+			<image src="../../../static/edit.png" class="right" mode="" @click="goEdit(index)"></image>
 		</uni-swipe-action>
 		<view class="save-button" @click="goAddAddress">新建地址</view>
 	</view>
@@ -18,19 +18,8 @@
 	export default {
 		data() {
 			return {
-				detailList: [{
-					title: '奖励',
-					time: '2019-06-24 09:25',
-					num: 300
-				}, {
-					title: '消费',
-					time: '2019-06-24 09:25',
-					num: -300
-				}, {
-					title: '奖励',
-					time: '2019-06-24 09:25',
-					num: 300
-				}],
+				addressList: [],
+				addType:['','公司地址','收货地址','邮寄地址','积分商品地址'],
 				options: [{
 					text: '删除',
 					style: {
@@ -39,13 +28,42 @@
 				}]
 			};
 		},
+		onShow() {
+			this.getAddressList();
+		},
 		components: {
 			uniSwipeAction
 		},
 		methods: {
+			async getAddressList() {
+				let res = await this.myRequest('/api/user/address/list', {
+					page:1,
+					per_page:100
+				}, 'POST');
+				console.log(res)
+				if (res) {
+					this.addressList = res.data.data;
+				}
+			},
+			async clickDelete(index) {
+				let res = await this.myRequest('/api/user/address/destroy', {
+					user_address_id: this.addressList[index].id
+				}, 'POST');
+				if (res) {
+					this.myToast('删除成功');
+					this.getAddressList();
+				}
+			},
 			goAddAddress() {
 				uni.navigateTo({
 					url: `/pages/my/add-address/add-address`
+				});
+			},
+			goEdit(index) {
+				console.log(index);
+				let id = this.addressList[index].id;
+				uni.navigateTo({
+					url: `/pages/my/add-address/add-address?id=${id}`
 				});
 			}
 		}

@@ -14,4 +14,9 @@
 
 <style>
 	/*每个页面公共css */
+	.ellipsis{
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}
 </style>
