@@ -4,9 +4,11 @@
 			<view class="header-title">
 				<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
 			</view>
-			<view class="header-content">
-				<view class="h-person">时先生 16610039071</view>
-				<view class="h-address">北京市丰台区宋家庄位子坑149号庄子写字楼北楼一层</view>
+			<view class="header-content" @click="goAddressList">
+				<view class="h-person" v-if="addreses[tabIndex+1]">{{addreses[tabIndex+1].addressee + ' ' + addreses[tabIndex+1].mobile}}
+				</view>
+				<view class="h-address" v-if="addreses[tabIndex+1]">{{addreses[tabIndex+1].area_join.city_join.zh_name + addreses[tabIndex+1].area_join.zh_name + addreses[tabIndex+1].site}}</view>
+				<view class="h-person" v-if="!addreses[tabIndex+1]">暂无地址</view>
 				<image src="../../../static/c/c30gg.png" mode="" class="goOn h-img"></image>
 			</view>
 		</view>
@@ -18,38 +20,38 @@
 			</view>
 			<view class="goods-box">
 				<view class="goods-item" v-for="(item,index) in goodsInfo" :key="index">
-						<view class="goods-content">
-							<view class="goods-imgbox">
-								<image class="w100" :src="item.goods_cover_pic"></image>
+					<view class="goods-content">
+						<view class="goods-imgbox">
+							<image class="w100" :src="item.goods_cover_pic"></image>
+						</view>
+						<view class="goods-dis">
+							<view class="g1">
+								{{item.goods_title}}
 							</view>
-							<view class="goods-dis">
-								<view class="g1">
-									{{item.goods_title}}
-								</view>
-								<view class="g2">
-									{{item.one_specs_title}};{{item.two_specs_title}}
-								</view>
-								<view class="g3">
-									<text class="gx-p">¥{{item.price}}</text>
-									<text class="gy-p"></text>
-								</view>
+							<view class="g2">
+								{{item.one_specs_title}};{{item.two_specs_title}}
+							</view>
+							<view class="g3">
+								<text class="gx-p">¥{{item.price}}</text>
+								<text class="gy-p"></text>
 							</view>
 						</view>
-						<text class="num"> x{{item.num}}</text>
+					</view>
+					<text class="num"> x{{item.num}}</text>
 				</view>
 			</view>
 			<view class="discount">
 				<view class="dis-title">优惠</view>
 				<view class="dis-content">
-					100积分，抵扣
-					<text style="color:#ED193A">￥10</text>
+					0积分，抵扣
+					<text style="color:#ED193A">￥0</text>
 				</view>
 				<image src="../../../static/c/c30gg.png" class="goOn d-img" mode=""></image>
 			</view>
 			<view class="remark">
 				<view class="re-title">备注信息：</view>
 				<textarea class="re-content" v-model="subData.remark" placeholder="填写留言信息" />
-			</view>
+				</view>
 		</view>
 		<view class="footer">
 			<view class="agreement">
@@ -92,7 +94,7 @@
 					address_id_arr:[1],
 				},
 				isOrder:false,
-				
+				addreses: ["","","",""]				
 			};
 		},
 		methods:{
@@ -113,12 +115,11 @@
 			},
 			async confirm () {
 				if(this.isWatch == false){
-					uni.showToast({
-						title:'请勾选用户协议'
-					})
+					this.myToast('请勾选用户协议');
 					return;
 				}
 				let res;
+				this.subData.address_id_arr = [this.addreses[1].id,this.addreses[2].id,this.addreses[3].id];
 				if(this.isOrder){
 					let orderInfo = {...this.subData}
 					let value = uni.getStorageSync('orderInfo');
@@ -139,10 +140,39 @@
 					uni.showToast({
 						title:'购买成功'
 					})
+				} else {
+					this.myToast(res.message);
 				}
+			},
+			async getAddress() {
+				let res = await this.myRequest('/api/user/address/list', {
+					page:1,
+					per_page:100
+				}, 'POST');
+				if (res) {
+					let allAddress = res.data.data;
+					for (let i = 1; i < 4; i++) {
+						if (!this.$store.state.userAddress[i]) {
+							let address = allAddress.find(item => { return item.type == i});
+							this.$store.commit('saveUserAddress', {
+								index: i,
+								address: address
+							})
+						}
+					}
+					this.addreses = this.$store.state.userAddress;
+					this.$forceUpdate();
+				}
+			},
+			goAddressList() {
+				uni.navigateTo({
+					url:`/pages/my/my-address/my-address?choosenType=${this.tabIndex+1}`
+				})
 			}
 		},
 		onShow () {
+			this.addreses = this.$store.state.userAddress;
+			this.$forceUpdate();
 			try {
 			    const value = uni.getStorageSync('goodsInfo');
 			    if (value) {
@@ -158,7 +188,7 @@
 			if(option){
 				this.isOrder = option.order;
 			}
-			
+			this.getAddress();			
 		}
 	}
 </script>

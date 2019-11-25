@@ -1,7 +1,7 @@
 <template>
 	<view class="my-address">
 		<uni-swipe-action v-if="addressList.length" v-for="(item,index) in addressList" :key="index" class="detail-item" :options="options" @click="clickDelete(index)">
-			<view class="left">
+			<view class="left" @click="clickAddress(index)">
 				<view class="left-top"><text class="address-name">{{addType[item.type]}}</text>{{item.addressee + ' ' + item.mobile}}</view>
 				<view class="left-bottom">{{item.area_join.city_join.zh_name + item.area_join.zh_name + item.site}}</view>
 			</view>
@@ -19,14 +19,18 @@
 		data() {
 			return {
 				addressList: [],
-				addType:['','公司地址','收货地址','邮寄地址','积分商品地址'],
+				addType:['','公司地址','收货地址','发票邮寄地址','积分商品地址'],
 				options: [{
 					text: '删除',
 					style: {
 						backgroundColor: '#ED193A'
 					}
-				}]
+				}],
+				choosenType: null
 			};
+		},
+		onLoad(option) {
+			this.choosenType = option.choosenType;
 		},
 		onShow() {
 			this.getAddressList();
@@ -40,7 +44,6 @@
 					page:1,
 					per_page:100
 				}, 'POST');
-				console.log(res)
 				if (res) {
 					this.addressList = res.data.data;
 				}
@@ -53,6 +56,17 @@
 					this.myToast('删除成功');
 					this.getAddressList();
 				}
+			},
+			clickAddress(index) {
+				if (!this.choosenType) return;
+				let address = {
+					index: this.choosenType,
+					address: this.addressList[index]
+				}
+				this.$store.commit('saveUserAddress', address);
+				uni.navigateBack({
+					delta:1
+				})
 			},
 			goAddAddress() {
 				uni.navigateTo({

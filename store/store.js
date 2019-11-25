@@ -12,7 +12,8 @@ const store = new Vuex.Store({
 		},
 		isLogin: false,
 		needFresh: false,
-		orderAddress: null
+		orderAddress: null,
+		userAddress: ['','','','']
 	},
 	mutations: {
 		saveUserInfo(state, info) {
@@ -29,6 +30,9 @@ const store = new Vuex.Store({
 		},
 		saveOrderAddress(state, orderAddress) {
 			state.orderAddress = orderAddress;
+		},
+		saveUserAddress(state, address) {
+			state.userAddress[address.index] = address.address;
 		}
 	},
 	actions: {}

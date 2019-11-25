@@ -34,7 +34,9 @@
 			}
 		}, {
 			"path": "pages/car/confirm-order/confirm-order",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "确认订单"
+			}
 		}, {
 			"path": "pages/good/good-activity/good-activity",
 			"style": {
