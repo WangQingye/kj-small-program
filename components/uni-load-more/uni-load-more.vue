@@ -112,7 +112,7 @@ export default {
 	height: 80upx;
 	align-items: center;
 	justify-content: center;
-
+	background: white;
 	&__text {
 		font-size: 28upx;
 		color: $uni-text-color-grey;

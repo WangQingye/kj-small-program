@@ -85,7 +85,7 @@
 					page,
 					per_page: perPage
 				}, 'POST');
-				if (res.data.data.length) {
+				if (res.data.data) {
 					this.listItems = this.listItems.concat(res.data.data);
 					if (res.data.data.length < perPage) {
 						this.status = 'noMore'

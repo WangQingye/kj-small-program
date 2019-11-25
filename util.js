@@ -11,8 +11,8 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 		method,
 		data,
 		header: {
-			'Authorization': 'Bearer ' + testToken,
-			// 'Authorization': 'Bearer ' + store.state.userToken.api_token,
+			// 'Authorization': 'Bearer ' + testToken,
+			'Authorization': 'Bearer ' + store.state.userToken.api_token,
 			'Accept': 'application/json'
 		}
 	});

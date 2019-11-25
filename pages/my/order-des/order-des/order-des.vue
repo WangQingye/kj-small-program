@@ -192,11 +192,10 @@
 			async deleteGood(id) {
 				let res = await this.myRequest('/api/user/manage/delGoods', {
 					order_goods_id: id
-				}, 'POST');
+				}, 'POST', true, false);
 				if (res.message != 'success') {
 					this.myToast(res.message);
 				} else {
-					this.myToast('删除成功');
 					this.prices = [];
 					this.nums = [];
 					this.getOrderDesc();
