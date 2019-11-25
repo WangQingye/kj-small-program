@@ -1,7 +1,7 @@
 <template>
 	<view class="add-address-wrapper" v-if="showForm">
 		<view class="add-address">
-			<view class="list-radio">
+			<view class="list-radio" v-if="!orderAddressId">
 				<radio-group @change="radioChange">
 					<label class="radio" style="margin-right: 60rpx;">
 						<radio value="1" checked="true" color="#006CB7" style="transform:scale(0.8)" />公司地址</label>
@@ -28,7 +28,7 @@
 				<area-picker @changeArea="ararChange" :areaIds="areaIds"></area-picker>
 				</picker>
 			</view>
-			<view class="list-item list-picker">
+<!-- 			<view class="list-item list-picker">
 				<view class="list-label">机构类型</view>
 				<picker class="list-input" @change="orgChange" :range="orgs">
 					<view class="list-input ellipsis" style="width: 520rpx" v-if="orgIndex !== null">{{orgs[orgIndex]}}</view>
@@ -37,13 +37,13 @@
 					</view>
 				</picker>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-			</view>
+			</view> -->
 			<view class="list-item" style="height: 240rpx;padding-top: 32rpx;">
 				<textarea style="font-size: 32rpx;" v-model="addressDetail" placeholder="请输入详细地址" placeholder-style="color:#999999"
 				 auto-height />
 				</view>
 		</view>
-		<view class="list-item list-item-1" style="height: 240rpx;">
+		<view class="list-item list-item-1" style="height: 240rpx;" v-if="!orderAddressId">
 			<label><checkbox value="cb" :checked="status" style="transform:scale(0.7)" color="#999999"/>设为默认地址</label>
 		</view>
 		<view class="save-button" @click="saveAddress">保存</view>
@@ -68,6 +68,8 @@
 				addressId: null,
 				// 如果是编辑那么等待数据请求后再渲染
 				showForm: false,
+				// 编辑订单地址时的id
+				orderAddressId: null,
 				areaIds: null
 			};
 		},
@@ -76,14 +78,33 @@
 			this.getOrgs();
 			if (option.id) {
 				this.addressId = option.id;
+				uni.setNavigationBarTitle({
+				    title: '编辑地址'
+				});
 				this.getAddressById(option.id);
+			} else if(option.orderAddressId) {
+				this.orderAddressId = option.orderAddressId;
+				let data = this.$store.state.orderAddress;
+				this.name = data.addressee;
+				this.addType = data.type;
+				this.phone = data.mobile;
+				this.mail = data.email;
+				this.areaIds = [data.province_id, data.city_id, data.area_id];
+				this.addressDetail = data.site;
+				this.status = Boolean(data.status);
+				uni.setNavigationBarTitle({
+				    title: '编辑订单地址'
+				});
+				this.showForm = true;
 			} else{
+				uni.setNavigationBarTitle({
+				    title: '添加地址'
+				});
 				this.showForm = true;
 			}
 		},
 		methods: {
 			ararChange(region) {
-				console.log(region);
 				this.areaId = region[3];
 			},
 			radioChange(e) {
@@ -110,7 +131,6 @@
 			},
 			async getOrgs() {
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
-				console.log(res);
 				if (res) {
 					this.orgs = res.data.map(item => {
 						return item.zh_name;
@@ -132,15 +152,19 @@
 				if (this.addressId) {
 					url = '/api/user/address/update';
 					data.user_address_id = this.addressId;
+				} else if (this.orderAddressId) {
+					url = '/api/user/manage/upAddress';
+					data.order_address_id = this.orderAddressId;
+					delete data.type
 				} else {
-					url = '/api/user/address/store'
+					url = '/api/user/address/store'					
 				}
+				console.log(data);
 				let res = await this.myRequest(url, data , 'POST');
 				if (res) {
 					this.myToast('保存成功',1500,()=>{
-						console.log(312321);
-						uni.navigateTo({
-							url:'/pages/my/my-address/my-address'
+						uni.navigateBack({
+							delta:1
 						})
 					})
 				}
@@ -162,10 +186,10 @@
 					this.myToast('请选择省市区')
 					return false;
 				}
-				if (this.orgIndex == null) {
-					this.myToast('请选择机构类型')
-					return false;
-				}
+				// if (this.orgIndex == null) {
+				// 	this.myToast('请选择机构类型')
+				// 	return false;
+				// }
 				if (!this.addressDetail) {
 					this.myToast('请输入详细地址')
 					return false;

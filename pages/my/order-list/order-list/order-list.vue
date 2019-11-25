@@ -1,66 +1,103 @@
 <template>
 	<view class="main">
 		<view class="body">
-			<view class="order-box" v-for="item in 2" :key="item" >
+			<view class="order-box" v-for="(item,index) in listItems" :key="index" >
 				<view class="order-title">
 					<text class="order-num">
-						订单编号:1826432
+						订单编号:{{item.sn}}
 					</text>
 					<text class="order-status">
-						待确认
+						{{item.status == 1 ? '待处理' : item.status == 2 ? '已取消' : '已完成'}}
 					</text>
 				</view>
 				<view class="goods-box">
-					<view class="goods-item" v-for="item in 2" :key="item">
+					<view class="goods-item" v-for="(good,goodIndex) in item.goods_join" :key="goodIndex">
 							<view class="goods-content">
 								<view class="goods-imgbox">
-									<image class="w100"></image>
+									<image class="w100" :src="good.cover_pic"></image>
 								</view>
 								<view class="goods-dis">
 									<view class="g1">
-										GeneRead DNA FFPE Kit2019 款
+										{{good.title}}
 									</view>
 									<view class="g2">
-										干血斑;DP362-01
+										{{good.two_type_title + ';' + good.two_specs_title}}
 									</view>
 									<view class="g3">
-										<text class="gx-p">¥980</text>
-										<text class="gy-p" >￥1999</text>
+										<text class="gx-p">{{good.clinch_price}}</text>
+										<text class="gy-p" >{{good.original_price}}</text>
 									</view>
 									
 								</view>
 							</view>
-							<text class="num"> x2</text>
+							<text class="num"> x{{good.num}}</text>
 					</view>
 					<view class="order-total" >
 						<view class="order-content">
-							<view class="order-company">新墨（北京）科技有限公司</view>
-							<view class="order-add">时振川  17600220747</view>
+							<view class="order-company">{{item.organ_name}}</view>
+							<view class="order-add">{{item.user_name + ' ' + item.mobile}}</view>
 						</view>
-						<view class="btn" @click="godetails">审核订单</view>
+						<view class="btn" @click="godetails(item.id)" v-if="item.status == 1">审核订单</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<load-more :status="status" v-if="hasList"></load-more>
 	</view>
 </template>
 
 <script>
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
+	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		components:{
-			sunTab
+			sunTab,
+			LoadMore
 		},
 		data() {
 			return {
 				tabIndex:0,
 				tabList:['商品订单',"积分订单"],
+				status: 'more',
+				listPage: 1,
+				listItems: [],
+				hasList: false
 			};
 		},
+		onShow() {
+			this.getOrderList(1);
+		},
+		onReachBottom() {
+			if (this.status == 'more') {
+				this.listPage++;
+				this.getOrderList(this.listPage);
+			}
+		},
 		methods:{
-			godetails () {
+			async getOrderList(page) {
+				if (page != 1) {
+					this.status = 'loading';
+				} else {
+					this.listItems = [];
+				}
+				let perPage = 8;
+				let res = await this.myRequest('/api/user/manage/index', {
+					page,
+					per_page: perPage
+				}, 'POST');
+				if (res.data.data.length) {
+					this.listItems = this.listItems.concat(res.data.data);
+					if (res.data.data.length < perPage) {
+						this.status = 'noMore'
+					} else {
+						this.status = 'more'
+					}
+				}
+				this.hasList = true;
+			},
+			godetails (id) {
 				uni.navigateTo({
-					url: `/pages/my/order-des/order-des/order-des`
+					url: `/pages/my/order-des/order-des/order-des?orderId=${id}`
 				});
 			}
 		}
@@ -75,16 +112,12 @@
 	.main{
 		background: #eee;
 		width: 100%;
-		height: 100vh;
-		overflow: hidden;
 		
 	
 		.body{
 			width:100%;
 			height: 100%;
-			overflow: auto;
 			box-sizing: border-box;
-			padding-bottom: 50rpx;
 			.order-box{
 				padding:0 30rpx;
 				box-sizing: border-box;

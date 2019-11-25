@@ -31,7 +31,7 @@
 					<view class="list-text">我的积分</view>
 					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 				</view>
-				<view class="list-item" @click="goList(4)">
+				<view class="list-item" @click="goList(4)" v-if="isBusiness">
 					<image src="../../../static/list-4.png" mode="" class="list-img"></image>
 					<view class="list-text">订单管理</view>
 					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
@@ -59,10 +59,12 @@
 				showPage: false,
 				nickName: '',
 				avatar: '',
-				company: ''
+				company: '',
+				isBusiness: true
 			};
 		},
 		onShow() {
+			// this.isBusiness = this.$store.state.userToken.is_business;
 			if (this.$store.state.userToken.api_token) {
 				this.showPage = true;
 			}
@@ -224,7 +226,7 @@
 
 		.my-list {
 			width: 690rpx;
-			height: 554rpx;
+			// height: 554rpx;
 			background: white;
 			padding: 0 30rpx;
 			margin-top: 20rpx;

@@ -26,8 +26,9 @@
 						that.loginInfo.code = loginRes.code;
 						uni.getUserInfo({
 							provider: 'weixin',
+							lang: 'zh_CN',
 							success: function(infoRes) {
-								// console.log(infoRes)
+								console.log(infoRes)
 								// console.log(JSON.parse(infoRes.rawData));
 								that.loginInfo.encryptedData = infoRes.encryptedData;
 								that.loginInfo.iv = infoRes.iv;

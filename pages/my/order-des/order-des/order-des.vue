@@ -1,54 +1,55 @@
 <template>
-	<view class="main">
+	<view class="main" v-if="orderData">
 		<view class="body">
 			<view class="order-address">
-				<view class="order-person">时振川  16610039071</view>
-				<view class="order-com-add">北京市丰台区宋家庄位子坑149号庄子写字楼北楼一层</view>
-				<view class="order-add-btn"></view>
+				<view class="order-person">{{orderData.address_join[0].addressee + ' ' + orderData.address_join[0].mobile}}</view>
+				<view class="order-com-add">{{orderData.address_join[0].province_zh + orderData.address_join[0].city_zh + orderData.address_join[0].area_zh + orderData.address_join[0].site}}</view>
+				<view class="order-add-btn" @click="goEdit(orderData.address_join[0].id)"></view>
 			</view>
 			<view class="kf-code">
-				<view class="kf-content">客户代码：1234567</view>
+				<view class="kf-content">客户代码：{{orderData.organ_code}}</view>
 				<view class="kf-btn" @click="openMc(2)"></view>
 			</view>
 			<view class="goods-box">
-				<view class="goods-item" v-for="item in 2" :key="item">
-						<view class="goods-content">
-							<view class="goods-imgbox">
-								<image class="w100"></image>
-							</view>
-							<view class="goods-dis">
-								<view class="g1">
-									GeneRead DNA FFPE Kit FFPE2019 款  
-								</view>
-								<view class="g2" @click="openMc(1)">
-									干血斑;DP362-01
-								</view>
-							</view>
+				<view class="goods-item" v-for="(item,index) in orderData.goods_join" :key="index">
+					<view class="goods-content">
+						<view class="goods-imgbox">
+							<image class="w100" :src="item.cover_pic"></image>
 						</view>
-						<view class="goods-des">
-							<view class="goods-prices">
-								<text>单价：</text>
-								<input type="number" class="goods-inputs">
+						<view class="goods-dis">
+							<view class="g1">
+								{{item.title}}
 							</view>
-							<view class="goods-num">
-								<uniNumberBox class="goods-numbox"></uniNumberBox>
-								<text>数量：</text>
+							<view class="g2" @click="openMc(1)">
+								{{item.two_type_title + ';' + item.two_specs_title}}
 							</view>
+							<image src="../../../../static/delete.png" class="delete-img" @click="deleteGood(item.id)"></image>
 						</view>
+					</view>
+					<view class="goods-des">
+						<view class="goods-prices">
+							<text>单价：</text>
+							<input type="number" class="goods-inputs" v-model="prices[index]" @blur="priceChange(index)">
+						</view>
+						<view class="goods-num">
+							<uniNumberBox class="goods-numbox" v-model="nums[index]" @change="numChange($event,index)"></uniNumberBox>
+							<text>数量：</text>
+						</view>
+					</view>
 				</view>
 			</view>
 			<view class="remark">
 				<text>备注信息：</text>
-				<textarea class="remark-box" value=" " placeholder="请输入备注信息" />
-			</view>
+				<textarea class="remark-box" v-model="remark" placeholder="请输入备注信息" @blur="remarkChange" />
+				</view>
 			<view class="last-info">
-				<view class="order-num">订单编号：180916093124</view>
-				<view class="order-company">所属公司：新墨（北京）科技有限公司</view>
+				<view class="order-num">订单编号：{{orderData.sn}}</view>
+				<view class="order-company">所属公司：{{orderData.organ_name}}</view>
 			</view>
 		</view>
 		<view class="footer">
-			<view class="order-refuse">拒绝订单</view>
-			<view class="order-pass">确认订单</view>
+			<view class="order-refuse" @click="changeOrderStatus(2)">拒绝订单</view>
+			<view class="order-pass" @click="changeOrderStatus(3)">确认订单</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
 			<view class="guige" v-if = "showTc == 1">
@@ -99,9 +100,9 @@
 			<view class="code" v-if = "showTc == 2">
 				<view class="code-title">编辑客户代码</view>
 				<view class="code-box">
-					<input type="text" value="12345678" class="code-input"/>
+					<input type="text" v-model="organCode" class="code-input"/>
 				</view>
-				<view class="code-footer">确认</view>
+				<view class="code-footer" @click="editOrganCode">确认</view>
 				<view class="close" @click="closeMc">	</view>
 			</view>
 		</uniPopup>
@@ -118,10 +119,113 @@
 		},
 		data() {
 			return {
-				showTc:''
+				showTc:'',
+				orderId: null,
+				remark: "",
+				orderData: null,
+				organCode: null,
+				prices: [],
+				nums: []
 			};
 		},
+		onLoad(option) {
+			this.orderId = option.orderId;
+			this.getOrderDesc();
+		},
+		onShow() {
+			if (this.orderId) this.getOrderDesc();
+		},
 		methods:{
+			async getOrderDesc() {
+				let res = await this.myRequest('/api/user/manage/show', {
+					order_id: this.orderId
+				}, 'POST');
+				if (res) {
+					console.log(res)
+					this.orderData = res.data;
+					this.remark = res.data.remark;
+					this.organCode = res.data.organ_code;
+					this.prices = res.data.goods_join.map(item => {
+						return item.clinch_price;
+					})
+					this.nums = res.data.goods_join.map(item => {
+						return item.num;
+					})
+				}
+			},
+			async editOrganCode() {
+				if (!this.organCode) {
+					this.myToast('客户代码不能为空');
+				}
+				let res = await this.myRequest('/api/user/manage/upOrgan', {
+					order_id: this.orderId,
+					organ_code: this.organCode
+				}, 'POST');
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				} else {
+					this.myToast('修改成功');
+					this.showTc = false;
+				}
+			},
+			async numChange(value,index) {
+				if (!value) return;
+				this.nums[index] = value;
+				let res = await this.myRequest('/api/user/manage/upNum', {
+					order_goods_id: this.orderData.goods_join[index].id,
+					num: this.nums[index]
+				}, 'POST', true, false);
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				}
+			},
+			async priceChange(index) {
+				if (!this.prices[index]) return;
+				let res = await this.myRequest('/api/user/manage/upClinchPrice', {
+					order_goods_id: this.orderData.goods_join[index].id,
+					clinch_price: this.prices[index]
+				}, 'POST', true, false);
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				}
+			},
+			async deleteGood(id) {
+				let res = await this.myRequest('/api/user/manage/delGoods', {
+					order_goods_id: id
+				}, 'POST');
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				} else {
+					this.myToast('删除成功');
+					this.prices = [];
+					this.nums = [];
+					this.getOrderDesc();
+				}
+			},
+			async remarkChange() {
+				let res = await this.myRequest('/api/user/manage/upRemark', {
+					order_id: this.orderId,
+					remark: this.remark
+				}, 'POST', true, false);
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				}
+			},
+			async changeOrderStatus(status) {
+				let res = await this.myRequest('/api/user/manage/upStatus', {
+					order_id: this.orderId,
+					status
+				}, 'POST', true, false);
+				if (res.message == 'success') {
+					this.myToast('操作成功', 1000, ()=>{						
+						uni.navigateBack({
+							delta:1
+						})
+					});
+				} else {
+					this.myToast(res.message);					
+				}
+			},
 			openMc (type) {
 				this.showTc = type;
 				this.$refs['buyCode'].open()
@@ -129,6 +233,12 @@
 			closeMc () {
 				this.showTc = false;
 				this.$refs['buyCode'].close()
+			},
+			goEdit(id) {
+				this.$store.commit('saveOrderAddress', this.orderData.address_join[0]);
+				uni.navigateTo({
+					url: `/pages/my/add-address/add-address?orderAddressId=${id}`
+				});
 			}
 		}
 	}
@@ -244,6 +354,7 @@
 								font-weight:400;
 								color:rgba(51,51,51,1);
 								line-height:38rpx;
+								min-height: 76rpx;
 								margin-bottom: 10rpx;
 							}
 							.g2{
@@ -271,6 +382,11 @@
 									background-size: cover;
 									
 								}
+							}
+							.delete-img {
+								width: 40rpx;
+								height: 40rpx;
+								float: right;
 							}
 							.g3{
 								.gx-p{
@@ -323,6 +439,8 @@
 								display: block;
 								border: 1px solid #ccc;
 								box-sizing: border-box;
+								text-align: center;
+								color: #ED193A;
 							}
 						}
 						.goods-num{
