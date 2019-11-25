@@ -43,7 +43,7 @@
 					数量
 				</view>
 				<view class="m4-numbox">
-					<uniNumberBox :min="1" :max="9"  :value="subData.num" @change="bindChange"></uniNumberBox>
+					<uniNumberBox :min="1" :max="9"  @change="bindChange"></uniNumberBox>
 				</view>
 			</view>
 		<!-- v-if="goodsInfo.attach_goods.length > 0" -->
@@ -112,7 +112,7 @@
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	export default {
-		props:['listData'],
+		props:['listData','type'],
 		name: 'specification',
 		components: {
 			uniNumberBox,
@@ -122,7 +122,7 @@
 		data() {
 			return {
 				showLoginPage:false,
-				subData:{ //下单信息
+				subData:{ //下单信息 加入购物车
 					num:1,
 					colorId:'', //颜色Id 一级id
 					colorTitle:'', //颜色名字
@@ -137,7 +137,22 @@
 				zhgoods:[],
 				zht_goods:[],
 				attach_goods:[],//组合商品
-				showTwo :false
+				showTwo :false,
+				orderData:{ //预约下单
+					address_id_arr:[],	
+					organ_code:'',	
+					deduct_id:'',	
+					remark:'',	
+					goods_id:'',	
+					two_specs_id:'',	
+					cart_attach_arr:[{
+						goods_attach_id:'',
+						attach_goods_id	:'',
+						attach_price_id	:'',
+						num:'',
+					}]
+					
+				}
 				
 			};
 		},
@@ -159,12 +174,12 @@
 					this.goodsInfo = [...res.data];
 					this.changeColor(this.goodsInfo[0]);
 					this.goodsGroups();
+					console.log(this.listData)
 				}
 			},
 			async goodsGroups () { //获取组合商品列表
 				let res = await this.myRequest('/api/goods/attachGoods', {goods_id:this.listData.id}, 'GET', false);
 				if(res.message == "success"){
-					
 					this.attach_goods = [...res.data];	
 					this.attach_goods.map(item=>{
 						item.img = '' ; 
@@ -181,49 +196,90 @@
 				}
 			},
 			async addShopCar () { //加入购物车
-				if(!this.$store.state.userToken.api_token){
-					this.showLoginPage = true;
-					return ;
-				}
-				let arr = [];
-				if(this.subData.attach_goods.length > 0) {
-					for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
-						let item = this.subData.attach_goods[i];
-						let obj = {};
-						obj.goods_attach_id =item.goods_attach_id;
-						obj.attach_goods_id =item.attach_goods_id;
-						obj.attach_price_id =item.attach_price_id;
-						obj.num = 1;
-						arr.push(obj);
+				if(this.type == 'choose'){
+					this.$emit('closeWin')
+					return;
+				}else if(this.type == 'order'){
+					let arr =[{
+						goods_title:this.listData.title,
+						goods_cover_pic:this.listData.cover_pic,
+						price:this.subData.show_price,
+						num:this.subData.num,
+						one_specs_title:this.subData.colorTitle,
+						two_specs_title:this.subData.models,
+						id:this.listData.id
+					}];
+					
+					
+					let orderData = {
+						goods_id: this.listData.id,
+						two_specs_id:this.subData.mId,
+						num:this.subData.num,
+						cart_attach_arr:[]						
+					}
+					
+				 	this.subData.attach_goods && this.subData.attach_goods.map(item=>{
+						let obj = {}
+						obj.goods_attach_id = item.goods_attach_id;
+						obj.attach_goods_id = item.attach_goods_id;
+						obj.attach_price_id = item.attach_price_id;
+						obj.num = 1
+						orderData.cart_attach_arr.push(obj)
+					});
+					uni.setStorageSync("orderInfo",JSON.stringify(orderData));
+					uni.setStorageSync("goodsInfo",JSON.stringify(arr));
+					uni.navigateTo({
+						url: `/pages/car/confirm-order/confirm-order?order=true`
+					});
+					this.$emit('closeWin')
+					return;
+				}else{
+					if(!this.$store.state.userToken.api_token){
+						this.showLoginPage = true;
+						return ;
+					}
+					let arr = [];
+					if(this.subData.attach_goods.length > 0) {
+						for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
+							let item = this.subData.attach_goods[i];
+							let obj = {};
+							obj.goods_attach_id =item.goods_attach_id;
+							obj.attach_goods_id =item.attach_goods_id;
+							obj.attach_price_id =item.price_id;
+							obj.num = 1;
+							arr.push(obj);
+						}
+					}
+					
+					let data = {
+						api_token:this.$store.state.userToken.api_token,
+						goods_id:this.listData.id,
+						two_specs_id:this.subData.mId,
+						num:this.subData.num,
+					};
+					if(arr.length > 0 ){
+						data.cart_attach_arr = arr;
+					}
+					let res = await this.myRequest('/api/user/cart/store', data , 'POST', false);
+					if(res.message =="success"){
+						uni.showToast({
+							title:'加入购物车成功',
+							
+						})
+						this.$emit('closeWin')
 					}
 				}
 				
-				let data = {
-					api_token:this.$store.state.userToken.api_token,
-					goods_id:this.listData.id,
-					two_specs_id:this.subData.mId,
-					num:this.subData.num,
-				};
-				if(arr.length > 0 ){
-					data.cart_attach_arr = arr;
-				}
-				let res = await this.myRequest('/api/user/cart/store', data , 'POST', false);
-				if(res.message =="success"){
-					uni.showToast({
-						title:'加入购物车成功',
-						
-					})
-					this.$emit('closeWin')
-				}
+				
 			},
 			close () {
 				this.$emit('closeWin')
 			},
-			bindChange (e) {
-				if(isNaN(e)){
-					this.num = 1
+			bindChange (data) {
+				if(isNaN(data.num)){
+					this.subData.num = 1
 				}else{
-					this.num = e;
+					this.subData.num = data.num;
 				}
 			},
 			changeOne (data,item) { //组合商品 一级

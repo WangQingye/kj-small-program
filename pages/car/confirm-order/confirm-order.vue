@@ -14,7 +14,7 @@
 			<!-- 客户代码 -->
 			<view class="code">
 				<text class="c-t">客户代码：</text>
-				<input class="c-input" type="text" placeholder="请输入...">
+				<input class="c-input" v-model="subData.organ_code" type="text" placeholder="请输入...">
 			</view>
 			<view class="goods-box">
 				<view class="goods-item" v-for="(item,index) in goodsInfo" :key="index">
@@ -31,7 +31,7 @@
 								</view>
 								<view class="g3">
 									<text class="gx-p">¥{{item.price}}</text>
-									<text class="gy-p">￥1999</text>
+									<text class="gy-p"></text>
 								</view>
 							</view>
 						</view>
@@ -48,12 +48,12 @@
 			</view>
 			<view class="remark">
 				<view class="re-title">备注信息：</view>
-				<textarea class="re-content" placeholder="填写留言信息" />
+				<textarea class="re-content" v-model="subData.remark" placeholder="填写留言信息" />
 			</view>
 		</view>
 		<view class="footer">
 			<view class="agreement">
-					<checkbox />
+					<checkbox :checked="isWatch" @click="check"/>
 					<text>
                             我已阅读并同意
                     </text>
@@ -65,7 +65,7 @@
 					合计：
 					<text class="totalNum">￥{{total}}</text>
 				</view>
-				<view class="com-btn">确认订单</view>
+				<view class="com-btn" @click="confirm">确认订单</view>
             </view>
 		</view>
 	</view>
@@ -81,8 +81,17 @@
 			return {
 				total:0,
 				tabIndex:0,
+				isWatch:false,
 				tabList:['公司地址',"发货地址","发票邮寄地址"],
 				goodsInfo:[],
+				subData:{
+					remark:'',
+					organ_code:'',
+					deduct_id:'',
+					cart_id_arr:[],
+					address_id_arr:[1],
+				},
+				isOrder:false,
 				
 			};
 		},
@@ -99,6 +108,39 @@
 				this.total = Number(total);
 				this.total = this.total.toFixed(2)
 			},
+			check () {
+				this.isWatch = !this.isWatch;
+			},
+			async confirm () {
+				if(this.isWatch == false){
+					uni.showToast({
+						title:'请勾选用户协议'
+					})
+					return;
+				}
+				let res;
+				if(this.isOrder){
+					let orderInfo = {...this.subData}
+					let value = uni.getStorageSync('orderInfo');
+						value = JSON.parse(value);
+						for (let i in value){
+							orderInfo[i] = value[i]
+						}
+						delete orderInfo.cart_id_arr;
+					res = await this.myRequest('/api/goods/order/goodsStore', orderInfo, 'POST', false);
+				}else{
+					this.goodsInfo.map(item=>{
+						this.subData.cart_id_arr.push(item.id)
+					})
+					res = await this.myRequest('/api/goods/order/cartStore', this.subData, 'POST', false);
+				}
+				
+				if(res.message == "success"){
+					uni.showToast({
+						title:'购买成功'
+					})
+				}
+			}
 		},
 		onShow () {
 			try {
@@ -111,7 +153,11 @@
 			} catch (e) {
 			    // error
 			}
-		
+		},
+		onLoad (option) {
+			if(option){
+				this.isOrder = option.order;
+			}
 			
 		}
 	}

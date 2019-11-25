@@ -40,7 +40,7 @@
 				</view>
 			</view>
 			<!-- 选择规格 -->
-			<view class="gg" @click="openMc">
+			<view class="gg" @click="openMc('choose')">
 				<text>选择规格</text>
 				<image src="/static/c/c30gg.png" mode="" class="toRight"></image>
 			</view>
@@ -54,7 +54,6 @@
 						<view class="s-item" v-for="(item,key) in listData.gift_join" :key="key">
 							<view class="s-imgbox">
 								<image :src="item.cover_pic" mode="" class="s-img"></image>
-
 							</view>
 							<view class="s-p">
 								{{item.title}}
@@ -90,12 +89,12 @@
 				</view>
 			</view>
 			<view class="f-r">
-				<view class="addCar" @click="openMc">{{'加入购物车'}}</view>
-				<view class="order" @click="openMc">{{'预约下单'}}</view>
+				<view class="addCar" @click="openMc('shopCar')">{{'加入购物车'}}</view>
+				<view class="order" @click="openMc('order')">{{'预约下单'}}</view>
 			</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
-			<specification :listData="listData" @closeWin="closeWin" v-if="showTc"></specification>
+			<specification :listData="listData" :type="type" @closeWin="closeWin" v-if="showTc"></specification>
 		</uniPopup>
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
@@ -119,6 +118,7 @@
 				goodId: 0,
 				showTc: false,
 				showLoginPage:true,
+				type:''
 			};
 		},
 		onLoad(option) {
@@ -144,7 +144,8 @@
 			swiperChange(e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current;
 			},
-			openMc() {
+			openMc(item) {
+				this.type = item;
 				this.showTc = true;
 				this.$refs['buyCode'].open()
 			},
