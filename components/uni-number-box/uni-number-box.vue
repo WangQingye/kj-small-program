@@ -32,6 +32,10 @@ export default {
       type: Number,
       default: 100
     },
+	index: {
+		type: Number,
+		default: 0
+	},
     step: {
       type: Number,
       default: 1
@@ -52,7 +56,12 @@ export default {
     },
     inputValue (newVal, oldVal) {
       if (+newVal !== +oldVal) {
-        this.$emit('change', newVal)
+		  let data ={
+			num : newVal,
+			index: this.index
+		  }
+		  
+        this.$emit('change', data)
       }
     }
   },

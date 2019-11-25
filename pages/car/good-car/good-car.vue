@@ -1,46 +1,52 @@
 <template>
 	<view class="main">
 		<view class="body">
-			<uni-Swipe-Action :options="option" @click="bindClick()">
+			<uni-Swipe-Action :options="option" @click="delClick(item)"  v-for="(item,index) in goodsInfo" :key="index">
 				<view class="goods-item">
 						<label class='goods-check'>
-							<checkbox class="check-box"/>
+							<checkbox class="check-box" :checked="item.checked" @click="check('item',index)" :disabled="item.goods_is_buy == 0"/>
 						</label>
 						<view class="goods-content">
 							<view class="goods-imgbox">
-								<image class="w100"></image>
+								<image class="w100" :src="item.goods_cover_pic"></image>
 							</view>
 							<view class="goods-dis">
 								<view class="g1">
-									GeneRead DNA FFPE Kit2019 款
+									{{item.goods_title}}
 								</view>
 								<view class="g2">
-									干血斑;DP362-01
+									{{item.one_specs_title}};{{item.two_specs_title}}
 								</view>
 								<view class="g3">
-									<text class="gx-p">¥980</text>
-									<text class="gy-p">￥1999</text>
+									<text class="gx-p">¥{{item.price}}</text>
+									<text class="gy-p"></text>
 								</view>
 							</view>
 						</view>
-						<uniNumberBox :min="1" :max="99"  :value="1" @change="bindChange" class="num-box"></uniNumberBox>
+						<uniNumberBox 
+							:min="1" 
+							:max="99"  
+							:index="index"
+							:value="item.num" 
+							@change="bindChange"
+							class="num-box">
+						</uniNumberBox>
 				</view>
 			</uni-Swipe-Action>
 		</view>
 		<view class="footer">
 			<view class="action">
-				<label class="all-box">
-					<checkbox class="all-checkbox"/>
+				<label class="all-box" @click="check('all')">
+					<checkbox class="all-checkbox" :checked="allChecked"/>
 					<text class="allcheck">全选</text>
 				</label>
 				<view class="total">
 					<view class="tw">合计：</view>
-					<view class="t-price">￥4056</view>
+					<view class="t-price">￥{{total}}</view>
 				</view>
 			</view>
 			<view class="confirm" @click="confirm">提交订单</view>
 		</view>
-		
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
@@ -52,7 +58,12 @@
 	export default {
 		data() {
 			return {
-				showLoginPage: true,
+				showLoginPage: false,
+				index:1,
+				goodsInfo:[],
+				total:0,
+				empty:'',
+				allChecked:false,
 				option:[
 					{
 						text: '删除',
@@ -63,31 +74,142 @@
 				]				
 			}
 		},
-		
 		onLoad() {
+			
+		},
+		onShow () {
 			
 		},
 		onPullDownRefresh() {
 		        console.log('refresh');
+				this.getList();
 		        setTimeout(function () {
 		            uni.stopPullDownRefresh();
-		        }, 1000);
+		        }, 500);
 		},
 		methods: {
-			loginOver() {
-				this.showLoginPage = false;
-				uni.showTabBar();
+			loginOver(err) {
+			console.log(err)
+			// 自动登录失败，显示登录框
+			if (err === 1) {
+				uni.hideTabBar();
+				this.showLoginPage = true;
+				return;
+			}
+			// 登录失败返回首页
+			if (err) {
+				uni.switchTab({
+					url: '/pages/index/index'
+				});
+				return;
+			}
+			if (this.$store.state.userToken.api_token) {
+				this.getList();
+			}
+			this.showLoginPage = false;
+			uni.showTabBar();
 			},
-			bindChange (e) {
+			bindChange (data) {
+				// this.goodsInfo[data.index].num = data.num;
+				// this.calcTotal(this.goodsInfo[data.index],data.num);
+				this.changeNum(this.goodsInfo[data.index],data.num)
 				
 			},
-			change () {
+			async changeNum (item,num) { //修改商品数量
+				let res = await this.myRequest('/api/user/cart/upNum', {
+					shop_cart_id:item.id,
+					shop_cart_attach_id:'',
+					num:num
+				}, 'POST', false);
+				if(res.message == "success"){
+					item.num = num;
+					this.calcTotal();
+				}
+			},
+			delClick (item) {
+				let that = this;
+				uni.showModal({
+				    title: '确定删除',
+				    content: '这是一个模态弹窗',
+				    success: function (res) {
+				        if (res.confirm) {
+				           that.delGoods(item.id)
+				        } else if (res.cancel) {
+				            
+				        }
+				    }
+				});
+			},
+			async delGoods (id) { //删除商品
+				let res = await this.myRequest('/api/user/cart/destroy', {
+					api_token:this.$store.state.userToken.api_token,
+					shop_cart_id:id
+				}, 'POST', false);
+				if(res.message == "success"){
+					uni.showToast({
+						title:'删除商品成功'
+					})
+					this.getList()
+				}
+			},
+			async getList () { //获取购物车列表
+					let res = await this.myRequest('/api/user/cart/list', {
+						api_token:this.$store.state.userToken.api_token,
+						page:this.index,
+						per_page:10
+					}, 'POST', false);
+					if (res.message == "success") {
+						this.goodsInfo = [...res.data.data];
+						this.goodsInfo.map(item=>{
+							item.checked = false;
+						})
+					}
 				
 			},
-			bindClick (e) {
-				console.log(e)
+			calcTotal(){ //计算总价
+				if(this.goodsInfo.length === 0){
+					this.empty = true;
+					return;
+				}
+				let total = 0;
+				let checked = true;
+				this.goodsInfo.forEach(item=>{
+					if(item.checked === true){
+						total += item.price * item.num;
+					}else {
+						checked = false;
+					}
+				})
+				this.allChecked = checked;
+				this.total = Number(total);
+				this.total = this.total.toFixed(2)
+			},
+			check(type, index){ //选择单个商品 、全选
+				if(type === 'item'){
+					this.goodsInfo[index].checked = !this.goodsInfo[index].checked;
+				}else{
+					const checked = !this.allChecked
+					this.goodsInfo.forEach(item=>{
+						item.checked = checked;
+					})
+					this.allChecked = checked;
+				}
+				this.calcTotal();
 			},
 			confirm () {
+				let arr = [];
+				this.goodsInfo.map(res=>{
+					if(res.checked == true){
+						arr.push(res)
+					}
+				})
+				if(arr.length == 0){
+					uni.showToast({
+						title:'请选择你要下单的商品'
+					})
+					return ;
+				}
+				uni.setStorageSync("goodsInfo",JSON.stringify(arr));
 				uni.navigateTo({
 					url: `/pages/car/confirm-order/confirm-order`
 				});
@@ -125,6 +247,7 @@
 				position: relative;
 				.goods-check{
 					width:70rpx;
+					margin-top:40rpx;
 					height: 100%;
 					display: flex;
 					align-items: center;
@@ -135,7 +258,6 @@
 					.goods-imgbox{
 						width:240rpx;
 						height: 135rpx;
-						background:red;
 						margin-right: 20rpx;
 					}
 					.goods-dis{

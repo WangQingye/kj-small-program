@@ -11,7 +11,6 @@
 				<view class="m1-d" v-if="chooseStr">
 					已选：{{chooseStr}}
 				</view>
-				
 			</view>
 			<image src="../static/c/c31close.png" mode="" class="m1-close" @click="close"></image>
 		</view>
@@ -53,9 +52,9 @@
 					组合商品
 				</view>
 				<view class="m5-box">
-					<view class="m5-item" v-for="(item,index) in goodsInfo.attach_goods" :key="index">
-						<label class="m5-checkbox">
-								<checkbox class="m5-cb" />
+					<view class="m5-item" v-for="(item,index) in attach_goods" :key="index">
+						<label class="m5-checkbox" >
+								<checkbox class="m5-cb" @click="checkItem(item)"  />
 						</label>
 						<view class="m5-goods">
 							<view class="m5-imgbox">
@@ -79,7 +78,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="footer">确认</view>
+		<view class="footer" @click="addShopCar">确认</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" >
 			<view class="m2" v-if=" showTwo ">
 				<view class="m2-title">
@@ -104,10 +103,12 @@
 			</view>
 			
 		</uniPopup>
+		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
 <script>
+	import LoginPage from '@/components/login-page.vue';
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	export default {
@@ -115,23 +116,27 @@
 		name: 'specification',
 		components: {
 			uniNumberBox,
-			uniPopup
+			uniPopup,
+			LoginPage
 		},
 		data() {
 			return {
+				showLoginPage:false,
 				subData:{ //下单信息
 					num:1,
-					colorId:'', //颜色Id
+					colorId:'', //颜色Id 一级id
 					colorTitle:'', //颜色名字
 					models:'',//规格
-					mId:'',
+					mId:'',  //二级id
 					mlist:[],
 					show_price:'',
-					cover_pic:''
+					cover_pic:'',
+					attach_goods:[]
 				},
 				goodsInfo:[], //页面回显信息,
 				zhgoods:[],
 				zht_goods:[],
+				attach_goods:[],//组合商品
 				showTwo :false
 				
 			};
@@ -142,51 +147,73 @@
 			}
 		},
 		onLoad (option) {
+			
 		},
 		onShow () {
 			this.getInfo();
-			console.log(1321321)
-			this.goodsGroup();
 		},
 		methods:{
 			async getInfo () { //获取列表
 				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:this.listData.id}, 'GET', false);
 				if(res.message == "success"){
 					this.goodsInfo = [...res.data];
-					
 					this.changeColor(this.goodsInfo[0]);
-					// this.goodsInfo.attach_goods.map(item=>{
-					// 	item.img = '' ; 
-					// 	item.price = ''; //现价
-					// 	item.yPrice = '';//原价
-					// 	item.discription = ''; 
-					// 	item.Oid = ''; //一级id
-					// 	item.Tid =''; //二级id
-					// 	this.zhgoods = item;
-					// 	this.changeOne(item.goods_attach_join.one_specs_join[0],item)
-					// })
+					this.goodsGroups();
 				}
 			},
-			async goodsGroup () { //获取列表
-				console.log(1321321)
+			async goodsGroups () { //获取组合商品列表
 				let res = await this.myRequest('/api/goods/attachGoods', {goods_id:this.listData.id}, 'GET', false);
-				console.log(res)
 				if(res.message == "success"){
-					console.log(res)
-					return;
-					this.goodsInfo = [...res.data];
 					
-					this.changeColor(this.goodsInfo[0]);
-					// this.goodsInfo.attach_goods.map(item=>{
-					// 	item.img = '' ; 
-					// 	item.price = ''; //现价
-					// 	item.yPrice = '';//原价
-					// 	item.discription = ''; 
-					// 	item.Oid = ''; //一级id
-					// 	item.Tid =''; //二级id
-					// 	this.zhgoods = item;
-					// 	this.changeOne(item.goods_attach_join.one_specs_join[0],item)
-					// })
+					this.attach_goods = [...res.data];	
+					this.attach_goods.map(item=>{
+						item.img = '' ; 
+						item.price = ''; //现价
+						item.yPrice = '';//原价
+						item.discription = ''; 
+						item.Oid = ''; //一级id
+						item.Tid =''; //二级id
+						item.price_id = '';
+						item.goods_attach_id = '';
+						this.zhgoods = item;
+						this.changeOne(item.goods_attach_join.one_specs_join[0],item)
+					})
+				}
+			},
+			async addShopCar () { //加入购物车
+				if(!this.$store.state.userToken.api_token){
+					this.showLoginPage = true;
+					return ;
+				}
+				let arr = [];
+				if(this.subData.attach_goods.length > 0) {
+					for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
+						let item = this.subData.attach_goods[i];
+						let obj = {};
+						obj.goods_attach_id =item.goods_attach_id;
+						obj.attach_goods_id =item.attach_goods_id;
+						obj.attach_price_id =item.attach_price_id;
+						obj.num = 1;
+						arr.push(obj);
+					}
+				}
+				
+				let data = {
+					api_token:this.$store.state.userToken.api_token,
+					goods_id:this.listData.id,
+					two_specs_id:this.subData.mId,
+					num:this.subData.num,
+				};
+				if(arr.length > 0 ){
+					data.cart_attach_arr = arr;
+				}
+				let res = await this.myRequest('/api/user/cart/store', data , 'POST', false);
+				if(res.message =="success"){
+					uni.showToast({
+						title:'加入购物车成功',
+						
+					})
+					this.$emit('closeWin')
 				}
 			},
 			close () {
@@ -206,11 +233,12 @@
 				this.changeTwo(data.two_specs_join[0],item)
 			},
 			changeTwo (item,data) { //组合商品 二级
-				console.log(1321)
 				data.price = item.attach_price;
 				data.yPrice = item.price;
 				data.img = item.cover_pic;
 				data.Tid = item.id;
+				data.price_id = item.attach_price_id;
+				data.goods_attach_id = item.goods_attach_id;
 				data.discription = data.discription + ";" + item.title
 			},
 			changeColor (item) { //选择颜色
@@ -235,7 +263,59 @@
 			closeMc () {
 				this.$refs['buyCode'] && this.$refs['buyCode'].close();
 				this.showTwo =false;
-			}
+			},
+			checkItem (val) { //选择组合商品
+				let idx ;
+				if(this.subData.attach_goods.length == 0 ){
+					this.subData.attach_goods.push(val)
+				}else{
+					if(!this.subData.attach_goods.every((item,index)=>{
+						if(item.attach_goods_id == val.attach_goods_id){
+							idx = index;
+							return true
+						}else{
+							return false
+						}
+						
+					})){
+						this.subData.attach_goods.push(val)
+					}else{
+						this.subData.attach_goods.splice(idx,1)
+					}
+				}
+				
+			},
+			loginOver(err) {
+				console.log(err)
+				// 自动登录失败，显示登录框
+				if (err === 1) {
+					uni.hideTabBar();
+					this.showLoginPage = true;
+					return;
+				}
+				// 登录失败返回首页
+				if (err) {
+					// uni.switchTab({
+					// 	url: '/pages/index/index'
+					// });
+					// return;
+				}
+				if (this.$store.state.userToken.api_token) {
+					this.getUserInfo();
+				}
+				this.showLoginPage = false;
+				// uni.showTabBar();
+			},
+			async getUserInfo() {
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res) {
+					this.$store.commit('saveUserInfo', res.data);
+					this.nickName = res.data.nickname;
+					this.avatar = res.data.avatar;
+					this.company = (res.data.organization_join && res.data.organization_join.name) || '暂无机构'
+					this.showPage = true;
+				} else {}
+			},
 		},
 		
 		mounted () {

@@ -63,7 +63,8 @@
 			};
 		},
 		onShow() {
-			if (this.$store.state.userToken.api_token) {
+			
+			if (this.$store.state.userToken && this.$store.state.userToken.api_token) {
 				this.showPage = true;
 			}
 			if (this.showLoginPage) {

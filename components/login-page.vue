@@ -27,7 +27,6 @@
 						uni.getUserInfo({
 							provider: 'weixin',
 							success: function(infoRes) {
-								// console.log(infoRes)
 								// console.log(JSON.parse(infoRes.rawData));
 								that.loginInfo.encryptedData = infoRes.encryptedData;
 								that.loginInfo.iv = infoRes.iv;
@@ -53,7 +52,6 @@
 				}
 			},
 			onGotUserInfo(res) {
-				console.log(res);
 				if (res.detail.errMsg == 'getUserInfo:ok') {
 					let infoRes = res.detail
 					this.loginInfo.encryptedData = infoRes.encryptedData;

@@ -39,6 +39,7 @@
 							</view>
 							<text class="num" v-show="tabIndex == 0"> x2</text>
 					</view>
+					
 					<view class="order-total" v-show="tabIndex == 0">
 						<text>合计:</text>
 						<text class="order-money">￥9888</text>
@@ -132,6 +133,8 @@
 				}
 				.goods-box{
 					width: 100%;
+					padding:0 30rpx;
+					box-sizing: border-box;
 					.goods-item{
 						width: 100%;
 						padding:30rpx 0;

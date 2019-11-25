@@ -17,25 +17,25 @@
 				<input class="c-input" type="text" placeholder="请输入...">
 			</view>
 			<view class="goods-box">
-				<view class="goods-item" v-for="item in 2" :key="item">
+				<view class="goods-item" v-for="(item,index) in goodsInfo" :key="index">
 						<view class="goods-content">
 							<view class="goods-imgbox">
-								<image class="w100"></image>
+								<image class="w100" :src="item.goods_cover_pic"></image>
 							</view>
 							<view class="goods-dis">
 								<view class="g1">
-									GeneRead DNA FFPE Kit2019 款
+									{{item.goods_title}}
 								</view>
 								<view class="g2">
-									干血斑;DP362-01
+									{{item.one_specs_title}};{{item.two_specs_title}}
 								</view>
 								<view class="g3">
-									<text class="gx-p">¥980</text>
+									<text class="gx-p">¥{{item.price}}</text>
 									<text class="gy-p">￥1999</text>
 								</view>
 							</view>
 						</view>
-						<text class="num"> x2</text>
+						<text class="num"> x{{item.num}}</text>
 				</view>
 			</view>
 			<view class="discount">
@@ -63,7 +63,7 @@
 			<view class="comfirm-box">
 				<view class="total">
 					合计：
-					<text class="totalNum">￥1096</text>
+					<text class="totalNum">￥{{total}}</text>
 				</view>
 				<view class="com-btn">确认订单</view>
             </view>
@@ -79,10 +79,40 @@
 		},
 		data() {
 			return {
+				total:0,
 				tabIndex:0,
 				tabList:['公司地址',"发货地址","发票邮寄地址"],
+				goodsInfo:[],
 				
 			};
+		},
+		methods:{
+			calcTotal(){ //计算总价
+				if(this.goodsInfo.length == 0){
+					this.total = 0;
+					return ;
+				}
+				let total = 0;
+				this.goodsInfo.forEach(item=>{
+						total += item.price * item.num;
+				})
+				this.total = Number(total);
+				this.total = this.total.toFixed(2)
+			},
+		},
+		onShow () {
+			try {
+			    const value = uni.getStorageSync('goodsInfo');
+			    if (value) {
+			       this.goodsInfo = JSON.parse(value)
+				   console.log(this.goodsInfo)
+				   this.calcTotal()
+			    }
+			} catch (e) {
+			    // error
+			}
+		
+			
 		}
 	}
 </script>
@@ -242,7 +272,6 @@
 						.goods-imgbox{
 							width:240rpx;
 							height: 135rpx;
-							background:red;
 							margin-right: 20rpx;
 						}
 						.goods-dis{

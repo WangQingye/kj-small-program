@@ -76,14 +76,14 @@
 		</view>
 		<view class="footer">
 			<view class="f-l">
-				<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
+				<navigator url="/pages/car/good-car/good-car" open-type="switchTab" class="p-b-btn">
 					<image src="/static/c/c30gwc.png" class="p-b-car"></image>
 					<text>购物车</text>
 				</navigator>
-				<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
+				<view class="p-b-btn">
 					<image class="p-b-zx" src="/static/c/c30zx.png" mode=""></image>
 					<text>咨询</text>
-				</navigator>
+				</view>
 				<view class="p-b-btn" :class="{active: favorite}" @click="toFavorite">
 					<image class="p-b-zx" src="/static/c/c30sc.png" mode=""></image>
 					<text>收藏</text>
@@ -97,16 +97,19 @@
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
 			<specification :listData="listData" @closeWin="closeWin" v-if="showTc"></specification>
 		</uniPopup>
+		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
 <script>
+	
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import specification from '@/components/specification.vue'
 	export default {
 		components: {
 			uniPopup,
-			specification
+			specification,
+			
 		},
 		data() {
 			return {
@@ -114,12 +117,14 @@
 				swiperCurrent: 0,
 				swiperLength: 0,
 				goodId: 0,
-				showTc: false
+				showTc: false,
+				showLoginPage:true,
 			};
 		},
 		onLoad(option) {
 			this.goodId = option.goodId;
-			this.getList()
+			this.getList();
+			
 		},
 		methods: {
 			async getList() {
