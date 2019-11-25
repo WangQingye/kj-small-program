@@ -1,48 +1,48 @@
 <template>
 	<view class="main">
 		<view class="header">
-			<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
+			<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true"  @update:value="onTabChange" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
 			<view class="h">
 			</view>
 		</view>
 		<view class="body">
-			<view class="order-box" v-for="item in 2" :key="item" >
+			<view class="order-box" v-for="(item,index) in listItems" :key="index" >
 				<view class="order-title">
 					<text class="order-num">
-						订单编号:1826432
+						订单编号:{{item.sn}}
 					</text>
 					<text class="order-status">
-						待确认
+						{{item.status == 1 ? '待处理' : item.status == 2 ? '已取消' : '已完成'}}
 					</text>
 				</view>
 				<view class="goods-box">
-					<view class="goods-item" v-for="item in 2" :key="item">
+					<view class="goods-item" v-for="(good,goodIndex) in item.goods_join" :key="goodIndex">
 							<view class="goods-content">
 								<view class="goods-imgbox">
-									<image class="w100"></image>
+									<image class="w100" :src="good.cover_pic"></image>
 								</view>
 								<view class="goods-dis">
 									<view class="g1">
-										GeneRead DNA FFPE Kit2019 款
+										{{good.title}}
 									</view>
 									<view class="g2" v-show="tabIndex == 0">
-										干血斑;DP362-01
+										{{good.two_type_title + ';' + good.two_specs_title}}
 									</view>
 									<view class="g3">
-										<text class="gx-p">¥980</text>
-										<text class="gy-p" v-show="tabIndex == 0">￥1999</text>
+										<text class="gx-p">￥ {{good.clinch_price}}</text>
+										<text class="gy-p" v-show="tabIndex == 0">￥ {{good.original_price}}</text>
 									</view>
 									<view class="logistics" v-show="tabIndex == 1">
-										物流信息:1543265486545
+										物流信息:{{item.ship_sn}}
 									</view>
 								</view>
 							</view>
-							<text class="num" v-show="tabIndex == 0"> x2</text>
+							<text class="num" v-show="tabIndex == 0"> x{{good.num}}</text>
 					</view>
 					
 					<view class="order-total" v-show="tabIndex == 0">
 						<text>合计:</text>
-						<text class="order-money">￥9888</text>
+						<text class="order-money">￥{{item.price_total}}</text>
 					</view>
 				</view>
 			</view>
@@ -50,31 +50,83 @@
 				
 			</view>
 		</view>
+		<load-more :status="status" v-if="hasList"></load-more>
 	</view>
 </template>
 
 <script>
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
+	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		components:{
-			sunTab
+			sunTab,
+			LoadMore
 		},
 		data() {
 			return {
 				tabIndex:0,
 				tabList:['商品订单',"积分订单"],
+				status: 'more',
+				listPage: 1,
+				listItems: [],
+				hasList: false,
+				url: '/api/user/myOrder/goodsList'
 			};
+		},
+		onShow() {
+			this.getOrderList(1);
+		},
+		onReachBottom() {
+			if (this.status == 'more') {
+				this.listPage++;
+				this.getOrderList(this.listPage);
+			}
+		},
+		methods:{
+			async getOrderList(page) {
+				if (page != 1) {
+					this.status = 'loading';
+				} else {
+					this.listItems = [];
+				}
+				let perPage = 8;
+				let res = await this.myRequest(this.url, {
+					page,
+					per_page: perPage
+				}, 'POST');
+				if (res.data.data) {
+					this.listItems = this.listItems.concat(res.data.data);
+					if (res.data.data.length < perPage) {
+						this.status = 'noMore'
+					} else {
+						this.status = 'more'
+					}
+				}
+				this.hasList = true;
+			},
+			onTabChange(index) {
+				// if (index == 0) {
+				// 	this.url = '/api/user/myOrder/goodsList';
+				// } else if (index == 1) {
+				// 	this.url = '/api/integral/order';
+				// }
+				// this.listPage = 1;
+				// this.getOrderList(1);
+			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	.w100{
+		width: 100%;
+		height: 100%;
+	}
 	.main{
 		display: flex;
 		flex-direction: column;
 		background: #eee;
 		width: 100%;
-		height: 100vh;
 		.header{
 			width: 100%;
 			height: 80rpx;
@@ -102,7 +154,6 @@
 		.body{
 			flex: 1;
 			width:100%;
-			overflow: auto;
 			box-sizing: border-box;
 			.order-box{
 				padding:0 30rpx;

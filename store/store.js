@@ -11,7 +11,8 @@ const store = new Vuex.Store({
 			is_business: 0
 		},
 		isLogin: false,
-		needFresh: false
+		needFresh: false,
+		orderAddress: null
 	},
 	mutations: {
 		saveUserInfo(state, info) {
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
 		},
 		saveNeedFresh(state, needFresh) {
 			state.needFresh = needFresh;
+		},
+		saveOrderAddress(state, orderAddress) {
+			state.orderAddress = orderAddress;
 		}
 	},
 	actions: {}

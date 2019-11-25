@@ -26,7 +26,7 @@ export default {
     },
     min: {
       type: Number,
-      default: 0
+      default: 1
     },
     max: {
       type: Number,
@@ -55,6 +55,7 @@ export default {
       this.inputValue = +val
     },
     inputValue (newVal, oldVal) {
+			if (oldVal == 0) return;
       if (+newVal !== +oldVal) {
 		  let data ={
 			num : newVal,
