@@ -146,7 +146,7 @@
 				this.swiperCurrent = e.detail.current;
 			},
 			openMc(item) {
-				if(this.$store.state.userToken.api_token == ""){
+				if(this.$store.state.userToken.api_token == "" && item != "choose"){
 					this.showLoginPage = true;
 					return
 				}
