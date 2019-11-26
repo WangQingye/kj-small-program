@@ -55,14 +55,15 @@
 		</view>
 		<view class="footer">
 			<view class="agreement">
-				<lable @click="check">
-					<van-checkbox :value="isWatch" ></van-checkbox>
-					<text>
+				<view  @click="checks" style="display: flex;align-items: center;height: 100%;">
+					<van-checkbox :value="isWatch" style="margin-right: 20rpx;"></van-checkbox>
+					<text >
 					        我已阅读并同意
 					</text>
-				
-				</lable>
-				<text style="color: #006CB7;">《用户协议》</text>
+				</view>
+					
+			
+				<text style="color: #006CB7;" @click="Goagreement">《用户协议》</text>
 					
 				
 			</view>
@@ -114,8 +115,13 @@
 				this.total = Number(total);
 				this.total = this.total.toFixed(2)
 			},
-			check () {
+			checks () {
 				this.isWatch = !this.isWatch;
+			},
+			Goagreement (){
+				uni.navigateTo({
+					url: `/pages/score/score-desc/score-desc`
+				});
 			},
 			async confirm () {
 				if(this.isWatch == false){
@@ -141,9 +147,11 @@
 				}
 				
 				if(res.message == "success"){
-					uni.showToast({
-						title:'购买成功'
-					})
+					uni.navigateTo({
+						url: `/pages/car/good-car/good-car`
+					});
+					this.myToast('购买成功')
+					
 				} else {
 					this.myToast(res.message);
 				}

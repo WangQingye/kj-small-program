@@ -46,8 +46,8 @@
 					<uniNumberBox :min="1" :max="9"  @change="bindChange"></uniNumberBox>
 				</view>
 			</view>
-		<!-- v-if="goodsInfo.attach_goods.length > 0" -->
-			<view class="m5" >
+		<!-- " -->
+			<view class="m5" v-if="attach_goods.length > 0">
 				<view class="m5-title">
 					组合商品
 				</view>
@@ -207,15 +207,12 @@
 						two_specs_title:this.subData.models,
 						id:this.listData.id
 					}];
-					
-					
 					let orderData = {
 						goods_id: this.listData.id,
 						two_specs_id:this.subData.mId,
 						num:this.subData.num,
 						cart_attach_arr:[]						
 					}
-					
 				 	this.subData.attach_goods && this.subData.attach_goods.map(item=>{
 						let obj = {}
 						obj.goods_attach_id = item.goods_attach_id;
@@ -258,8 +255,8 @@
 					if(res.message =="success"){
 						uni.showToast({
 							title:'加入购物车成功',
-							
 						})
+						this.getCarNum();
 						this.$emit('closeWin')
 					}
 				}
@@ -356,15 +353,15 @@
 				this.showLoginPage = false;
 				// uni.showTabBar();
 			},
-			async getUserInfo() {
-				let res = await this.myRequest('/api/user/info', {}, 'POST');
-				if (res) {
-					this.$store.commit('saveUserInfo', res.data);
-					this.nickName = res.data.nickname;
-					this.avatar = res.data.avatar;
-					this.company = (res.data.organization_join && res.data.organization_join.name) || '暂无机构'
-					this.showPage = true;
-				} else {}
+			async getCarNum () { //获取购物车数量
+					let res = await this.myRequest('/api/user/cart/list', {
+						api_token:this.$store.state.userToken.api_token,
+						page:1,
+						per_page:1
+					}, 'POST', false,false);
+					if (res.message == "success") {
+						this.$emit('carNums',res.data.total)
+					}
 			},
 		},
 		

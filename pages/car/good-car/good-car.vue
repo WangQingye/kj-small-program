@@ -33,6 +33,7 @@
 						</uniNumberBox>
 				</view>
 			</uni-Swipe-Action>
+			<load-more :status="status"></load-more>
 		</view>
 		<view class="footer">
 			<view class="action">
@@ -48,10 +49,12 @@
 			<view class="confirm" @click="confirm">提交订单</view>
 		</view>
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
+		
 	</view>
 </template>
 
 <script>
+	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import {uniSwipeAction} from "@/components/uni-swipe-action/uni-swipe-action.vue"
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import LoginPage from '@/components/login-page.vue';
@@ -64,6 +67,7 @@
 				total:0,
 				empty:'',
 				allChecked:false,
+				status:'more',
 				option:[
 					{
 						text: '删除',
@@ -77,19 +81,30 @@
 		onLoad() {
 			
 		},
+		
 		beforeCreate () {
 			if(this.$store.state.userToken.api_token == ''){
 				this.showLoginPage = true;
 			}
 		},
 		onShow () {
+			this.index = 1 ;
+			this.goodsInfo.length = 0;
 			if(this.$store.state.userToken.api_token){
 				this.getList();
 			}
 			
 		},
+		onReachBottom () {
+			if (this.status == 'more') {
+				this.index++;
+				this.getList();
+			}
+		},
 		onPullDownRefresh() {
 		        console.log('refresh');
+				this.index = 1;
+				this.goodsInfo.length = 0;
 				this.getList();
 		        setTimeout(function () {
 		            uni.stopPullDownRefresh();
@@ -138,7 +153,7 @@
 				let that = this;
 				uni.showModal({
 				    title: '确定删除',
-				    content: '这是一个模态弹窗',
+				    content: '',
 				    success: function (res) {
 				        if (res.confirm) {
 				           that.delGoods(item.id)
@@ -156,18 +171,26 @@
 				if(res.message == "success"){
 					uni.showToast({
 						title:'删除商品成功'
-					})
+					});
+					this.index = 1 ;
+					this.goodsInfo.length = 0;
 					this.getList()
 				}
 			},
 			async getList () { //获取购物车列表
+					this.status = 'loading';
 					let res = await this.myRequest('/api/user/cart/list', {
 						api_token:this.$store.state.userToken.api_token,
 						page:this.index,
 						per_page:10
-					}, 'POST', false);
+					}, 'POST',false,false);
 					if (res.message == "success") {
-						this.goodsInfo = [...res.data.data];
+						if(res.data.data.length < 9){
+							this.status = "noMore";
+						}else{
+							this.status = "more"
+						}
+						this.goodsInfo = this.goodsInfo.concat(res.data.data);
 						this.goodsInfo.map(item=>{
 							item.checked = false;
 						})
@@ -213,7 +236,8 @@
 				})
 				if(arr.length == 0){
 					uni.showToast({
-						title:'请选择你要下单的商品'
+						title:'请选择您要下单的商品',
+						icon: 'none'
 					})
 					return ;
 				}
@@ -226,7 +250,8 @@
 		components: {
 			LoginPage,
 			uniNumberBox,
-			uniSwipeAction
+			uniSwipeAction,
+			LoadMore
 		}
 	}
 </script>
@@ -352,8 +377,8 @@
 					color:rgba(51,51,51,1);
 					align-items: center;
 					.all-checkbox{
-						width: 40rpx;
-						height: 40rpx;
+						width: 42rpx;
+						height: 42rpx;
 						margin-right: 32rpx;
 					}
 				}

@@ -78,6 +78,7 @@
 				<navigator url="/pages/car/good-car/good-car" open-type="switchTab" class="p-b-btn">
 					<image src="/static/c/c30gwc.png" class="p-b-car"></image>
 					<text>购物车</text>
+					<view class="jb" v-if="carNum != 0">{{carNum}}</view>
 				</navigator>
 				<view class="p-b-btn">
 					<image class="p-b-zx" src="/static/c/c30zx.png" mode=""></image>
@@ -95,7 +96,7 @@
 		</view>
 		<login-page :showFlag="showLoginPage" v-if="showLoginPage" @login-over="loginOver"></login-page>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
-			<specification :listData="listData" :type="type" @closeWin="closeWin" v-if="showTc"></specification>
+			<specification :listData="listData" :type="type" @closeWin="closeWin" @carNums='shopCarNum' v-if="showTc"></specification>
 		</uniPopup>
 		
 	</view>
@@ -118,6 +119,7 @@
 				swiperLength: 0,
 				goodId: 0,
 				showTc: false,
+				carNum:0,
 				showLoginPage:false,
 				type:''
 			};
@@ -128,6 +130,9 @@
 		},
 		onShow () {
 			this.getList();
+			if(this.$store.state.userToken.api_token){
+				this.getCarNum()
+			}
 		},
 		methods: {
 			async getList() {
@@ -141,6 +146,16 @@
 					this.swiperLength = this.listData.pic_join.length;
 				}
 
+			},
+			async getCarNum () { //获取购物车数量
+					let res = await this.myRequest('/api/user/cart/list', {
+						api_token:this.$store.state.userToken.api_token,
+						page:1,
+						per_page:1
+					}, 'POST', false);
+					if (res.message == "success") {
+						this.carNum = res.data.total
+					}
 			},
 			swiperChange(e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current;
@@ -158,6 +173,9 @@
 				this.showTc = false;
 				this.$refs['buyCode'].close()
 			},
+			shopCarNum (num) {
+				this.carNum = num;
+			},
 			loginOver(err) {
 				console.log(err)
 				// 自动登录失败，显示登录框
@@ -173,9 +191,9 @@
 					});
 					return;
 				}
-				// if (this.$store.state.userToken.api_token) {
-				// 	this.getUserInfo();
-				// }
+				if (this.$store.state.userToken.api_token) {
+					this.getCarNum()
+				}
 				this.showLoginPage = false;
 				// uni.showTabBar();
 			},
@@ -447,13 +465,26 @@
 
 				.p-b-btn {
 					display: flex;
+					position:relative;
 					flex-direction: column;
 					justify-content: space-between;
 					align-items: center;
 					width: 70rpx;
 					height: 100%;
 					margin-right: 30rpx;
-					;
+					.jb{
+						width: 30rpx;
+						height: 20rpx;
+						border-radius: 14rpx;
+						background: red;
+						color: #fff;
+						font-size: 15rpx;
+						line-height: 20rpx;
+						text-align: center;
+						position: absolute;
+						top: -5rpx;
+						right: 5rpx;
+					}
 
 					.p-b-car {
 						width: 42rpx;
