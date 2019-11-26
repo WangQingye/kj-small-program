@@ -14,7 +14,11 @@
 			"path": "pages/car/good-car/good-car",
 			"style": {
 				"navigationBarTitleText": "购物车",
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": true,
+				"usingComponents": {
+					"van-checkbox": "/wxcomponents/vant-weapp/checkbox/index"
+				}
+				
 			}
 		}, {
 			"path": "pages/good/good-type/good-type",
@@ -30,7 +34,8 @@
 		}, {
 			"path": "pages/good/good-desc/good-desc",
 			"style": {
-				"navigationBarTitleText": "商品列表"
+				"navigationBarTitleText": "商品列表",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/car/confirm-order/confirm-order",
@@ -107,6 +112,7 @@
 			"path": "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
 			"style": {
 				"navigationBarTitleText": "确认订单"
+				
 			}
 		}, {
 			"path": "pages/my/order-list/order-list/order-list",

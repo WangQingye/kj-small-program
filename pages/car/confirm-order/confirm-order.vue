@@ -55,11 +55,15 @@
 		</view>
 		<view class="footer">
 			<view class="agreement">
-					<checkbox :checked="isWatch" @click="check"/>
+				<lable @click="check">
+					<van-checkbox :value="isWatch" ></van-checkbox>
 					<text>
-                            我已阅读并同意
-                    </text>
-					<text style="color: #006CB7;">《用户协议》</text>
+					        我已阅读并同意
+					</text>
+				
+				</lable>
+				<text style="color: #006CB7;">《用户协议》</text>
+					
 				
 			</view>
 			<view class="comfirm-box">

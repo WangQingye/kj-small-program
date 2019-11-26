@@ -3,8 +3,8 @@
 		<view class="body">
 			<uni-Swipe-Action :options="option" @click="delClick(item)"  v-for="(item,index) in goodsInfo" :key="index">
 				<view class="goods-item">
-						<label class='goods-check'>
-							<checkbox class="check-box" :checked="item.checked" @click="check('item',index)" :disabled="item.goods_is_buy == 0"/>
+						<label class='goods-check' @click="check('item',index)">
+							<van-checkbox class="check-box" :value="item.checked"  :disabled="item.goods_is_buy == 0"></van-checkbox>
 						</label>
 						<view class="goods-content">
 							<view class="goods-imgbox">
@@ -37,7 +37,7 @@
 		<view class="footer">
 			<view class="action">
 				<label class="all-box" @click="check('all')">
-					<checkbox class="all-checkbox" :checked="allChecked"/>
+					<van-checkbox class="all-checkbox" :value="allChecked"></van-checkbox>
 					<text class="allcheck">全选</text>
 				</label>
 				<view class="total">
@@ -77,7 +77,15 @@
 		onLoad() {
 			
 		},
+		beforeCreate () {
+			if(this.$store.state.userToken.api_token == ''){
+				this.showLoginPage = true;
+			}
+		},
 		onShow () {
+			if(this.$store.state.userToken.api_token){
+				this.getList();
+			}
 			
 		},
 		onPullDownRefresh() {
@@ -237,6 +245,7 @@
 		.body{
 			width: 100%;
 			flex: 1;
+			overflow: auto;
 			.goods-item{
 				width: 100%;
 				padding:30rpx;

@@ -1,6 +1,6 @@
 <template>
-	<view class="good-desc">
-		<view class="body">
+	<view class="good-desc" v-if="JSON.stringify(listData) !='{}'">
+		<view class="body" >
 			<!-- 轮播 -->
 			<view class="carousel">
 				<swiper circular=true duration="400" class="carousel-box" @change="swiperChange">
@@ -93,22 +93,23 @@
 				<view class="order" @click="openMc('order')">{{'预约下单'}}</view>
 			</view>
 		</view>
+		<login-page :showFlag="showLoginPage" v-if="showLoginPage" @login-over="loginOver"></login-page>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
 			<specification :listData="listData" :type="type" @closeWin="closeWin" v-if="showTc"></specification>
 		</uniPopup>
-		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
+		
 	</view>
 </template>
 
 <script>
-	
+	import LoginPage from '@/components/login-page.vue';
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import specification from '@/components/specification.vue'
 	export default {
 		components: {
 			uniPopup,
 			specification,
-			
+			LoginPage
 		},
 		data() {
 			return {
@@ -117,14 +118,16 @@
 				swiperLength: 0,
 				goodId: 0,
 				showTc: false,
-				showLoginPage:true,
+				showLoginPage:false,
 				type:''
 			};
 		},
 		onLoad(option) {
 			this.goodId = option.goodId;
-			this.getList();
 			
+		},
+		onShow () {
+			this.getList();
 		},
 		methods: {
 			async getList() {
@@ -134,9 +137,7 @@
 				if (res.message == "success") {
 					if (res.data.content) res.data.content = res.data.content.replace(/\<img/gi,
 						"<img class='rich-text-img'");
-					this.listData = { ...res.data
-					};
-					console.log(this.listData.content)
+					this.listData = { ...res.data};
 					this.swiperLength = this.listData.pic_join.length;
 				}
 
@@ -145,6 +146,10 @@
 				this.swiperCurrent = e.detail.current;
 			},
 			openMc(item) {
+				if(this.$store.state.userToken.api_token == ""){
+					this.showLoginPage = true;
+					return
+				}
 				this.type = item;
 				this.showTc = true;
 				this.$refs['buyCode'].open()
@@ -152,10 +157,34 @@
 			closeWin() {
 				this.showTc = false;
 				this.$refs['buyCode'].close()
-			}
+			},
+			loginOver(err) {
+				console.log(err)
+				// 自动登录失败，显示登录框
+				if (err === 1) {
+					uni.hideTabBar();
+					this.showLoginPage = true;
+					return;
+				}
+				// 登录失败返回首页
+				if (err) {
+					uni.switchTab({
+						url: '/pages/index/index'
+					});
+					return;
+				}
+				// if (this.$store.state.userToken.api_token) {
+				// 	this.getUserInfo();
+				// }
+				this.showLoginPage = false;
+				// uni.showTabBar();
+			},
 		},
 		onPullDownRefresh: function() { //下拉刷新
-			this.getList()
+			this.getList();
+			setTimeout(function () {
+			    uni.stopPullDownRefresh();
+			}, 500);
 		}
 	}
 </script>

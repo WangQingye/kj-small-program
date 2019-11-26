@@ -103,7 +103,6 @@
 			</view>
 			
 		</uniPopup>
-		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
@@ -174,7 +173,6 @@
 					this.goodsInfo = [...res.data];
 					this.changeColor(this.goodsInfo[0]);
 					this.goodsGroups();
-					console.log(this.listData)
 				}
 			},
 			async goodsGroups () { //获取组合商品列表
@@ -234,10 +232,6 @@
 					this.$emit('closeWin')
 					return;
 				}else{
-					if(!this.$store.state.userToken.api_token){
-						this.showLoginPage = true;
-						return ;
-					}
 					let arr = [];
 					if(this.subData.attach_goods.length > 0) {
 						for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
