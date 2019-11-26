@@ -15,6 +15,26 @@
 					<text>&nbsp; {{swiperLength}}</text>
 				</view>
 			</view>
+			<!-- 限时秒杀 -->
+			<view class="ms" v-if="false">
+				<view class="left-box">
+					<view class="left-top">限时秒杀</view>
+					<view class="left-bottom">还剩268件</view>
+				</view>
+				<view class="right-box">
+					<text>距离结束还剩</text>
+					<uni-Countdown
+						color="#ED193A" 
+						background-color="#FFF" 
+						border-color="#ED193A" 
+						:show-day="false"
+						:hour="2" 
+						:minute="30" 
+						:second="0" :reset="false"
+						class="countDown"
+					></uni-Countdown>
+				</view>
+			</view>
 			<!-- 价格详情 -->
 			<view class="goods-price">
 				<view class="t1">
@@ -80,7 +100,7 @@
 					<text>购物车</text>
 					<view class="jb" v-if="carNum != 0">{{carNum}}</view>
 				</navigator>
-				<view class="p-b-btn">
+				<view class="p-b-btn" @click="openZx">
 					<image class="p-b-zx" src="/static/c/c30zx.png" mode=""></image>
 					<text>咨询</text>
 				</view>
@@ -95,14 +115,20 @@
 			</view>
 		</view>
 		<login-page :showFlag="showLoginPage" v-if="showLoginPage" @login-over="loginOver"></login-page>
-		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
+		<uni-popup ref="buyCode" type="bottom" class="buy-wrapper">
 			<specification :listData="listData" :type="type" @closeWin="closeWin" @carNums='shopCarNum' v-if="showTc"></specification>
-		</uniPopup>
-		
+		</uni-popup>
+		<uni-popup ref='zx' type="center" class="zx-wrapper">
+			<view class="zx-box">
+				<view class="zx-item">技术咨询</view>
+				<view class="zx-item">购买咨询</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script>
+	import uniCountdown from "@/components/linnian-CountDown/uni-countdown.vue"
 	import LoginPage from '@/components/login-page.vue';
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import specification from '@/components/specification.vue'
@@ -110,7 +136,8 @@
 		components: {
 			uniPopup,
 			specification,
-			LoginPage
+			LoginPage,
+			uniCountdown
 		},
 		data() {
 			return {
@@ -159,6 +186,12 @@
 			},
 			swiperChange(e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current;
+			},
+			openZx () {
+				this.$refs['zx'].open()
+			},
+			closeZx () {
+				this.$refs['zx'].close()
 			},
 			openMc(item) {
 				if(this.$store.state.userToken.api_token == "" && item != "choose"){
@@ -258,7 +291,51 @@
 				}
 
 			}
-
+			.ms{
+				width:100%;
+				height: 80rpx;
+				background: #ED193A;
+				color:#fff;
+				padding:14rpx 0 ;
+				box-sizing: border-box;
+				display: flex;
+				.left-box{
+					width: 180rpx;
+					height: 100%;
+					position: relative;
+					&:after{
+						content: '';
+						width: 1rpx;
+						height: 40rpx;
+						position: absolute;
+						right: 0;top:0;bottom:0;
+						margin:auto;
+						background: #fff;
+					}
+					.left-top{
+						font-size: 24rpx;
+						text-align: center;
+						line-height: 1;
+						margin-bottom: 10rpx;
+					}
+					.left-bottom{
+						line-height: 1;
+						text-align: center;
+						font-size: 20rpx;
+					}
+				}
+				.right-box{
+					flex:1;
+					height: 100%;
+					display: flex;
+					align-items: center;
+					font-size: 28rpx;
+					margin-left: 116rpx;
+					.countDown{
+						font-weight: bold;
+					}
+				}
+			}
 			.goods-price {
 				width: 100%;
 				padding: 30rpx;
@@ -533,5 +610,27 @@
 
 		}
 
+	}
+	.zx-wrapper .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box{
+		padding:unset ;
+	}
+	.zx-box{
+		width: 560rpx;
+		height: 220rpx;
+		background: #fff;
+		.zx-item{
+			width: 100%;
+			height: 110rpx;
+			border-bottom: 1rpx solid #ddd;
+			line-height: 110rpx;
+			text-align: center;
+			color:#000000;
+			font-size: 32rpx;
+			font-family:PingFang SC;
+			box-sizing: border-box;
+			&:last-child{
+				border-bottom: unset;
+			}
+		}
 	}
 </style>

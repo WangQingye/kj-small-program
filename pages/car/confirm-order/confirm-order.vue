@@ -123,11 +123,34 @@
 					url: `/pages/score/score-desc/score-desc`
 				});
 			},
-			async confirm () {
+			async getUserInfo() { //获取用户信息
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res.message == "success") {
+					if(res.data.mobile){
+						this.buyGoods();
+					}else{
+						uni.navigateTo({
+							url: `/pages/my/my-phone/my-phone`
+						});
+					}
+					
+				} else {
+					this.myToast(res.message)
+				}
+			},
+			confirm () {
 				if(this.isWatch == false){
 					this.myToast('请勾选用户协议');
 					return;
 				}
+				if(!this.$store.state.userInfo.mobile){
+					this.getUserInfo()
+					return ;
+				}
+				this.buyGoods ();
+				
+			},
+			async buyGoods () {
 				let res;
 				this.subData.address_id_arr = [this.addreses[1].id,this.addreses[2].id,this.addreses[3].id];
 				if(this.isOrder){
@@ -145,15 +168,17 @@
 					})
 					res = await this.myRequest('/api/goods/order/cartStore', this.subData, 'POST', false);
 				}
-				
 				if(res.message == "success"){
+					// uni.navigateTo({
+					// 	url: `/pages/car/good-car/good-car`
+					// });
 					uni.navigateTo({
-						url: `/pages/car/good-car/good-car`
-					});
+						url:`/pages/car/good-car/good-car`
+					})
 					this.myToast('购买成功')
 					
-				} else {
-					this.myToast(res.message);
+				} else { 
+					this.myToast(res.message)
 				}
 			},
 			async getAddress() {
