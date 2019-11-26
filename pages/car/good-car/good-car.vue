@@ -127,6 +127,8 @@
 				return;
 			}
 			if (this.$store.state.userToken.api_token) {
+				this.index = 1;
+				this.goodsInfo.length = 0;
 				this.getList();
 			}
 			this.showLoginPage = false;
