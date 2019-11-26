@@ -105,13 +105,13 @@
 				this.hasList = true;
 			},
 			onTabChange(index) {
-				// if (index == 0) {
-				// 	this.url = '/api/user/myOrder/goodsList';
-				// } else if (index == 1) {
-				// 	this.url = '/api/integral/order';
-				// }
-				// this.listPage = 1;
-				// this.getOrderList(1);
+				if (index == 0) {
+					this.url = '/api/user/myOrder/goodsList';
+				} else if (index == 1) {
+					this.url = '/api/integral/order';
+				}
+				this.listPage = 1;
+				this.getOrderList(1);
 			}
 		}
 	}

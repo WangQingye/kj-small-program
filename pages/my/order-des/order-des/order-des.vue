@@ -170,7 +170,7 @@
 			},
 			async numChange(value,index) {
 				if (!value) return;
-				this.nums[index] = value;
+				this.nums[index] = value.num;
 				let res = await this.myRequest('/api/user/manage/upNum', {
 					order_goods_id: this.orderData.goods_join[index].id,
 					num: this.nums[index]
