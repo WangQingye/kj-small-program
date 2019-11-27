@@ -43,12 +43,12 @@
 							backgroundColor: '#ED193A'
 						}
 					}
-				]	
+				]
 			};
 		},
 		methods:{
-			
-			
+
+
 		}
 	}
 </script>
@@ -67,7 +67,7 @@
 			display: flex;
 			background: #fff;
 			position: relative;
-			
+
 			.goods-check{
 				width:70rpx;
 				height: 100%;
@@ -81,9 +81,9 @@
 				.goods-imgbox{
 					width:240rpx;
 					height: 135rpx;
-					background:red;
+					// background:red;
 					margin-right: 20rpx;
-					
+
 				}
 				.goods-dis{
 					flex: 1;
@@ -133,7 +133,7 @@
 					width:100%;
 					height: 100%;
 				}
-			}	
+			}
 		}
 	}
 </style>

@@ -120,6 +120,8 @@
 			async getRecomGoods(page) {
 				if (page != 1) {
 					this.status = 'loading';
+				} else {
+					this.recommendItems = [];
 				}
 				let res = await this.myRequest('/api/goods/newestGoods', {
 					page: page,

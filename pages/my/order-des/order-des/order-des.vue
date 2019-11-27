@@ -79,7 +79,7 @@
 							<view class="m1-d">
 								已选：“干血斑”“DP362-01”
 							</view>
-							
+
 						</view>
 						<image src="../../../../static/c/c31close.png" mode="" class="m1-close" @click="closeMc"></image>
 					</view>
@@ -87,7 +87,7 @@
 						<view class="m2-title">
 							颜色
 						</view>
-						<viwe class="m2-box">  
+						<viwe class="m2-box">
 						<!-- :class="{active:subData.mId == item.id}" -->
 							<view class="m2-item">
 								白色
@@ -98,7 +98,7 @@
 						<view class="m3-title" >
 							编号
 						</view>
-						<viwe class="m3-box">  
+						<viwe class="m3-box">
 							<view class="m3-item"  >
 								DP362-01
 							</view>
@@ -108,7 +108,7 @@
 						</view>
 					</view>
 				</view>
-				
+
 				<view class="footer">确认</view>
 			</view>
 			<view class="code" v-if = "showTc == 2">
@@ -235,13 +235,13 @@
 					status
 				}, 'POST', true, false);
 				if (res.message == 'success') {
-					this.myToast('操作成功', 1000, ()=>{						
+					this.myToast('操作成功', 1000, ()=>{
 						uni.navigateBack({
 							delta:1
 						})
 					});
 				} else {
-					this.myToast(res.message);					
+					this.myToast(res.message);
 				}
 			},
 			openMc (type) {
@@ -321,7 +321,7 @@
 						top:0;bottom:0;margin:auto;
 					}
 				}
-				
+
 			}
 			.order-address{
 				width: 100%;
@@ -362,7 +362,7 @@
 				height: 110rpx;
 				padding:0 70rpx 0 30rpx;
 				box-sizing: border-box;
-				
+
 				background-color: #FFF;
 				margin-bottom: 20rpx;
 				position: relative;
@@ -405,7 +405,7 @@
 						.goods-imgbox{
 							width:240rpx;
 							height: 135rpx;
-							background:red;
+							// background:red;
 							margin-right: 20rpx;
 						}
 						.goods-dis{
@@ -442,7 +442,7 @@
 									margin:auto;
 									background: url(../../../../static/down.png) no-repeat;
 									background-size: cover;
-									
+
 								}
 							}
 							.delete-img {
@@ -518,7 +518,7 @@
 						}
 					}
 				}
-				
+
 			}
 			.remark-wrapper {
 				width: 100%;
@@ -639,7 +639,7 @@
 		}
 	}
 	.guige{
-		
+
 		.body{
 			overflow: auto;
 			width:100%;
@@ -670,7 +670,7 @@
 					background: #F34B0B;
 				}
 				.m1-price{
-					flex:1;			
+					flex:1;
 					.m1-p{
 						font-size:38rpx;
 						font-family:PingFang SC;
@@ -688,9 +688,9 @@
 						line-height:1;
 					}
 				}
-				
+
 			}
-			
+
 			.m2{
 				width: 100%;
 				margin-bottom: 40rpx;
@@ -700,14 +700,14 @@
 					font-family:PingFang SC;
 					font-weight:400;
 					color:rgba(51,51,51,1);
-					
+
 				}
 				.m2-box{
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
 					.m2-item{
-						padding:20rpx 40rpx; 
+						padding:20rpx 40rpx;
 						background:rgba(255,255,255,1);
 						border:1px solid rgba(205,205,205,1);
 						color:#999999;
@@ -724,7 +724,7 @@
 						}
 					}
 				}
-				
+
 			}
 			.m3{
 				width: 100%;
@@ -740,9 +740,9 @@
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
-					
+
 					.m3-item{
-						padding:20rpx 40rpx; 
+						padding:20rpx 40rpx;
 						margin-bottom: 30rpx;
 						background:rgba(255,255,255,1);
 						border:1px solid rgba(205,205,205,1);
@@ -768,8 +768,8 @@
 					margin-bottom: 40rpx;
 				}
 			}
-			
-			
+
+
 		}
 		.footer{
 			width:100%;

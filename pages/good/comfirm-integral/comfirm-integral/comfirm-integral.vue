@@ -5,7 +5,7 @@
 				<view class="full">
 					请填写收货地址
 				</view>
-				
+
 			</view>
 			<view class="goods-box">
 				<view class="goods-item" v-for="item in 2" :key="item">
@@ -27,12 +27,12 @@
 								<!-- <view class="logistics" v-show="tabIndex == 1">
 									物流信息:1543265486545
 								</view> -->
-								
+
 							</view>
 						</view>
 						<text class="num" > x2</text>
 				</view>
-				
+
 			</view>
 			<view class="xiye">
 				<checkbox /><text>我已阅读并同意</text><text style="color:#006CB7">《用户协议》</text>
@@ -93,7 +93,7 @@
 					color:rgba(153,153,153,1);
 					line-height: 163rpx;
 				}
-				
+
 			}
 			.goods-box{
 				width: 100%;
@@ -119,7 +119,7 @@
 						.goods-imgbox{
 							width:240rpx;
 							height: 135rpx;
-							background:red;
+							// background:red;
 							margin-right: 20rpx;
 						}
 						.goods-dis{
@@ -174,7 +174,7 @@
 						font-family:PingFang SC;
 						font-weight:400;
 						color:rgba(153,153,153,1);
-					}	
+					}
 				}
 			}
 			.xiye{

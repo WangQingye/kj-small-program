@@ -145,7 +145,7 @@
 					.img-box {
 						width: 100%;
 						height: 190rpx;
-						background: red;
+						// background: red;
 						margin-bottom: 22rpx;
 					}
 

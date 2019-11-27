@@ -27,7 +27,7 @@
 										<text class="gx-p">{{good.clinch_price}}</text>
 										<text class="gy-p" >{{good.original_price}}</text>
 									</view>
-									
+
 								</view>
 							</view>
 							<text class="num"> x{{good.num}}</text>
@@ -112,8 +112,8 @@
 	.main{
 		background: #eee;
 		width: 100%;
-		
-	
+
+
 		.body{
 			width:100%;
 			height: 100%;
@@ -162,7 +162,7 @@
 							.goods-imgbox{
 								width:240rpx;
 								height: 135rpx;
-								background:red;
+								// background:red;
 								margin-right: 20rpx;
 							}
 							.goods-dis{
@@ -217,9 +217,9 @@
 							font-family:PingFang SC;
 							font-weight:400;
 							color:rgba(153,153,153,1);
-						}	
+						}
 					}
-					
+
 				}
 				.order-total{
 					height: 120rpx;
@@ -263,7 +263,7 @@
 					}
 				}
 			}
-			
+
 		}
 	}
 </style>
