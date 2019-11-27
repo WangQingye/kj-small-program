@@ -201,7 +201,6 @@
 							.goods-imgbox{
 								width:240rpx;
 								height: 135rpx;
-								background:red;
 								margin-right: 20rpx;
 							}
 							.goods-dis{

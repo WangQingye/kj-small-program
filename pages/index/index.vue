@@ -94,6 +94,9 @@
 		onPullDownRefresh() {
 			this.getStarGoods();
 			this.getRecomGoods(1);
+			setTimeout(function () {
+			    uni.stopPullDownRefresh();
+			}, 500);
 		},
 		onShow() {
 			uni.showTabBar();

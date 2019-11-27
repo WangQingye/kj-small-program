@@ -35,7 +35,7 @@
 					</view>
 				</viwe>
 				<view class="m3-tips">
-					对应规格：100次
+					对应规格：{{subData.depict}}
 				</view>
 			</view>
 			<view class="m4">
@@ -130,6 +130,7 @@
 					mlist:[],
 					show_price:'',
 					cover_pic:'',
+					depict:'',//规格 
 					attach_goods:[]
 				},
 				goodsInfo:[], //页面回显信息,
@@ -176,7 +177,7 @@
 				}
 			},
 			async goodsGroups () { //获取组合商品列表
-				let res = await this.myRequest('/api/goods/attachGoods', {goods_id:this.listData.id}, 'GET', false);
+				let res = await this.myRequest('/api/goods/attachGoods', {goods_id:this.listData.id}, 'GET', false,false);
 				if(res.message == "success"){
 					this.attach_goods = [...res.data];	
 					this.attach_goods.map(item=>{
@@ -197,71 +198,75 @@
 				if(this.type == 'choose'){
 					this.$emit('closeWin')
 					return;
-				}else if(this.type == 'order'){
-					let arr =[{
-						goods_title:this.listData.title,
-						goods_cover_pic:this.listData.cover_pic,
-						price:this.subData.show_price,
-						num:this.subData.num,
-						one_specs_title:this.subData.colorTitle,
-						two_specs_title:this.subData.models,
-						id:this.listData.id
-					}];
-					let orderData = {
-						goods_id: this.listData.id,
-						two_specs_id:this.subData.mId,
-						num:this.subData.num,
-						cart_attach_arr:[]						
+				}else {
+					if(!this.$store.state.userToken.api_token){
+						this.$emit('closeWin',true)
+						return;
 					}
-				 	this.subData.attach_goods && this.subData.attach_goods.map(item=>{
-						let obj = {}
-						obj.goods_attach_id = item.goods_attach_id;
-						obj.attach_goods_id = item.attach_goods_id;
-						obj.attach_price_id = item.attach_price_id;
-						obj.num = 1
-						orderData.cart_attach_arr.push(obj)
-					});
-					uni.setStorageSync("orderInfo",JSON.stringify(orderData));
-					uni.setStorageSync("goodsInfo",JSON.stringify(arr));
-					uni.navigateTo({
-						url: `/pages/car/confirm-order/confirm-order?order=true`
-					});
-					this.$emit('closeWin')
-					return;
-				}else{
-					let arr = [];
-					if(this.subData.attach_goods.length > 0) {
-						for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
-							let item = this.subData.attach_goods[i];
-							let obj = {};
-							obj.goods_attach_id =item.goods_attach_id;
-							obj.attach_goods_id =item.attach_goods_id;
-							obj.attach_price_id =item.price_id;
-							obj.num = 1;
-							arr.push(obj);
+					if(this.type == 'order'){
+						let arr =[{
+							goods_title:this.listData.title,
+							goods_cover_pic:this.listData.cover_pic,
+							price:this.subData.show_price,
+							num:this.subData.num,
+							one_specs_title:this.subData.colorTitle,
+							two_specs_title:this.subData.models,
+							id:this.listData.id
+						}];
+						let orderData = {
+							goods_id: this.listData.id,
+							two_specs_id:this.subData.mId,
+							num:this.subData.num,
+							cart_attach_arr:[]						
+						}
+						this.subData.attach_goods && this.subData.attach_goods.map(item=>{
+							let obj = {}
+							obj.goods_attach_id = item.goods_attach_id;
+							obj.attach_goods_id = item.attach_goods_id;
+							obj.attach_price_id = item.attach_price_id;
+							obj.num = 1
+							orderData.cart_attach_arr.push(obj)
+						});
+						uni.setStorageSync("orderInfo",JSON.stringify(orderData));
+						uni.setStorageSync("goodsInfo",JSON.stringify(arr));
+						uni.navigateTo({
+							url: `/pages/car/confirm-order/confirm-order?order=true`
+						});
+						this.$emit('closeWin')
+						return;
+					}else{
+						let arr = [];
+						if(this.subData.attach_goods.length > 0) {
+							for(let i = 0,len = this.subData.attach_goods.length;i < len;i++){
+								let item = this.subData.attach_goods[i];
+								let obj = {};
+								obj.goods_attach_id =item.goods_attach_id;
+								obj.attach_goods_id =item.attach_goods_id;
+								obj.attach_price_id =item.price_id;
+								obj.num = 1;
+								arr.push(obj);
+							}
+						}
+					
+						let data = {
+							api_token:this.$store.state.userToken.api_token,
+							goods_id:this.listData.id,
+							two_specs_id:this.subData.mId,
+							num:this.subData.num,
+						};
+						if(arr.length > 0 ){
+							data.cart_attach_arr = arr;
+						}
+						let res = await this.myRequest('/api/user/cart/store', data , 'POST', false);
+						if(res.message =="success"){
+							uni.showToast({
+								title:'加入购物车成功',
+							})
+							this.getCarNum();
+							this.$emit('closeWin')
 						}
 					}
-					
-					let data = {
-						api_token:this.$store.state.userToken.api_token,
-						goods_id:this.listData.id,
-						two_specs_id:this.subData.mId,
-						num:this.subData.num,
-					};
-					if(arr.length > 0 ){
-						data.cart_attach_arr = arr;
-					}
-					let res = await this.myRequest('/api/user/cart/store', data , 'POST', false);
-					if(res.message =="success"){
-						uni.showToast({
-							title:'加入购物车成功',
-						})
-						this.getCarNum();
-						this.$emit('closeWin')
-					}
 				}
-				
-				
 			},
 			close () {
 				this.$emit('closeWin')
@@ -299,6 +304,7 @@
 				this.subData.models = item.title;
 				this.subData.show_price = item.price;
 				this.subData.cover_pic = item.cover_pic;
+				this.subData.depict = item.depict;
 				
 			},
 			openMc (item) {
@@ -367,7 +373,6 @@
 		
 		mounted () {
 			this.getInfo()
-			
 		}
 	}
 </script>

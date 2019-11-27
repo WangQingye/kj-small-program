@@ -194,16 +194,17 @@
 				this.$refs['zx'].close()
 			},
 			openMc(item) {
-				if(this.$store.state.userToken.api_token == "" && item != "choose"){
-					this.showLoginPage = true;
-					return
-				}
+				// if(this.$store.state.userToken.api_token == "" && item != "choose"){
+				// 	this.showLoginPage = true;
+				// 	return
+				// }
 				this.type = item;
 				this.showTc = true;
 				this.$refs['buyCode'].open()
 			},
-			closeWin() {
+			closeWin(data=false) {
 				this.showTc = false;
+				this.showLoginPage = data;
 				this.$refs['buyCode'].close()
 			},
 			shopCarNum (num) {

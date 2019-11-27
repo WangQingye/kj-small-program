@@ -19,26 +19,49 @@
 				<input class="c-input" v-model="subData.organ_code" type="text" placeholder="请输入...">
 			</view>
 			<view class="goods-box">
-				<view class="goods-item" v-for="(item,index) in goodsInfo" :key="index">
-					<view class="goods-content">
-						<view class="goods-imgbox">
-							<image class="w100" :src="item.goods_cover_pic"></image>
+				<view class="" v-for="(item,index) in goodsInfo" :key="index">
+					<view class="goods-item" >
+						<view class="goods-content">
+							<view class="goods-imgbox">
+								<image class="w100" :src="item.goods_cover_pic"></image>
+							</view>
+							<view class="goods-dis">
+								<view class="g1">
+									{{item.goods_title}}
+								</view>
+								<view class="g2">
+									{{item.one_specs_title}};{{item.two_specs_title}}
+								</view>
+								<view class="g3">
+									<text class="gx-p">¥{{item.price}}</text>
+									<text class="gy-p"></text>
+								</view>
+							</view>
 						</view>
-						<view class="goods-dis">
-							<view class="g1">
-								{{item.goods_title}}
-							</view>
-							<view class="g2">
-								{{item.one_specs_title}};{{item.two_specs_title}}
-							</view>
-							<view class="g3">
-								<text class="gx-p">¥{{item.price}}</text>
-								<text class="gy-p"></text>
-							</view>
-						</view>
+						<text class="num"> x{{item.num}}</text>
 					</view>
-					<text class="num"> x{{item.num}}</text>
+					<view class="goods-item" v-for="(val,idx) in item.attach_join" :key="idx">
+						<view class="goods-content">
+							<view class="goods-imgbox">
+								<image class="w100" :src="val.goods_cover_pic"></image>
+							</view>
+							<view class="goods-dis">
+								<view class="g1">
+									{{val.goods_title}}
+								</view>
+								<view class="g2">
+									{{val.one_specs_title}};{{val.two_specs_title}}
+								</view>
+								<view class="g3">
+									<text class="gx-p">¥{{val.price}}</text>
+									<text class="gy-p"></text>
+								</view>
+							</view>
+						</view>
+						<text class="num"> x{{val.num}}</text>
+					</view>			
 				</view>
+
 			</view>
 			<view class="discount">
 				<view class="dis-title">优惠</view>
@@ -111,6 +134,11 @@
 				let total = 0;
 				this.goodsInfo.forEach(item=>{
 						total += item.price * item.num;
+						if(item.attach_join.length > 0){
+							item.attach_join.map(res=>{
+								total += res.price * res.num;
+							})
+						}
 				})
 				this.total = Number(total);
 				this.total = this.total.toFixed(2)
@@ -212,7 +240,13 @@
 			    const value = uni.getStorageSync('goodsInfo');
 			    if (value) {
 			       this.goodsInfo = JSON.parse(value)
-				   console.log(this.goodsInfo)
+				   // this.goodsInfo.map(item=>{
+					  //  if(item.attach_join > 0) {
+						 //   item.attach_join.map(res=>{
+							//    this.goodsInfo.push(res)
+						 //   })
+					  //  }
+				   // })
 				   this.calcTotal()
 			    }
 			} catch (e) {

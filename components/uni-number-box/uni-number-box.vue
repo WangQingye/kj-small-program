@@ -40,6 +40,10 @@ export default {
       type: Number,
       default: 1
     },
+	groupNum:{
+		type: Number,
+		default: -1
+	},
     disabled: {
       type: Boolean,
       default: false
@@ -59,6 +63,7 @@ export default {
       if (+newVal !== +oldVal) {
 		  let data ={
 			num : newVal,
+			group:this.groupNum,
 			index: this.index
 		  }
 		  

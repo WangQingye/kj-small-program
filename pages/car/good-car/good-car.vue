@@ -1,24 +1,57 @@
 <template>
 	<view class="main">
 		<view class="body">
-			<uni-Swipe-Action :options="option" @click="delClick(item)"  v-for="(item,index) in goodsInfo" :key="index">
-				<view class="goods-item">
-						<label class='goods-check' @click="check('item',index)">
-							<van-checkbox class="check-box" :value="item.checked"  :disabled="item.goods_is_buy == 0"></van-checkbox>
+			<view class=""  v-for="(item,index) in goodsInfo" :key="index">
+				<uni-Swipe-Action :options="option" @click="delClick(item)" >
+					<view class="goods-item">
+							<label class='goods-check' @click="check('item',index)">
+								<van-checkbox class="check-box" :value="item.checked"  :disabled="item.goods_is_buy == 0"></van-checkbox>
+							</label>
+							<view class="goods-content">
+								<view class="goods-imgbox">
+									<image class="w100" :src="item.goods_cover_pic"></image>
+								</view>
+								<view class="goods-dis">
+									<view class="g1">
+										{{item.goods_title}}
+									</view>
+									<view class="g2">
+										{{item.one_specs_title}};{{item.two_specs_title}}
+									</view>
+									<view class="g3">
+										<text class="gx-p">¥{{item.price}}</text>
+										<text class="gy-p"></text>
+									</view>
+								</view>
+							</view>
+							<uniNumberBox 
+								:min="1" 
+								:max="99"  
+								:index="index"
+								:value="item.num" 
+								@change="bindChange"
+								class="num-box">
+							</uniNumberBox>
+					</view>
+				
+				</uni-Swipe-Action>
+				<view class="goods-item" v-for="(val,idx) in item.attach_join" :key='idx'>
+						<label class='goods-check' >
+							<!-- <van-checkbox class="check-box" :value="item.checked"  :disabled="item.goods_is_buy == 0" v-show ='false'></van-checkbox> -->
 						</label>
 						<view class="goods-content">
 							<view class="goods-imgbox">
-								<image class="w100" :src="item.goods_cover_pic"></image>
+								<image class="w100" :src="val.goods_cover_pic"></image>
 							</view>
 							<view class="goods-dis">
 								<view class="g1">
-									{{item.goods_title}}
+									{{val.goods_title}}
 								</view>
 								<view class="g2">
-									{{item.one_specs_title}};{{item.two_specs_title}}
+									{{val.one_specs_title}};{{val.two_specs_title}}
 								</view>
 								<view class="g3">
-									<text class="gx-p">¥{{item.price}}</text>
+									<text class="gx-p">¥{{val.price}}</text>
 									<text class="gy-p"></text>
 								</view>
 							</view>
@@ -27,12 +60,15 @@
 							:min="1" 
 							:max="99"  
 							:index="index"
-							:value="item.num" 
+							:groupNum="idx"
+							:value="val.num" 
 							@change="bindChange"
 							class="num-box">
 						</uniNumberBox>
 				</view>
-			</uni-Swipe-Action>
+										
+			</view>
+			
 			<load-more :status="status"></load-more>
 		</view>
 		<view class="footer">
@@ -90,6 +126,8 @@
 		onShow () {
 			this.index = 1 ;
 			this.goodsInfo.length = 0;
+			this.total = 0;
+			this.allChecked =false;
 			if(this.$store.state.userToken.api_token){
 				this.getList();
 			}
@@ -137,17 +175,29 @@
 			bindChange (data) {
 				// this.goodsInfo[data.index].num = data.num;
 				// this.calcTotal(this.goodsInfo[data.index],data.num);
-				this.changeNum(this.goodsInfo[data.index],data.num)
+				console.log(data)
+				this.changeNum(this.goodsInfo[data.index],data.num,data.group)
+				
+				
 				
 			},
-			async changeNum (item,num) { //修改商品数量
-				let res = await this.myRequest('/api/user/cart/upNum', {
+			async changeNum (item,num,group=-1) { //修改商品数量
+				let data = {
 					shop_cart_id:item.id,
 					shop_cart_attach_id:'',
 					num:num
-				}, 'POST', false);
+				}
+				if( group != -1 ){
+					data.shop_cart_attach_id = item.attach_join[group].id
+				}
+				let res = await this.myRequest('/api/user/cart/upNum',data, 'POST', false);
 				if(res.message == "success"){
-					item.num = num;
+					if(group != -1 ) {
+						item.attach_join[group].num = num
+					}else{
+						item.num = num;
+					}
+					
 					this.calcTotal();
 				}
 			},
@@ -195,6 +245,11 @@
 						this.goodsInfo = this.goodsInfo.concat(res.data.data);
 						this.goodsInfo.map(item=>{
 							item.checked = false;
+							if(item.attach_join && item.attach_join.length > 0){ //判断是否有组合商品
+								item.attach_join.map(res=>{
+									res.checked = false;
+								})
+							}
 						})
 					}
 				
@@ -209,6 +264,13 @@
 				this.goodsInfo.forEach(item=>{
 					if(item.checked === true){
 						total += item.price * item.num;
+						if(item.attach_join && item.attach_join.length > 0){ //判断是否有组合商品
+							item.attach_join.map(res=>{
+								if(res.checked === true){
+									total += res.price * res.num;
+								}
+							})
+						}
 					}else {
 						checked = false;
 					}
@@ -219,11 +281,24 @@
 			},
 			check(type, index){ //选择单个商品 、全选
 				if(type === 'item'){
-					this.goodsInfo[index].checked = !this.goodsInfo[index].checked;
+					let ischeck = !this.goodsInfo[index].checked;
+					this.goodsInfo[index].checked = ischeck;
+					if(this.goodsInfo[index].attach_join.length > 0){
+						this.goodsInfo[index].attach_join.map(res=>{
+							res.checked = ischeck;
+						})
+					}
+					
+					
 				}else{
 					const checked = !this.allChecked
 					this.goodsInfo.forEach(item=>{
 						item.checked = checked;
+						if(item.attach_join.length > 0){
+							item.attach_join.map(res=>{
+								res.checked = checked;
+							})
+						}
 					})
 					this.allChecked = checked;
 				}

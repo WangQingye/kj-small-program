@@ -3,7 +3,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "凯杰电商"
+				"navigationBarTitleText": "凯杰电商",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/search/search-page/search-page",
@@ -40,7 +41,10 @@
 		}, {
 			"path": "pages/car/confirm-order/confirm-order",
 			"style": {
-				"navigationBarTitleText": "确认订单"
+				"navigationBarTitleText": "确认订单",
+				"usingComponents": {
+					"van-checkbox": "/wxcomponents/vant-weapp/checkbox/index"
+				}
 			}
 		}, {
 			"path": "pages/good/good-activity/good-activity",
