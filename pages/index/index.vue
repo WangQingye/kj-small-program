@@ -91,6 +91,10 @@
 			this.getStarGoods();
 			this.getRecomGoods(1);
 		},
+		onPullDownRefresh() {
+			this.getStarGoods();
+			this.getRecomGoods(1);
+		},
 		onShow() {
 			uni.showTabBar();
 		},

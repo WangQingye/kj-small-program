@@ -91,6 +91,7 @@
 				}
 				// 登录失败返回首页
 				if (err) {
+					this.myToast('登录失败');
 					uni.switchTab({
 						url: '/pages/index/index'
 					});

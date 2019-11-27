@@ -169,13 +169,11 @@
 					res = await this.myRequest('/api/goods/order/cartStore', this.subData, 'POST', false);
 				}
 				if(res.message == "success"){
-					// uni.navigateTo({
-					// 	url: `/pages/car/good-car/good-car`
-					// });
-					uni.navigateTo({
-						url:`/pages/car/good-car/good-car`
+					this.myToast('购买成功',1000,()=>{						
+						uni.switchTab({
+							url:`/pages/car/good-car/good-car`
+						})
 					})
-					this.myToast('购买成功')
 					
 				} else { 
 					this.myToast(res.message)

@@ -1,11 +1,19 @@
 <template>
 	<view class="main" v-if="orderData">
 		<view class="body">
-			<view class="order-address">
-				<view class="order-person">{{orderData.address_join[0].addressee + ' ' + orderData.address_join[0].mobile}}</view>
-				<view class="order-com-add">{{orderData.address_join[0].province_zh + orderData.address_join[0].city_zh + orderData.address_join[0].area_zh + orderData.address_join[0].site}}</view>
-				<view class="order-add-btn" @click="goEdit(orderData.address_join[0].id)"></view>
+			<view class="header">
+				<view class="header-title">
+					<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
+				</view>
+				<view class="header-content">
+					<view class="order-address">
+						<view class="order-person">{{areaData[tabIndex].addressee + ' ' + areaData[tabIndex].mobile}}</view>
+						<view class="order-com-add">{{areaData[tabIndex].province_zh + areaData[tabIndex].city_zh + areaData[tabIndex].area_zh + areaData[tabIndex].site}}</view>
+						<view class="order-add-btn" @click="goEdit(areaData[tabIndex].id)"></view>
+					</view>
+				</view>
 			</view>
+
 			<view class="kf-code">
 				<view class="kf-content">客户代码：{{orderData.organ_code}}</view>
 				<view class="kf-btn" @click="openMc(2)"></view>
@@ -38,9 +46,15 @@
 					</view>
 				</view>
 			</view>
-			<view class="remark">
-				<text>备注信息：</text>
-				<textarea class="remark-box" v-model="remark" placeholder="请输入备注信息" @blur="remarkChange" />
+			<view class="remark-wrapper">
+				<view class="remark">
+					<text>客户备注：</text>
+					<view class="remark-box">{{orderData.remark || '无'}}</view>
+				</view>
+				<view class="remark">
+					<text>备注信息：</text>
+					<textarea class="remark-box" v-model="remark" placeholder="请输入备注信息" @blur="remarkChange" />
+					</view>
 				</view>
 			<view class="last-info">
 				<view class="order-num">订单编号：{{orderData.sn}}</view>
@@ -112,20 +126,25 @@
 <script>
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
+	import sunTab from '@/components/sun-tab/sun-tab.vue';
 	export default {
 		components:{
 			uniNumberBox,
-			uniPopup
+			uniPopup,
+			sunTab
 		},
 		data() {
 			return {
+				tabIndex:0,
+				tabList:['公司地址',"发货地址","发票邮寄地址"],
 				showTc:'',
 				orderId: null,
 				remark: "",
 				orderData: null,
 				organCode: null,
 				prices: [],
-				nums: []
+				nums: [],
+				areaData: null
 			};
 		},
 		onLoad(option) {
@@ -141,9 +160,8 @@
 					order_id: this.orderId
 				}, 'POST');
 				if (res) {
-					console.log(res)
 					this.orderData = res.data;
-					this.remark = res.data.remark;
+					// this.remark = res.data.remark;
 					this.organCode = res.data.organ_code;
 					this.prices = res.data.goods_join.map(item => {
 						return item.clinch_price;
@@ -151,6 +169,7 @@
 					this.nums = res.data.goods_join.map(item => {
 						return item.num;
 					})
+					this.areaData = res.data.address_join;
 				}
 			},
 			async editOrganCode() {
@@ -234,7 +253,7 @@
 				this.$refs['buyCode'].close()
 			},
 			goEdit(id) {
-				this.$store.commit('saveOrderAddress', this.orderData.address_join[0]);
+				this.$store.commit('saveOrderAddress', this.areaData[this.tabIndex]);
 				uni.navigateTo({
 					url: `/pages/my/add-address/add-address?orderAddressId=${id}`
 				});
@@ -260,6 +279,50 @@
 			width: 100%;
 			flex: 1;
 			overflow: auto;
+			.header{
+				width: 100%;
+				box-sizing: border-box;
+				background: #fff;
+				margin-bottom: 20rpx;
+				.header-title{
+					height: 102rpx;
+					width: 100%;
+					padding: 0 30rpx;
+					box-sizing: border-box;
+					.uni-tab {
+						justify-content: space-between;
+						height: 100%;
+						.uni-tab-item{
+							line-height:102rpx;
+						}
+					}
+				}
+				.header-content{
+					width:100%;
+					box-sizing: border-box;
+					font-size:32rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					position:relative;
+					.h-person{
+						margin-bottom: 29rpx;
+						line-height: 1;
+					}
+					.h-address{
+						font-size:24rpx;
+						font-family:PingFang SC;
+						font-weight:400;
+						color:rgba(153,153,153,1)
+					}
+					.h-img{
+						position:absolute;
+						right:0rpx;
+						top:0;bottom:0;margin:auto;
+					}
+				}
+				
+			}
 			.order-address{
 				width: 100%;
 				height: 180rpx;
@@ -457,14 +520,17 @@
 				}
 				
 			}
-			.remark{
+			.remark-wrapper {
 				width: 100%;
-				height: 110rpx;
+				background-color: #fff;
+				margin-bottom: 20rpx;
 				padding:0 30rpx;
 				box-sizing: border-box;
-				margin-bottom: 20rpx;
-				line-height: 110rpx;
-				background-color: #fff;
+			}
+			.remark{
+				width: 100%;
+				height: 80rpx;
+				line-height: 80rpx;
 				font-size:32rpx;
 				font-family:PingFang SC;
 				font-weight:400;
@@ -474,7 +540,7 @@
 					flex: 1;
 					height: 100%;
 					line-height: 40rpx;
-					padding-top:35rpx;
+					padding-top:20rpx;
 					box-sizing: border-box;
 				}
 			}

@@ -43,6 +43,7 @@
 			},
 			async myLogin() {
 				let res = await this.myRequest('/api/user/applet-login', this.loginInfo, 'POST', false);
+				console.log(res);
 				if (res) {
 					this.$store.commit('saveUserToken', res.data)
 					this.$store.commit('saveIsLogin', true);
