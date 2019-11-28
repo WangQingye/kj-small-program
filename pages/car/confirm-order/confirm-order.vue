@@ -59,7 +59,7 @@
 							</view>
 						</view>
 						<text class="num"> x{{val.num}}</text>
-					</view>			
+					</view>
 				</view>
 
 			</view>
@@ -84,11 +84,11 @@
 					        我已阅读并同意
 					</text>
 				</view>
-					
-			
+
+
 				<text style="color: #006CB7;" @click="Goagreement">《用户协议》</text>
-					
-				
+
+
 			</view>
 			<view class="comfirm-box">
 				<view class="total">
@@ -112,7 +112,7 @@
 				total:0,
 				tabIndex:0,
 				isWatch:false,
-				tabList:['公司地址',"发货地址","发票邮寄地址"],
+				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				goodsInfo:[],
 				subData:{
 					remark:'',
@@ -122,7 +122,7 @@
 					address_id_arr:[1],
 				},
 				isOrder:false,
-				addreses: ["","","",""]				
+				addreses: ["","","",""]
 			};
 		},
 		methods:{
@@ -161,7 +161,7 @@
 							url: `/pages/my/my-phone/my-phone`
 						});
 					}
-					
+
 				} else {
 					this.myToast(res.message)
 				}
@@ -176,7 +176,7 @@
 					return ;
 				}
 				this.buyGoods ();
-				
+
 			},
 			async buyGoods () {
 				let res;
@@ -197,13 +197,13 @@
 					res = await this.myRequest('/api/goods/order/cartStore', this.subData, 'POST', false);
 				}
 				if(res.message == "success"){
-					this.myToast('购买成功',1000,()=>{						
+					this.myToast('购买成功',1000,()=>{
 						uni.switchTab({
 							url:`/pages/car/good-car/good-car`
 						})
 					})
-					
-				} else { 
+
+				} else {
 					this.myToast(res.message)
 				}
 			},
@@ -257,7 +257,7 @@
 			if(option){
 				this.isOrder = option.order;
 			}
-			this.getAddress();			
+			this.getAddress();
 		}
 	}
 </script>
@@ -273,7 +273,7 @@
 	}
 	.main{
 		width: 100%;
-		height: 100vh; 
+		height: 100vh;
 		background-color: #eee;
 		display: flex;
 		flex-direction: column;
@@ -321,7 +321,7 @@
 					top:0;bottom:0;margin:auto;
 				}
 			}
-			
+
 		}
 		.footer{
 			width: 100%;
@@ -464,7 +464,7 @@
 						font-family:PingFang SC;
 						font-weight:400;
 						color:rgba(153,153,153,1);
-					}	
+					}
 				}
 			}
 			.discount{
@@ -474,7 +474,7 @@
 				height: 110rpx;
 				display: flex;
 				justify-content: space-between;
-				align-items: center;	
+				align-items: center;
 				font-size:32rpx;
 				font-family:PingFang SC;
 				font-weight:400;
@@ -505,9 +505,9 @@
 					flex: 1;
 					height: 100%;
 				}
-				
+
 			}
-			
+
 		}
 	}
 </style>

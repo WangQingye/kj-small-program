@@ -135,7 +135,7 @@
 		data() {
 			return {
 				tabIndex:0,
-				tabList:['公司地址',"发货地址","发票邮寄地址"],
+				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				showTc:'',
 				orderId: null,
 				remark: "",
@@ -155,7 +155,7 @@
 					twoInfo:[]
 				},
 				chooseItem:{},//选择的goodsitem
-				
+
 			};
 		},
 		onLoad(option) {
@@ -308,7 +308,7 @@
 				this.chooseData.Ttitle = item.title
 				this.chooseData.goods_id = item.goods_id;
 			}
-			
+
 		}
 	}
 </script>
@@ -718,7 +718,7 @@
 					width:200rpx;
 					height: 100%;
 					margin-right: 30rpx;
-				
+
 				}
 				.m1-price{
 					flex:1;

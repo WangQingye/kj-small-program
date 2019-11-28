@@ -6,7 +6,7 @@
 					<label class="radio" style="margin-right: 60rpx;">
 						<radio value="1" checked="true" color="#006CB7" style="transform:scale(0.8)" />公司地址</label>
 					<label class="radio" style="margin-right: 60rpx;">
-						<radio value="2" color="#006CB7" style="transform:scale(0.8)" />发货地址</label>
+						<radio value="2" color="#006CB7" style="transform:scale(0.8)" />收货地址</label>
 					<label class="radio">
 						<radio value="3" color="#006CB7" style="transform:scale(0.8)" />发票邮寄地址</label>
 				</radio-group>
@@ -163,7 +163,7 @@
 					data.order_address_id = this.orderAddressId;
 					delete data.type
 				} else {
-					url = '/api/user/address/store'					
+					url = '/api/user/address/store'
 				}
 				let res = await this.myRequest(url, data , 'POST');
 				if (res) {
@@ -194,8 +194,8 @@
 				if (!(/^1[3456789]\d{9}$/.test(this.phone))) {
 					this.myToast('请输入正确格式手机号')
 					return false;
-				}				
-				if (!/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/.test(this.mail)) {					
+				}
+				if (!/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/.test(this.mail)) {
 				    this.myToast("请输入有效邮箱");
 				    return false;
 				}
@@ -222,7 +222,7 @@
 
 <style lang="scss">
 	.add-address-wrapper {
-		
+
 	.add-address {
 		width: 100%;
 		padding: 0 30rpx;
