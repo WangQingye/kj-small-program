@@ -1,6 +1,7 @@
 <template>
 	<view class="my-address">
-		<uni-swipe-action v-if="addressList.length" v-for="(item,index) in addressList" :key="index" class="detail-item" :options="options" @click="clickDelete(index)">
+		<uni-swipe-action v-if="addressList.length" v-for="(item,index) in addressList" :key="index" class="detail-item"
+		 :options="options" @click="clickDelete(index)">
 			<view class="left" @click="clickAddress(index)">
 				<view class="left-top"><text class="address-name">{{addType[item.type]}}</text>{{item.addressee + ' ' + item.mobile}}</view>
 				<view class="left-bottom">{{item.area_join.city_join.zh_name + item.area_join.zh_name + item.site}}</view>
@@ -19,7 +20,7 @@
 		data() {
 			return {
 				addressList: [],
-				addType:['','公司地址','收货地址','发票邮寄地址','积分商品地址'],
+				addType: ['', '公司地址', '收货地址', '发票邮寄地址', '积分商品地址'],
 				options: [{
 					text: '删除',
 					style: {
@@ -41,8 +42,8 @@
 		methods: {
 			async getAddressList() {
 				let res = await this.myRequest('/api/user/address/list', {
-					page:1,
-					per_page:100
+					page: 1,
+					per_page: 100
 				}, 'POST');
 				if (res) {
 					this.addressList = res.data.data;
@@ -55,17 +56,35 @@
 				if (res) {
 					this.myToast('删除成功');
 					this.getAddressList();
+					// 如果这时候正在选择，那么要看一下是否删除了已经选择过的地址
+					if (this.choosenType) {
+						let addrs = this.$store.state.userAddress;
+						for (var i = 0; i < addrs.length; i++) {
+							if (addrs[i]) {
+								if (this.addressList[index].id == addrs[i].id) {
+									this.$store.commit('saveUserAddress', {
+										index: i,
+										address: ""
+									});
+								}
+							}
+						}
+					}
 				}
 			},
 			clickAddress(index) {
 				if (!this.choosenType) return;
+				if (this.addressList[index].type != this.choosenType) {
+					this.myToast('请选择相应类型的地址');
+					return;
+				}
 				let address = {
 					index: this.choosenType,
 					address: this.addressList[index]
 				}
 				this.$store.commit('saveUserAddress', address);
 				uni.navigateBack({
-					delta:1
+					delta: 1
 				})
 			},
 			goAddAddress() {

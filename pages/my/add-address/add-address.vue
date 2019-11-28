@@ -113,7 +113,7 @@
 			orgChange(e) {
 				this.orgIndex = e.detail.value;
 			},
-			async getAddressById(id) {
+			async getAddressById(id, flag) {
 				let res = await this.myRequest('/api/user/address/show', {
 					user_address_id: id
 				}, 'POST', true);
@@ -127,6 +127,12 @@
 					this.addressDetail = data.site;
 					this.status = Boolean(data.status);
 					this.showForm = true;
+					if (flag) {
+						this.$store.commit('saveUserAddress', {
+							index: data.type,
+							address: data
+						});
+					}
 				}
 			},
 			async getOrgs() {
@@ -159,9 +165,20 @@
 				} else {
 					url = '/api/user/address/store'					
 				}
-				console.log(data);
 				let res = await this.myRequest(url, data , 'POST');
 				if (res) {
+					// 如果是在修改地址，要看看是不是修改了已经选中的地址
+					if (this.addressId) {
+						let addrs = this.$store.state.userAddress;
+						for (var i = 0; i < addrs.length; i++) {
+							if (addrs[i]) {
+								if (this.addressId == addrs[i].id) {
+									// 重新获取这个地址，并且保存到store中
+									this.getAddressById(this.addressId, true);
+								}
+							}
+						}
+					}
 					this.myToast('保存成功',1500,()=>{
 						uni.navigateBack({
 							delta:1
@@ -178,7 +195,7 @@
 					this.myToast('请输入正确格式手机号')
 					return false;
 				}				
-				if (!/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(this.mail)) {
+				if (!/\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/.test(this.mail)) {					
 				    this.myToast("请输入有效邮箱");
 				    return false;
 				}

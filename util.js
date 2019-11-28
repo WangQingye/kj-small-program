@@ -10,7 +10,8 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 		method,
 		data,
 		header: {
-			'Authorization': 'Bearer ' + store.state.userToken.api_token
+			'Authorization': 'Bearer ' + store.state.userToken.api_token,
+			'Accept': 'application/json'
 		}
 	});
 	if (needLoading) wx.hideLoading()

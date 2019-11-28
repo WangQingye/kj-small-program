@@ -160,7 +160,7 @@
 		},
 		onLoad(option) {
 			this.orderId = option.orderId;
-			this.getOrderDesc();
+			// this.getOrderDesc();
 		},
 		onShow() {
 			if (this.orderId) this.getOrderDesc();
@@ -266,7 +266,7 @@
 			},
 			async confimType () {
 				let data ={
-					order_goods_id:this.chooseItem.goods_id,
+					order_goods_id:this.chooseItem.id
 				};
 				console.log(this.chooseData)
 				if(this.chooseItem.pid == 0){
