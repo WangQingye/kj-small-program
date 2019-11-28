@@ -29,8 +29,8 @@
 										{{good.two_type_title + ';' + good.two_specs_title}}
 									</view>
 									<view class="g3">
-										<text class="gx-p">￥ {{good.clinch_price}}</text>
-										<text class="gy-p" v-show="tabIndex == 0">￥ {{good.original_price}}</text>
+										<text class="gx-p">￥{{good.clinch_price}}</text>
+										<text class="gy-p" v-show="tabIndex == 0">￥{{good.original_price}}</text>
 									</view>
 									<view class="logistics" v-show="tabIndex == 1">
 										物流信息:{{item.ship_sn}}

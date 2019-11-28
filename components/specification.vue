@@ -588,7 +588,7 @@
 									line-height:36rpx;
 								}
 								.m5-d2{
-									padding:8rpx 42rpx 11px;
+									padding:8rpx 42rpx 8rpx;
 									line-height: 1;
 									margin-bottom: 20rpx;
 									font-size: 24rpx;
@@ -606,7 +606,7 @@
 										top:0;
 										bottom:0;
 										margin:auto;
-										//background: url('../static/down.png') no-repeat;
+										background: url('../static/down.png') no-repeat;
 										background-size: cover;
 									}
 								}

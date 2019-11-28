@@ -28,7 +28,7 @@
 							<view class="g1">
 								{{item.title}}
 							</view>
-							<view class="g2" @click="openMc(1)">
+							<view class="g2" @click="openMc(item)">
 								{{item.two_type_title + ';' + item.two_specs_title}}
 							</view>
 							<image src="../../../../static/delete.png" class="delete-img" @click="deleteGood(item.id)"></image>
@@ -70,16 +70,15 @@
 				<view class="body">
 					<view class="m1">
 						<view class="m1-imgbox">
-							<image :src="subData.cover_pic" mode="" class="w100"></image>
+							<image :src="chooseData.img" mode="" class="w100"></image>
 						</view>
 						<view class="m1-price">
 							<view class="m1-p">
-								¥{{1956}}
+								¥{{chooseData.price}}
 							</view>
 							<view class="m1-d">
-								已选：“干血斑”“DP362-01”
+								已选：“{{chooseData.Ftitle}}”“{{chooseData.Ttitle}}”
 							</view>
-
 						</view>
 						<image src="../../../../static/c/c31close.png" mode="" class="m1-close" @click="closeMc"></image>
 					</view>
@@ -88,9 +87,9 @@
 							颜色
 						</view>
 						<viwe class="m2-box">
-						<!-- :class="{active:subData.mId == item.id}" -->
-							<view class="m2-item">
-								白色
+						<!-- " -->
+							<view class="m2-item" :class="{active:chooseData.Fid == item.id}" v-for="(item,index) in typeInfo" :key="index" @click="chooseOne(item)">
+								{{item.title}}
 							</view>
 						</viwe>
 					</view>
@@ -99,17 +98,17 @@
 							编号
 						</view>
 						<viwe class="m3-box">
-							<view class="m3-item"  >
-								DP362-01
+							<view class="m3-item" :class="{active:chooseData.Tid == item.id}" v-for="(item,index) in chooseData.twoInfo" :key="index" @click="chooseTwo(item)">
+								{{item.title}}
 							</view>
 						</viwe>
 						<view class="m3-tips">
-							对应规格：100次
+							对应规格：{{chooseData.depict}}
 						</view>
 					</view>
 				</view>
 
-				<view class="footer">确认</view>
+				<view class="footer" @click="confimType">确认</view>
 			</view>
 			<view class="code" v-if = "showTc == 2">
 				<view class="code-title">编辑客户代码</view>
@@ -144,7 +143,19 @@
 				organCode: null,
 				prices: [],
 				nums: [],
-				areaData: null
+				typeInfo:[],
+				areaData: null,
+				chooseData:{
+					Fid:'',//一级id
+					Tid:'',//二级id
+					price:'',
+					depict:'',//规格
+					Ftitle:'',
+					Ttitle:'',
+					twoInfo:[]
+				},
+				chooseItem:{},//选择的goodsitem
+				
 			};
 		},
 		onLoad(option) {
@@ -244,9 +255,34 @@
 					this.myToast(res.message);
 				}
 			},
-			openMc (type) {
-				this.showTc = type;
-				this.$refs['buyCode'].open()
+			async getType (souceData) {
+				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:souceData.goods_id}, 'GET', true, true);
+				if(res.message == "success") {
+					this.typeInfo = [...res.data];
+					this.chooseOne(this.typeInfo[0]);
+					this.$refs['buyCode'].open()
+					this.showTc = true;
+				}
+			},
+			async confimType () {
+				let data ={
+					order_goods_id:this.chooseItem.goods_id,
+				};
+				console.log(this.chooseData)
+				if(this.chooseItem.pid == 0){
+					data.two_specs_id  = this.chooseData.Tid
+				}
+				let res = await this.myRequest('/api/user/manage/upSpecs', data, 'POST', true, true);
+				this.closeMc();
+				if(res.message == 'success'){
+					this.getOrderDesc();
+				}else{
+					this.myToast(res.message)
+				}
+			},
+			openMc (item) {
+				this.chooseItem = item;
+				this.getType(item);
 			},
 			closeMc () {
 				this.showTc = false;
@@ -257,7 +293,22 @@
 				uni.navigateTo({
 					url: `/pages/my/add-address/add-address?orderAddressId=${id}`
 				});
+			},
+			chooseOne (item) {
+				this.chooseData.Fid = item.id;
+				this.chooseData.twoInfo = item.two_specs_join;
+				this.chooseData.Ftitle = item.title
+				this.chooseTwo(item.two_specs_join[0])
+			},
+			chooseTwo (item) {
+				this.chooseData.Tid = item.id;
+				this.chooseData.price = item.price;
+				this.chooseData.depict = item.depict;
+				this.chooseData.img = item.cover_pic;
+				this.chooseData.Ttitle = item.title
+				this.chooseData.goods_id = item.goods_id;
 			}
+			
 		}
 	}
 </script>
@@ -667,7 +718,7 @@
 					width:200rpx;
 					height: 100%;
 					margin-right: 30rpx;
-					background: #F34B0B;
+				
 				}
 				.m1-price{
 					flex:1;
