@@ -38,8 +38,8 @@
 			};
 		},
 		onShow() {
-			console.log(333);
 			uni.hideTabBar();
+			this.getUserInfo();
 			this.name = this.$store.state.userInfo.nickname;
 			this.phone = this.$store.state.userInfo.mobile;
 			if (this.$store.state.userInfo.organization_join) {
@@ -61,6 +61,16 @@
 			onNameBlur() {
 				this.saveName();
 			},
+			async getUserInfo() {
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res) {
+					this.$store.commit('saveUserInfo', res.data);
+					this.nickName = res.data.nickname;
+					this.avatar = res.data.avatar;
+					this.company = (res.data.organization_join && res.data.organization_join.name) || '暂无机构'
+					this.showPage = true;
+				} else {}
+			},
 			async saveName() {
 				if (this.name != this.$store.state.userInfo.nickname) {
 					let res = await this.myRequest('/api/user/upNickname', {
@@ -71,17 +81,6 @@
 						let userInfo = this.$store.state.userInfo;
 						userInfo.nickname = this.name;
 						this.$store.commit('saveUserInfo', userInfo);
-						uni.$emit('updateName',{})
-						// uni.showToast({
-						// 	title: '保存成功',
-						// 	duration: 1500,
-						// 	icon: 'none'
-						// });
-						// setTimeout(() => {
-						// 	uni.switchTab({
-						// 		url: '/pages/my/my-main/my-main'
-						// 	});
-						// }, 1500)
 					}
 				} else {
 					uni.switchTab({

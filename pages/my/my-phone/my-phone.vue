@@ -86,16 +86,13 @@
 					let userInfo = this.$store.state.userInfo;
 					userInfo.mobile = this.phone;
 					this.$store.commit('saveUserInfo', userInfo);
-					uni.showToast({
-						title: '绑定成功',
-						duration: 1500,
-						icon: 'none'
-					});
-					setTimeout(() => {
+					this.myToast('绑定成功', 1500, ()=>{						
 						uni.navigateBack({
 							delta: 1
 						})
-					}, 1500)
+					});
+				} else {
+					this.myToast(res.message);
 				}
 			},
 			startCount() {
