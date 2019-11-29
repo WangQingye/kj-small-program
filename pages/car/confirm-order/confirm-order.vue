@@ -126,6 +126,8 @@
 				isWatch:false,
 				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				goodsInfo:[],
+				orgs: [],
+				orgIndex: null,
 				subData:{
 					remark:'',
 					organ_code:'',
@@ -243,12 +245,23 @@
 				uni.navigateTo({
 					url:`/pages/my/my-address/my-address?choosenType=${this.tabIndex+1}`
 				})
+			},
+			async getOrgs() {
+				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
+				if (res) {
+					this.orgs = res.data.map(item => {
+						return item.zh_name;
+					});
+				}
+			},
+			orgChange(e) {
+				this.orgIndex = e.detail.value;
 			}
 		},
 	
 		onShow () {
-			console.log(123)
 			this.addreses = this.$store.state.userAddress;
+			this.getOrgs();
 			this.$forceUpdate();
 			try {
 			    const value = uni.getStorageSync('goodsInfo');
@@ -266,6 +279,7 @@
 				this.isOrder = option.order;
 			}
 			this.getAddress();
+			this.getOrgs();
 		}
 	}
 </script>

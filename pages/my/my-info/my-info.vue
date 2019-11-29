@@ -81,6 +81,7 @@
 						let userInfo = this.$store.state.userInfo;
 						userInfo.nickname = this.name;
 						this.$store.commit('saveUserInfo', userInfo);
+						uni.$emit('updateName',{})
 					}
 				} else {
 					uni.switchTab({

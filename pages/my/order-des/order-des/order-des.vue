@@ -66,58 +66,58 @@
 			<view class="order-pass" @click="changeOrderStatus(3)">确认订单</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
-			<view class="guige" v-if = "showTc == 1">
-				<view class="body">
-					<view class="m1">
-						<view class="m1-imgbox">
-							<image :src="chooseData.img" mode="" class="w100"></image>
-						</view>
-						<view class="m1-price">
-							<view class="m1-p">
+			<cover-view class="guige" v-if = "showTc == 1">
+				<cover-view class="body">
+					<cover-view class="m1">
+						<cover-view class="m1-imgbox">
+							<cover-image :src="chooseData.img" mode="" class="w100"></cover-image>
+						</cover-view>
+						<cover-view class="m1-price">
+							<cover-view class="m1-p">
 								¥{{chooseData.price}}
-							</view>
-							<view class="m1-d">
+							</cover-view>
+							<cover-view class="m1-d">
 								已选：“{{chooseData.Ftitle}}”“{{chooseData.Ttitle}}”
-							</view>
-						</view>
-						<image src="../../../../static/c/c31close.png" mode="" class="m1-close" @click="closeMc"></image>
-					</view>
-					<view class="m2">
-						<view class="m2-title">
+							</cover-view>
+						</cover-view>
+						<cover-image src="../../../../static/c/c31close.png" mode="" class="m1-close" @click="closeMc"></cover-image>
+					</cover-view>
+					<cover-view class="m2">
+						<cover-view class="m2-title">
 							颜色
-						</view>
-						<viwe class="m2-box">
+						</cover-view>
+						<cover-view class="m2-box">
 						<!-- " -->
-							<view class="m2-item" :class="{active:chooseData.Fid == item.id}" v-for="(item,index) in typeInfo" :key="index" @click="chooseOne(item)">
+							<cover-view class="m2-item" :class="{active:chooseData.Fid == item.id}" v-for="(item,index) in typeInfo" :key="index" @click="chooseOne(item)">
 								{{item.title}}
-							</view>
-						</viwe>
-					</view>
-					<view class="m3">
-						<view class="m3-title" >
+							</cover-view>
+						</cover-view>
+					</cover-view>
+					<cover-view class="m3">
+						<cover-view class="m3-title" >
 							编号
-						</view>
-						<viwe class="m3-box">
-							<view class="m3-item" :class="{active:chooseData.Tid == item.id}" v-for="(item,index) in chooseData.twoInfo" :key="index" @click="chooseTwo(item)">
+						</cover-view>
+						<cover-view class="m3-box">
+							<cover-view class="m3-item" :class="{active:chooseData.Tid == item.id}" v-for="(item,index) in chooseData.twoInfo" :key="index" @click="chooseTwo(item)">
 								{{item.title}}
-							</view>
-						</viwe>
-						<view class="m3-tips">
+							</cover-view>
+						</cover-view>
+						<cover-view class="m3-tips">
 							对应规格：{{chooseData.depict}}
-						</view>
-					</view>
-				</view>
+						</cover-view>
+					</cover-view>
+				</cover-view>
 
-				<view class="footer" @click="confimType">确认</view>
-			</view>
-			<view class="code" v-if = "showTc == 2">
+				<cover-view class="footer" @click="confimType">确认</cover-view>
+			</cover-view>
+			<cover-view class="code" v-if = "showTc == 2">
 				<view class="code-title">编辑客户代码</view>
 				<view class="code-box">
 					<input type="text" v-model="organCode" class="code-input"/>
 				</view>
 				<view class="code-footer" @click="editOrganCode">确认</view>
 				<view class="close" @click="closeMc">	</view>
-			</view>
+			</cover-view>
 		</uniPopup>
 	</view>
 </template>
@@ -236,6 +236,7 @@
 				}
 			},
 			async remarkChange() {
+				if (!this.remark) return;
 				let res = await this.myRequest('/api/user/manage/upRemark', {
 					order_id: this.orderId,
 					remark: this.remark
@@ -265,7 +266,7 @@
 					this.typeInfo = [...res.data];
 					this.chooseOne(this.typeInfo[0]);
 					this.$refs['buyCode'].open()
-					this.showTc = true;
+					this.showTc = 1;
 				}
 			},
 			async confimType () {
@@ -285,6 +286,10 @@
 				}
 			},
 			openMc (item) {
+				if (item == 2) {
+					this.showTc = 2;
+					return;
+				}
 				this.chooseItem = item;
 				this.getType(item);
 			},

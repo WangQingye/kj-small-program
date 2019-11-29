@@ -67,7 +67,6 @@
 			};
 		},
 		onShow() {
-			this.isBusiness = this.$store.state.userToken.is_business;
 			if (this.$store.state.userToken.api_token) {
 				this.showPage = true;
 			}
@@ -101,6 +100,7 @@
 					return;
 				}
 				if (this.$store.state.userToken.api_token) {
+					this.isBusiness = this.$store.state.userToken.is_business;
 					this.getUserInfo();
 				}
 				this.showLoginPage = false;
