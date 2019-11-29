@@ -1,15 +1,18 @@
 <template>
-	<view class="main">
-		<search-input />
-		<view class="title">
-			<view :class="'t-item ' + (sortType == 1 ? 'acive' : '')" @click="clickSort(1)">默认</view>
-			<view :class="'t-item ' + (sortType == 2 ? 'acive' : '')" @click="clickSort(2)">上新</view>
-			<view :class="'t-item ' + (sortType == 3 ? 'acive' : '')" @click="clickSort(3)">热销</view>
-		</view>
-		<view class="content">
-			<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
-		</view>
-		<load-more :status="status"></load-more>
+	<view class="good-list">
+		<form-id>
+			<!-- <view>dsdas</view> -->
+			<search-input />
+			<view class="title">
+				<view :class="'t-item ' + (sortType == 1 ? 'acive' : '')" @click="clickSort(1)">默认</view>
+				<view :class="'t-item ' + (sortType == 2 ? 'acive' : '')" @click="clickSort(2)">上新</view>
+				<view :class="'t-item ' + (sortType == 3 ? 'acive' : '')" @click="clickSort(3)">热销</view>
+			</view>
+			<view class="content">
+				<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
+			</view>
+			<load-more :status="status"></load-more>
+		</form-id>
 	</view>
 </template>
 
@@ -17,6 +20,7 @@
 	import SearchInput from "@/components/search-input.vue";
 	import GoodItem from "@/components/good-item.vue";
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import FormId from '@/components/formid-collect.vue';
 	export default {
 		data() {
 			return {
@@ -54,7 +58,7 @@
 				}
 			},
 			clickSort(index) {
-				this.goodItems=[];
+				this.goodItems = [];
 				this.sortType = index;
 				this.getGoodList(1);
 			},
@@ -68,16 +72,17 @@
 		components: {
 			SearchInput,
 			GoodItem,
-			LoadMore
+			LoadMore,
+			FormId
 		}
 	}
 </script>
 
 <style lang="scss">
-	.main {
+	.good-list {
 		width: 100%;
 		// height: 100vh;
-		overflow: hidden;
+		// overflow: hidden;
 		font-family: PingFang SC;
 		box-sizing: border-box;
 		display: flex;
@@ -95,9 +100,11 @@
 			font-weight: 400;
 			display: flex;
 			justify-content: space-between;
+
 			.acive {
 				color: #006CB7;
 			}
+
 			.t-item {
 				flex: 1;
 				height: 100%;

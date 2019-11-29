@@ -40,7 +40,7 @@
 							<input type="number" class="goods-inputs" v-model="prices[index]" @blur="priceChange(index)">
 						</view>
 						<view class="goods-num">
-							<uniNumberBox class="goods-numbox" v-model="nums[index]" @change="numChange($event,index)"></uniNumberBox>
+							<uniNumberBox class="goods-numbox" v-model="nums[index]" @change="numChange($event,index)" :min="1" :max="99"></uniNumberBox>
 							<text>数量：</text>
 						</view>
 					</view>
@@ -199,7 +199,7 @@
 				}
 			},
 			async numChange(value,index) {
-				if (!value) return;
+				if (!value.num) return;
 				this.nums[index] = value.num;
 				let res = await this.myRequest('/api/user/manage/upNum', {
 					order_goods_id: this.orderData.goods_join[index].id,
@@ -211,6 +211,10 @@
 			},
 			async priceChange(index) {
 				if (!this.prices[index]) return;
+				if (this.prices[index] < 0.01 || this.prices[index] > 99999999.99) {
+					this.myToast('价格必须在0.01-99999999.99之间');
+					return;
+				}
 				let res = await this.myRequest('/api/user/manage/upClinchPrice', {
 					order_goods_id: this.orderData.goods_join[index].id,
 					clinch_price: this.prices[index]

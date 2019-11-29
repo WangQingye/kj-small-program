@@ -26,7 +26,7 @@
 			<view class="list-item">
 				<view class="list-label">省市区</view>
 				<area-picker @changeArea="ararChange" :areaIds="areaIds"></area-picker>
-				</picker>
+				<!-- </picker> -->
 			</view>
 <!-- 			<view class="list-item list-picker">
 				<view class="list-label">机构类型</view>

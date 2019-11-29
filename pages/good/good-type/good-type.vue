@@ -1,30 +1,31 @@
 <template>
 	<view class="good-type">
-		<search-input/>
-
-		<view class="main">
-			<scroll-view scroll-y="true" class="left-aside">
-				<view v-for="(item,index) in bigType " :key="index" class="aside-item" :class="{active: index == activeIndex}"
-				 @click="clickBigType(item,index)">
-					{{item.title}}
-				</view>
-			</scroll-view>
-			<view class="scroll-body">
-				<view class="scroll-title">
-					<text class="scroll-world">{{bigTypeTile}}</text>
-				</view>
-				<scroll-view scroll-y="true" class="scroll-box">
-					<view class="scorll-item" v-for="(item,index) in smallType" :key="index" @click="clickSmallType(item)">
-						<image class="small-type-img" :src="item.cover_pic" mode=""></image>
+		<form-id>
+			<search-input />
+			<view class="main">
+				<scroll-view scroll-y="true" class="left-aside">
+					<view v-for="(item,index) in bigType " :key="index" class="aside-item" :class="{active: index == activeIndex}"
+					 @click="clickBigType(item,index)">
+						{{item.title}}
 					</view>
 				</scroll-view>
+				<view class="scroll-body">
+					<view class="scroll-title">
+						<text class="scroll-world">{{bigTypeTile}}</text>
+					</view>
+					<scroll-view scroll-y="true" class="scroll-box">
+						<view class="scorll-item" v-for="(item,index) in smallType" :key="index" @click="clickSmallType(item)">
+							<image class="small-type-img" :src="item.cover_pic" mode=""></image>
+						</view>
+					</scroll-view>
+				</view>
 			</view>
-
-		</view>
+		</form-id>
 	</view>
 </template>
 
 <script>
+	import FormId from '@/components/formid-collect.vue';
 	import {
 		SearchInput
 	} from "@/components/search-input.vue";
@@ -85,14 +86,15 @@
 			this.pageInfo()
 		},
 		components: {
-			SearchInput
+			SearchInput,
+			FormId
 		}
 	}
 </script>
 
 <style lang="scss">
-	.good-type {
-	}
+	.good-type {}
+
 	.main {
 		width: 100%;
 		min-height: 91.5vh;

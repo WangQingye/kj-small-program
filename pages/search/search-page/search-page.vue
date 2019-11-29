@@ -1,30 +1,33 @@
 <template>
 	<view>
-		<search-input :needCancel="true" ref="searchInput" @goSearch="goSearch" />
-		<view class="search-content">
-			<view class="hot" v-if="showFlag == 1">
-				<view class="title">热门搜索</view>
-				<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
-					{{item.name}}
+		<form-id>
+			<search-input :needCancel="true" ref="searchInput" @goSearch="goSearch" />
+			<view class="search-content">
+				<view class="hot" v-if="showFlag == 1">
+					<view class="title">热门搜索</view>
+					<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
+						{{item.name}}
+					</view>
+				</view>
+				<view class="items" v-if="showFlag == 2">
+					<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
+				</view>
+				<view class="no-result" v-if="showFlag == 3">
+					<image src="../../../static/no-result.png" class="no-result-img"></image>
+					<view class="no-result-text">没有您搜索的商品</view>
+					<view class="title">推荐商品</view>
+					<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item" :type="1"></good-item>
 				</view>
 			</view>
-			<view class="items" v-if="showFlag == 2">
-				<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
-			</view>
-			<view class="no-result" v-if="showFlag == 3">
-				<image src="../../../static/no-result.png" class="no-result-img"></image>
-				<view class="no-result-text">没有您搜索的商品</view>
-				<view class="title">推荐商品</view>
-				<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item" :type="1"></good-item>
-			</view>
-		</view>
-		<load-more :status="status" v-if="showFlag != 1"></load-more>
+			<load-more :status="status" v-if="showFlag != 1"></load-more>
+		</form-id>
 	</view>
 </template>
 <script>
 	import SearchInput from "@/components/search-input.vue";
 	import GoodItem from "@/components/good-item.vue";
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import FormId from '@/components/formid-collect.vue';
 	export default {
 		data() {
 			return {
@@ -105,7 +108,7 @@
 					this.searchPage++;
 					if (this.showFlag == 2) {
 						this.goSearch(this.nowSearch, this.searchPage);
-					} else if (this.showFlag == 3){
+					} else if (this.showFlag == 3) {
 						this.getRecomend(this.searchPage);
 					}
 				}
@@ -114,7 +117,8 @@
 		components: {
 			SearchInput,
 			GoodItem,
-			LoadMore
+			LoadMore,
+			FormId
 		}
 	}
 </script>

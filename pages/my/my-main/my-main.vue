@@ -1,57 +1,60 @@
 <template>
 	<view class="my-index">
-		<view v-if="showPage">
-			<view class="my-info">
-				<view class="info" @click="goMyInfo">
-					<image class="avatar" :src="avatar" mode="aspectFill"></image>
-					<view class="middle">
-						<view class="name">{{nickName}}</view>
-						<view class="company">{{company}}</view>
+		<form-id>
+			<view v-if="showPage" style="background: #F6F6F6">
+				<view class="my-info">
+					<view class="info" @click="goMyInfo">
+						<image class="avatar" :src="avatar" mode="aspectFill"></image>
+						<view class="middle">
+							<view class="name">{{nickName}}</view>
+							<view class="company">{{company}}</view>
+						</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 					</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					<view class="my-button">
+						<view class="subscribe" @click="goCollect">我的收藏</view>
+						<view class="subscribe" @click="goOrder">我的订单</view>
+					</view>
 				</view>
-				<view class="my-button">
-					<view class="subscribe" @click="goCollect">我的收藏</view>
-					<view class="subscribe" @click="goOrder">我的订单</view>
+				<view class="my-list">
+					<view class="list-item" @click="goList(1)">
+						<image src="../../../static/list-1.png" mode="" class="list-img"></image>
+						<view class="list-text">问题咨询</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					</view>
+					<view class="list-item" @click="goList(2)">
+						<image src="../../../static/list-2.png" mode="" class="list-img"></image>
+						<view class="list-text">地址管理</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					</view>
+					<view class="list-item" @click="goList(3)">
+						<image src="../../../static/list-3.png" mode="" class="list-img"></image>
+						<view class="list-text">我的积分</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					</view>
+					<view class="list-item" @click="goList(4)" v-if="isBusiness">
+						<image src="../../../static/list-4.png" mode="" class="list-img"></image>
+						<view class="list-text">订单管理</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					</view>
+					<view class="list-item" style="border:none" @click="goList(5)">
+						<image src="../../../static/list-5.png" mode="" class="list-img"></image>
+						<view class="list-text">关于凯杰</view>
+						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					</view>
+				</view>
+				<view class="my-out">
+					注销登录
 				</view>
 			</view>
-			<view class="my-list">
-				<view class="list-item" @click="goList(1)">
-					<image src="../../../static/list-1.png" mode="" class="list-img"></image>
-					<view class="list-text">问题咨询</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-				</view>
-				<view class="list-item" @click="goList(2)">
-					<image src="../../../static/list-2.png" mode="" class="list-img"></image>
-					<view class="list-text">地址管理</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-				</view>
-				<view class="list-item" @click="goList(3)">
-					<image src="../../../static/list-3.png" mode="" class="list-img"></image>
-					<view class="list-text">我的积分</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-				</view>
-				<view class="list-item" @click="goList(4)" v-if="isBusiness">
-					<image src="../../../static/list-4.png" mode="" class="list-img"></image>
-					<view class="list-text">订单管理</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-				</view>
-				<view class="list-item" style="border:none" @click="goList(5)">
-					<image src="../../../static/list-5.png" mode="" class="list-img"></image>
-					<view class="list-text">关于凯杰</view>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-				</view>
-			</view>
-			<view class="my-out">
-				注销登录
-			</view>
-		</view>
+		</form-id>
 		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
 <script>
 	import LoginPage from '@/components/login-page.vue';
+	import FormId from '@/components/formid-collect.vue';
 	export default {
 		data() {
 			return {
@@ -60,11 +63,11 @@
 				nickName: '',
 				avatar: '',
 				company: '',
-				isBusiness: true
+				isBusiness: false
 			};
 		},
 		onShow() {
-			// this.isBusiness = this.$store.state.userToken.is_business;
+			this.isBusiness = this.$store.state.userToken.is_business;
 			if (this.$store.state.userToken.api_token) {
 				this.showPage = true;
 			}
@@ -155,7 +158,8 @@
 			}
 		},
 		components: {
-			LoginPage
+			LoginPage,
+			FormId
 		}
 	}
 </script>

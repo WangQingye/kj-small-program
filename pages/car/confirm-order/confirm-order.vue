@@ -14,13 +14,25 @@
 		</view>
 		<view class="content-box">
 			<!-- 客户代码 -->
-			<view class="code">
-				<text class="c-t">客户代码：</text>
-				<input class="c-input" v-model="subData.organ_code" type="text" placeholder="请输入...">
+			<view class="code-wrapper">
+				<view class="list-item list-picker">
+					<view class="list-label">机构类型</view>
+					<picker class="list-input" @change="orgChange" :range="orgs">
+						<view class="list-input ellipsis" style="width: 520rpx" v-if="orgIndex !== null">{{orgs[orgIndex]}}</view>
+						<view v-else style="min-width: 520rpx;color: #999999;">
+							请选择机构类型
+						</view>
+					</picker>
+					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+				</view>
+				<view class="code">
+					<text class="c-t">客户代码：</text>
+					<input class="c-input" v-model="subData.organ_code" type="text" placeholder="请输入...">
+				</view>
 			</view>
 			<view class="goods-box">
 				<view class="" v-for="(item,index) in goodsInfo" :key="index">
-					<view class="goods-item" >
+					<view class="goods-item">
 						<view class="goods-content">
 							<view class="goods-imgbox">
 								<image class="w100" :src="item.goods_cover_pic"></image>
@@ -380,21 +392,51 @@
 			width: 100%;
 			flex: 1;
 			overflow: auto;
-			.code{
+			.code-wrapper {
 				width: 100%;
-				height: 110rpx;
 				padding:0 30rpx;
+				height: 220rpx;
 				box-sizing: border-box;
 				background-color: #fff;
-				display: flex;
-				align-items: center;;
-				font-size:32rpx;
-				font-family:PingFang SC;
-				font-weight:400;
-				color:rgba(51,51,51,1);
 				margin-bottom: 20rpx;
-				.c-input{
-					flex: 1;
+				.code{
+					width: 100%;
+					height: 110rpx;
+					display: flex;
+					align-items: center;
+					font-size:32rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(51,51,51,1);
+					.c-input{
+						flex: 1;
+					}
+				}
+				.list-item {
+					width: 690rpx;
+					height: 110rpx;
+				
+					.list-label {
+						color: #333333;
+						width: 150rpx;
+						line-height: 110rpx;
+						text-align: left;
+						display: inline-block;
+						vertical-align: middle;
+						font-size: 32rpx;
+					}
+				
+					.list-input {
+						display: inline-block;
+						vertical-align: middle;
+						font-size: 32rpx;
+						line-height: 110rpx;
+					}
+					
+					.right-arrow {
+						width: 16rpx;
+						height: 26rpx;
+					}
 				}
 			}
 			.goods-box{

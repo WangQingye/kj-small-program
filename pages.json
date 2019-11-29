@@ -30,7 +30,7 @@
 		}, {
 			"path": "pages/good/good-list/good-list",
 			"style": {
-				"navigationBarTitleText": "商品详情"
+				"navigationBarTitleText": "商品列表"
 			}
 		}, {
 			"path": "pages/good/good-desc/good-desc",
