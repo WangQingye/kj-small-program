@@ -146,7 +146,7 @@
 				let total = 0;
 				this.goodsInfo.forEach(item=>{
 						total += item.price * item.num;
-						if(item.attach_join.length > 0){
+						if(item.attach_join && item.attach_join.length > 0){
 							item.attach_join.map(res=>{
 								total += res.price * res.num;
 							})
@@ -245,20 +245,16 @@
 				})
 			}
 		},
+	
 		onShow () {
+			console.log(123)
 			this.addreses = this.$store.state.userAddress;
 			this.$forceUpdate();
 			try {
 			    const value = uni.getStorageSync('goodsInfo');
 			    if (value) {
 			       this.goodsInfo = JSON.parse(value)
-				   // this.goodsInfo.map(item=>{
-					  //  if(item.attach_join > 0) {
-						 //   item.attach_join.map(res=>{
-							//    this.goodsInfo.push(res)
-						 //   })
-					  //  }
-				   // })
+					console.log(this.goodsInfo)
 				   this.calcTotal()
 			    }
 			} catch (e) {
