@@ -17,6 +17,17 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 	if (needLoading) wx.hideLoading()
 	if (!err && res.statusCode == 200) {
 		return res.data;
+	} else if (res.statusCode == 401) {
+		uni.showToast({
+			title: '登录信息过期,请重新登录',
+			duration: 1500,
+			icon: 'none'
+		})
+		setTimeout(() => {
+			uni.reLaunch({
+				url: '/pages/index/index'
+			});
+		}, 1500);
 	} else {
 		uni.showToast({
 			title: err || res.data.error_msg || '请求失败，请稍后再试',
@@ -25,6 +36,7 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 		})
 	}
 }
+
 function myToast(text, time = 2000, finish) {
 	uni.showToast({
 		title: text,
@@ -32,7 +44,7 @@ function myToast(text, time = 2000, finish) {
 		icon: 'none'
 	})
 	if (finish) {
-		setTimeout(()=>{
+		setTimeout(() => {
 			return finish();
 		}, time)
 	}
