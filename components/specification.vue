@@ -211,7 +211,8 @@
 							num:this.subData.num,
 							one_specs_title:this.subData.colorTitle,
 							two_specs_title:this.subData.models,
-							id:this.listData.id
+							id:this.listData.id,
+							attach_join:this.subData.attach_goods
 						}];
 						let orderData = {
 							goods_id: this.listData.id,
@@ -223,7 +224,7 @@
 							let obj = {}
 							obj.goods_attach_id = item.goods_attach_id;
 							obj.attach_goods_id = item.attach_goods_id;
-							obj.attach_price_id = item.attach_price_id;
+							obj.attach_price_id = item.price_id;
 							obj.num = 1
 							orderData.cart_attach_arr.push(obj)
 						});
@@ -279,7 +280,9 @@
 				}
 			},
 			changeOne (data,item) { //组合商品 一级
+				console.log(data)
 				item.discription = data.title;
+				item.one_specs_title =data.title;
 				item.Oid =  data.id;
 				this.zht_goods = data.two_specs_join;
 				this.changeTwo(data.two_specs_join[0],item)
@@ -292,6 +295,7 @@
 				data.price_id = item.attach_price_id;
 				data.goods_attach_id = item.goods_attach_id;
 				data.discription = data.discription + ";" + item.title
+				data.two_specs_title = item.title;
 			},
 			changeColor (item) { //选择颜色
 				this.subData.colorTitle = item.title
@@ -319,6 +323,9 @@
 			},
 			checkItem (val) { //选择组合商品
 				let idx ;
+				val.num = 1;
+				val.goods_title = val.goods_attach_join.title;
+				val.goods_cover_pic = val.img;
 				if(this.subData.attach_goods.length == 0 ){
 					this.subData.attach_goods.push(val)
 				}else{

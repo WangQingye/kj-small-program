@@ -116,7 +116,7 @@
 		</view>
 		<login-page :showFlag="showLoginPage" v-if="showLoginPage" @login-over="loginOver"></login-page>
 		<uni-popup ref="buyCode" type="bottom" class="buy-wrapper">
-			<specification :listData="listData" :type="type" @closeWin="closeWin" @carNums='shopCarNum' v-if="showTc"></specification>
+			<specification :listData="listData" :type="type" @closeWin="closeWin" @carNums='shopCarNum' ref="sp"></specification>
 		</uni-popup>
 		<uni-popup ref='zx' type="center" class="zx-wrapper">
 			<view class="zx-box">
@@ -171,6 +171,7 @@
 						"<img class='rich-text-img'");
 					this.listData = { ...res.data};
 					this.swiperLength = this.listData.pic_join.length;
+					
 				}
 
 			},
@@ -226,7 +227,8 @@
 					return;
 				}
 				if (this.$store.state.userToken.api_token) {
-					this.getCarNum()
+					this.$refs['sp'].addShopCar()
+					this.getCarNum();
 				}
 				this.showLoginPage = false;
 				// uni.showTabBar();
