@@ -18,6 +18,7 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 	if (!err && res.statusCode == 200) {
 		return res.data;
 	} else if (res.statusCode == 401) {
+		store.commit('resetStore');
 		uni.showToast({
 			title: '登录信息过期,请重新登录',
 			duration: 1500,

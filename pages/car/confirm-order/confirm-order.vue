@@ -261,12 +261,24 @@
 			},
 			orgChange(e) {
 				this.orgIndex = e.detail.value;
-			}
+			},
+			async getUserOrg() {
+				if (this.$store.state.userInfo.nickname) {
+					this.orgIndex = this.$store.state.userInfo.organization_join && ~~this.$store.state.userInfo.organization_join.organ_type_id - 1
+				} else {					
+					let res = await this.myRequest('/api/user/info', {}, 'POST');
+					if (res) {
+						this.$store.commit('saveUserInfo', res.data);
+						this.orgIndex = ~~res.data.organization_join.organ_type_id - 1
+					}
+				}
+			},
 		},
 	
 		onShow () {
 			this.addreses = this.$store.state.userAddress;
 			this.getOrgs();
+			this.getUserOrg();
 			this.$forceUpdate();
 			try {
 			    const value = uni.getStorageSync('goodsInfo');
@@ -284,7 +296,6 @@
 				this.isOrder = option.order;
 			}
 			this.getAddress();
-			this.getOrgs();
 		}
 	}
 </script>
