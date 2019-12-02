@@ -18,7 +18,7 @@
 			<!-- 价格详情 -->
 			<view class="goods-price">
 				<view class="t1">
-					凯杰定制雨伞
+					{{listData.title}}
 				</view>
 				<view class="t2">
 					凯杰定制的雨伞一把，防晒遮雨都可用
@@ -26,8 +26,8 @@
 			
 				<view class="t4">
 					<view class="price">
-						<text>￥</text>
-						<text class="num">1865</text>
+						<text class="num">{{listData.show_price}}</text>
+						<text></text>
 					</view>
 				
 				</view>
@@ -71,7 +71,7 @@
 		},
 		methods: {
 			async getList() {
-				let res = await this.myRequest('/api/goods/show', {
+				let res = await this.myRequest('/api/integral/goods-detail', {
 					goods_id: 21
 				}, 'GET', false);
 				if (res.message == "success") {

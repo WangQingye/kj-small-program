@@ -185,6 +185,10 @@
 					this.myToast('请勾选用户协议');
 					return;
 				}
+				if(this.orgIndex == null){
+					this.myToast('请选择机构类型');
+					return;
+				}
 				if(!this.$store.state.userInfo.mobile){
 					this.getUserInfo()
 					return ;
@@ -195,6 +199,7 @@
 			async buyGoods () {
 				let res;
 				this.subData.address_id_arr = [this.addreses[1].id,this.addreses[2].id,this.addreses[3].id];
+				this.subData.organ_type_id = ~~this.orgIndex + 1;
 				if(this.isOrder){
 					let orderInfo = {...this.subData}
 					let value = uni.getStorageSync('orderInfo');
@@ -212,8 +217,8 @@
 				}
 				if(res.message == "success"){
 					this.myToast('购买成功',1000,()=>{
-						uni.switchTab({
-							url:`/pages/car/good-car/good-car`
+						uni.navigateTo({
+							url:`/pages/my/my-order/my-order/my-order`
 						})
 					})
 

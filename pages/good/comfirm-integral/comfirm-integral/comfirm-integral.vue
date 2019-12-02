@@ -1,14 +1,17 @@
 <template>
 	<view class="main">
 		<view class="body">
-			<view class="add-address">
-				<view class="full">
+			<view class="add-address" @click="goAddressEdit">
+				<view class="h-person" v-if="address">{{address.addressee + ' ' + address.mobile}}
+				</view>
+				<view class="h-address" v-if="address">{{address.area_join.city_join.zh_name + address.area_join.zh_name + address.site}}</view>
+				<view class="full" v-if="!address">
 					请填写收货地址
 				</view>
 
 			</view>
 			<view class="goods-box">
-				<view class="goods-item" v-for="item in 2" :key="item">
+				<view class="goods-item">
 						<view class="goods-content">
 							<view class="goods-imgbox">
 								<image class="w100"></image>
@@ -21,7 +24,7 @@
 									干血斑;DP362-01
 								</view>
 								<view class="g3">
-									<text class="gx-p">¥980</text>
+									<text class="gx-p">200积分</text>
 									<!-- <text class="gy-p" v-show="tabIndex == 0">￥1999</text> -->
 								</view>
 								<!-- <view class="logistics" v-show="tabIndex == 1">
@@ -48,8 +51,27 @@
 	export default {
 		data() {
 			return {
-				Ftitle:'确认预订'
+				Ftitle:'确认预订',
+				address: null
 			};
+		},
+		onShow() {
+			this.getScoreAddress();
+		},
+		methods: {
+			async getScoreAddress() {
+				let res = await this.myRequest('/api/integral/address', {}, 'GET', true);
+				console.log(res);
+				if (res.data.addressee) {
+					this.$store.commit('saveScoreAddress', res.data);
+					this.address = res.data;
+				}
+			},
+			goAddressEdit() {
+				uni.navigateTo({
+					url: `/pages/my/add-address/add-address?isScore=${true}`
+				});
+			}
 		}
 	}
 </script>
@@ -92,6 +114,17 @@
 					font-weight:500;
 					color:rgba(153,153,153,1);
 					line-height: 163rpx;
+				}
+				.h-person{
+					margin-bottom: 29rpx;
+					line-height: 1;
+					padding-top: 39rpx;
+				}
+				.h-address{
+					font-size:24rpx;
+					font-family:PingFang SC;
+					font-weight:400;
+					color:rgba(153,153,153,1)
 				}
 
 			}
