@@ -17,7 +17,7 @@
 				</view>
 				<view class="goods-box">
 					<view class="goods-item" v-for="(good,goodIndex) in item.goods_join" :key="goodIndex">
-							<view class="goods-content">
+							<view class="goods-content" @click="goGoodDesc(good.id)">
 								<view class="goods-imgbox">
 									<image class="w100" :src="good.cover_pic"></image>
 								</view>
@@ -112,6 +112,11 @@
 				}
 				this.listPage = 1;
 				this.getOrderList(1);
+			},
+			goGoodDesc(id) {
+				uni.navigateTo({
+					url: `/pages/good/good-desc/good-desc?goodId=${id}`
+				});
 			}
 		}
 	}

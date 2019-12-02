@@ -35,7 +35,7 @@
 		}, {
 			"path": "pages/good/good-desc/good-desc",
 			"style": {
-				"navigationBarTitleText": "商品列表",
+				"navigationBarTitleText": "商品详情",
 				"enablePullDownRefresh": true
 			}
 		}, {

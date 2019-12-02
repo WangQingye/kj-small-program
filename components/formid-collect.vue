@@ -2,7 +2,6 @@
   <view>
     <form
       @submit="formSubmit"
-      @reset="formReset"
       report-submit="true"
       class="formid-button"
     >
@@ -22,11 +21,13 @@ export default {
   },
   methods: {
     formSubmit(e) {
-      console.log(e);
+			this.postFormId(e.detail.formId);
     },
-    test() {
-      console.log(111);
-    }
+		async postFormId(id) {
+			let res = await this.myRequest('/api/user/store-form-id', {
+				form_id: id
+			}, 'POST', true, false);
+		}
   }
 };
 </script>
