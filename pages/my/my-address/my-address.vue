@@ -106,16 +106,16 @@
 <style lang="scss">
 	.my-address {
 		padding: 0 30rpx;
-
+		.uni-swipe {
+			border-bottom: 1rpx solid #E5E5E5;
+		}
 		.detail-item {
 			width: 690rpx;
 			height: 128rpx;
-
 			.left {
 				width: 640rpx;
 				display: inline-block;
 				vertical-align: middle;
-				border-bottom: 1rpx solid #E5E5E5;
 
 				.left-top {
 					font-size: 32rpx;
@@ -148,7 +148,6 @@
 				height: 40rpx;
 				padding-bottom: 50rpx;
 				margin-top: 50rpx;
-				border-bottom: 1rpx solid #E5E5E5;
 			}
 
 		}

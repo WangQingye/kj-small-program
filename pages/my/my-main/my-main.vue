@@ -73,13 +73,12 @@
 			if (this.showLoginPage) {
 				uni.hideTabBar();
 			}
-			if (this.$store.state.userInfo) {
+			if (this.$store.state.userInfo.nickname) {
 				this.nickName = this.$store.state.userInfo.nickname;
 				this.isBusiness = Boolean(this.$store.state.userInfo.business_join.type);
 			}
 			uni.$on('updateName',
 				() => {
-					console.log(111);
 					this.nickName = this.$store.state.userInfo.nickname;
 				})
 		},

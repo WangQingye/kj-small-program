@@ -110,14 +110,14 @@
 
 				<cover-view class="footer" @click="confimType">确认</cover-view>
 			</cover-view>
-			<cover-view class="code" v-if = "showTc == 2">
+			<view class="code" v-if="showTc == 2">
 				<view class="code-title">编辑客户代码</view>
 				<view class="code-box">
 					<input type="text" v-model="organCode" class="code-input"/>
 				</view>
 				<view class="code-footer" @click="editOrganCode">确认</view>
 				<view class="close" @click="closeMc">	</view>
-			</cover-view>
+			</view>
 		</uniPopup>
 	</view>
 </template>
@@ -200,6 +200,10 @@
 			},
 			async numChange(value,index) {
 				if (!value.num) return;
+				if (value.num < 1 || value.num > 99) {
+					this.myToast('数量必须在1-99之间');
+					return;
+				}
 				this.nums[index] = value.num;
 				let res = await this.myRequest('/api/user/manage/upNum', {
 					order_goods_id: this.orderData.goods_join[index].id,
@@ -246,6 +250,14 @@
 				}
 			},
 			async changeOrderStatus(status) {
+				if (!this.organCode) {
+					this.myToast('客户代码不能为空');
+					return;
+				}
+				if (!this.orderData.organ_name) {
+					this.myToast('客户所属公司不能为空');
+					return;
+				}				
 				let res = await this.myRequest('/api/user/manage/upStatus', {
 					order_id: this.orderId,
 					status
@@ -288,6 +300,7 @@
 			openMc (item) {
 				if (item == 2) {
 					this.showTc = 2;
+					this.$refs['buyCode'].open()
 					return;
 				}
 				this.chooseItem = item;

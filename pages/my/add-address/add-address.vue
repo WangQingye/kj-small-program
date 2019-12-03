@@ -1,14 +1,14 @@
 <template>
 	<view class="add-address-wrapper" v-if="showForm">
 		<view class="add-address">
-			<view class="list-radio" v-if="!orderAddressId && !isScore">
+			<view class="list-radio" v-if="!orderAddressId && !isScore && addType !== 4">
 				<radio-group @change="radioChange">
 					<label class="radio" style="margin-right: 60rpx;">
-						<radio value="1" checked="true" color="#006CB7" style="transform:scale(0.8)" />公司地址</label>
+						<radio value="1" :checked="addType == 1" color="#006CB7" style="transform:scale(0.8)" />公司地址</label>
 					<label class="radio" style="margin-right: 60rpx;">
-						<radio value="2" color="#006CB7" style="transform:scale(0.8)" />收货地址</label>
+						<radio value="2" :checked="addType == 2" color="#006CB7" style="transform:scale(0.8)" />收货地址</label>
 					<label class="radio">
-						<radio value="3" color="#006CB7" style="transform:scale(0.8)" />发票邮寄地址</label>
+						<radio value="3" :checked="addType == 3" color="#006CB7" style="transform:scale(0.8)" />发票邮寄地址</label>
 				</radio-group>
 			</view>
 			<view class="list-item">

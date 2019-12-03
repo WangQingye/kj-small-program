@@ -17,13 +17,15 @@
 			<view class="code-wrapper">
 				<view class="list-item list-picker">
 					<view class="list-label">机构类型</view>
-					<picker class="list-input" @change="orgChange" :range="orgs">
-						<view class="list-input ellipsis" style="width: 520rpx" v-if="orgIndex !== null">{{orgs[orgIndex]}}</view>
-						<view v-else style="min-width: 520rpx;color: #999999;">
-							请选择机构类型
-						</view>
-					</picker>
-					<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					<!-- 					<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" v-if="hasOwnOrg">{{orgs[orgIndex]}}</view> -->
+					<!-- 					<picker v-else class="list-input" @change="orgChange" :range="orgs">
+					</picker> -->
+						<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view>
+					<view v-else class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
+						请选择机构类型
+					</view>
+					<w-picker mode="selector" @confirm="orgChange" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
+					<image v-if="!hasOwnOrg" class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 				</view>
 				<view class="code">
 					<text class="c-t">客户代码：</text>
@@ -115,9 +117,11 @@
 
 <script>
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
+	import wPicker from "@/components/w-picker/w-picker.vue";
 	export default {
 		components:{
-			sunTab
+			sunTab,
+			wPicker
 		},
 		data() {
 			return {
@@ -127,7 +131,16 @@
 				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				goodsInfo:[],
 				orgs: [],
+				selectList:[{
+					label:"男",
+					value:0
+				},{
+					label:"女",
+					value:1
+				}],
 				orgIndex: null,
+				// 用户是否本身有机构，如果有的话则不能再选
+				hasOwnOrg: false,
 				subData:{
 					remark:'',
 					organ_code:'',
@@ -254,13 +267,17 @@
 			async getOrgs() {
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
 				if (res) {
-					this.orgs = res.data.map(item => {
-						return item.zh_name;
+					this.orgs = res.data.map((item,index) => {
+						return {label:item.zh_name, value:index};
 					});
 				}
 			},
+			showOrgSelect() {
+				if (this.hasOwnOrg) return;
+				this.$refs.selector.show();
+			},
 			orgChange(e) {
-				this.orgIndex = e.detail.value;
+				this.orgIndex = e.checkArr.value;
 			},
 			async getUserOrg() {
 				if (this.$store.state.userInfo.nickname) {
@@ -271,6 +288,9 @@
 						this.$store.commit('saveUserInfo', res.data);
 						this.orgIndex = ~~res.data.organization_join.organ_type_id - 1
 					}
+				}
+				if (this.orgIndex !== null) {
+					this.hasOwnOrg = true;
 				}
 			},
 		},

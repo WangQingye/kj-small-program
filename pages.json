@@ -19,7 +19,7 @@
 				"usingComponents": {
 					"van-checkbox": "/wxcomponents/vant-weapp/checkbox/index"
 				}
-				
+
 			}
 		}, {
 			"path": "pages/good/good-type/good-type",
@@ -116,7 +116,6 @@
 			"path": "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
 			"style": {
 				"navigationBarTitleText": "确认订单"
-				
 			}
 		}, {
 			"path": "pages/my/order-list/order-list/order-list",
