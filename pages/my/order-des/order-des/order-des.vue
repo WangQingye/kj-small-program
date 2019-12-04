@@ -195,7 +195,7 @@
 					this.myToast(res.message);
 				} else {
 					this.myToast('修改成功');
-					this.showTc = false;
+					this.closeMc();
 				}
 			},
 			async numChange(value,index) {
