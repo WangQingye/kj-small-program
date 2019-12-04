@@ -17,16 +17,18 @@
 			<view class="code-wrapper">
 				<view class="list-item list-picker">
 					<view class="list-label">机构类型</view>
-					<!-- <view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view> -->
-					<view class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
+					<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view>
+					<view v-else class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
 						请选择机构类型
 					</view>
 					<image v-if="!hasOwnOrg" class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-					<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
+					<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7"
+					 :selectList="orgs"></w-picker>
 				</view>
 				<view class="code">
 					<text class="c-t" style="width: 150rpx;">机构名称</text>
-					<input class="c-input" v-model="subData.organ_name" type="text" placeholder="请输入...">
+					<input class="c-input" v-model="subData.organ_name" type="text" placeholder="请输入..." v-if="!hasOwnOrg">
+					<view class="c-input" v-else>{{subData.organ_name}}</view>
 				</view>
 			</view>
 			<view class="goods-box">
@@ -200,6 +202,10 @@
 				if(this.orgIndex == null){
 					this.myToast('请选择机构类型');
 					return;
+				}				
+				if(this.subData.organ_name == ''){
+					this.myToast('请输入机构名称');
+					return;
 				}
 				if(!this.$store.state.userInfo.mobile){
 					this.getUserInfo()
@@ -278,10 +284,9 @@
 						});
 					}
 				}
-				console.log(this.orgs)
 			},
 			showOrgSelect() {
-				// if (this.hasOwnOrg) return;
+				if (this.hasOwnOrg) return;
 				this.$refs.selector.show();
 				this.hasOpenModel = true;
 			},
@@ -291,12 +296,18 @@
 			},
 			async getUserOrg() {
 				if (this.$store.state.userInfo.nickname) {
-					this.orgIndex = this.$store.state.userInfo.organization_join && ~~this.$store.state.userInfo.organization_join.organ_type_id - 1
+					if (this.$store.state.userInfo.organization_join) {						
+						this.orgIndex = ~~this.$store.state.userInfo.organization_join.organ_type_id - 1;
+						this.subData.organ_name = this.$store.state.userInfo.organization_join.name
+					}
 				} else {					
 					let res = await this.myRequest('/api/user/info', {}, 'POST');
 					if (res) {
 						this.$store.commit('saveUserInfo', res.data);
-						this.orgIndex = ~~(res.data.organization_join&&res.data.organization_join.organ_type_id - 1)
+						if (res.data.organization_join) {
+							this.orgIndex = res.data.organization_join.organ_type_id - 1
+							this.subData.organ_name = res.data.organization_join.name
+						}
 					}
 				}
 				if (this.orgIndex !== null) {

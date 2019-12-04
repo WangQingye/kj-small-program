@@ -30,8 +30,13 @@ async function myRequest(api, data, method, needToken = true, needLoading = true
 			});
 		}, 1500);
 	} else {
+		console.log(res)
+		let msg;
+		for (let key in res.data.errors) {
+			msg = res.data.errors[key][0];
+		}
 		uni.showToast({
-			title: err || res.data.error_msg || '请求失败，请稍后再试',
+			title: msg || '请求失败，请稍后再试',
 			duration: 2000,
 			icon: 'none'
 		})
