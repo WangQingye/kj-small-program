@@ -13,7 +13,7 @@
 		</view>
 		<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" @update:value="onTabChange" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
 		<view class="score-items">
-			<view class="item-wrapper" @click="goDetail" v-for="(item,index) in goodItems" :key="index" :style="'margin-right:' + ((index+1) % 3 == 0 ? 0 : 30) + 'rpx'">
+			<view class="item-wrapper" @click="goDetail(item.id)" v-for="(item,index) in goodItems" :key="index" :style="'margin-right:' + ((index+1) % 3 == 0 ? 0 : 30) + 'rpx'">
 				<image class="item-img" :src="item.cover_pic" mode=""></image>
 				<view class="item-title">{{item.title}}</view>
 				<button class="item-button">兑换</button>
@@ -102,9 +102,9 @@
 					url: `/pages/score/score-detail/score-detail`
 				});
 			},
-			goDetail() {
+			goDetail(id) {
 				uni.navigateTo({
-					url: `/pages/good/integral-det/integral-det/integral-det`
+					url: `/pages/good/integral-det/integral-det/integral-det?goodId=${id}`
 				});
 			}
 		},

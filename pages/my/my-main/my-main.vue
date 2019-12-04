@@ -75,7 +75,7 @@
 			}
 			if (this.$store.state.userInfo.nickname) {
 				this.nickName = this.$store.state.userInfo.nickname;
-				this.isBusiness = Boolean(this.$store.state.userInfo.business_join.type);
+				this.isBusiness = Boolean(this.$store.state.userInfo.business_join && this.$store.state.userInfo.business_join.type);
 			}
 			uni.$on('updateName',
 				() => {
@@ -112,7 +112,7 @@
 					this.nickName = res.data.nickname;
 					this.avatar = res.data.avatar;
 					this.company = (res.data.organization_join && res.data.organization_join.name) || '暂无机构'
-					this.isBusiness = Boolean(res.data.business_join.type);
+					this.isBusiness = Boolean(res.data.business_join &&res.data.business_join.type);
 					this.showPage = true;
 				} else {}
 			},

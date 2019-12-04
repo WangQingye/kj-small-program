@@ -17,19 +17,16 @@
 			<view class="code-wrapper">
 				<view class="list-item list-picker">
 					<view class="list-label">机构类型</view>
-					<!-- 					<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" v-if="hasOwnOrg">{{orgs[orgIndex]}}</view> -->
-					<!-- 					<picker v-else class="list-input" @change="orgChange" :range="orgs">
-					</picker> -->
-						<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view>
-					<view v-else class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
+					<!-- <view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view> -->
+					<view class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
 						请选择机构类型
 					</view>
-					<w-picker mode="selector" @confirm="orgChange" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
 					<image v-if="!hasOwnOrg" class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
+					<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
 				</view>
 				<view class="code">
-					<text class="c-t">客户代码：</text>
-					<input class="c-input" v-model="subData.organ_code" type="text" placeholder="请输入...">
+					<text class="c-t" style="width: 150rpx;">机构名称</text>
+					<input class="c-input" v-model="subData.organ_name" type="text" placeholder="请输入...">
 				</view>
 			</view>
 			<view class="goods-box">
@@ -87,7 +84,7 @@
 			</view>
 			<view class="remark">
 				<view class="re-title">备注信息：</view>
-				<textarea class="re-content" v-model="subData.remark" placeholder="填写留言信息" />
+				<textarea class="re-content" v-model="subData.remark" v-show="!hasOpenModel" placeholder="填写留言信息" />
 				</view>
 		</view>
 		<view class="footer">
@@ -143,13 +140,15 @@
 				hasOwnOrg: false,
 				subData:{
 					remark:'',
-					organ_code:'',
+					organ_name:'',
 					deduct_id:'',
 					cart_id_arr:[],
 					address_id_arr:[1],
 				},
 				isOrder:false,
-				addreses: ["","","",""]
+				addreses: ["","","",""],
+				// 如果有弹出层，隐藏输入框
+				hasOpenModel: false
 			};
 		},
 		methods:{
@@ -265,19 +264,30 @@
 				})
 			},
 			async getOrgs() {
+				if (!this.addreses[1]) return;
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
 				if (res) {
-					this.orgs = res.data.map((item,index) => {
-						return {label:item.zh_name, value:index};
-					});
+					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
+					if (this.addreses[1].area_join.city_join.province_id == 1) {						
+						this.orgs = res.data.map((item,index) => {
+							return {label:item.zh_name, value:index};
+						});
+					} else {
+						this.orgs = res.data.slice(0,5).map((item,index) => {
+							return {label:item.zh_name, value:index};
+						});
+					}
 				}
+				console.log(this.orgs)
 			},
 			showOrgSelect() {
-				if (this.hasOwnOrg) return;
+				// if (this.hasOwnOrg) return;
 				this.$refs.selector.show();
+				this.hasOpenModel = true;
 			},
 			orgChange(e) {
 				this.orgIndex = e.checkArr.value;
+				this.hasOpenModel = false;
 			},
 			async getUserOrg() {
 				if (this.$store.state.userInfo.nickname) {
@@ -286,7 +296,7 @@
 					let res = await this.myRequest('/api/user/info', {}, 'POST');
 					if (res) {
 						this.$store.commit('saveUserInfo', res.data);
-						this.orgIndex = ~~res.data.organization_join.organ_type_id - 1
+						this.orgIndex = ~~(res.data.organization_join&&res.data.organization_join.organ_type_id - 1)
 					}
 				}
 				if (this.orgIndex !== null) {
@@ -304,18 +314,18 @@
 			    const value = uni.getStorageSync('goodsInfo');
 			    if (value) {
 			       this.goodsInfo = JSON.parse(value)
-					console.log(this.goodsInfo)
 				   this.calcTotal()
 			    }
 			} catch (e) {
 			    // error
 			}
 		},
-		onLoad (option) {
+		async onLoad (option) {
 			if(option){
 				this.isOrder = option.order;
 			}
-			this.getAddress();
+			await this.getAddress();
+			this.getOrgs();
 		}
 	}
 </script>

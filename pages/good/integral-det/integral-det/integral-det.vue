@@ -4,7 +4,7 @@
 			<!-- 轮播 -->
 			<view class="carousel">
 				<swiper circular=true duration="400" class="carousel-box" @change="swiperChange">
-					<swiper-item class="swiper-item" v-for="(item,index) in listData.pic_join" :key="index">
+					<swiper-item class="swiper-item" v-for="(item,index) in listData.goods_pic" :key="index">
 						<view class="image-wrapper">
 							<image :src="item.pic" class="w100"></image>
 						</view>
@@ -21,12 +21,12 @@
 					{{listData.title}}
 				</view>
 				<view class="t2">
-					凯杰定制的雨伞一把，防晒遮雨都可用
+					{{listData.depict}}
 				</view>
 			
 				<view class="t4">
 					<view class="price">
-						<text class="num">{{listData.show_price}}</text>
+						<text class="num">{{listData.need_integral}}积分</text>
 						<text></text>
 					</view>
 				
@@ -42,7 +42,7 @@
 		</view>
 		
 		<view class="footer" @click="goDetail">
-			确认
+			立即兑换
 		</view>
 	
 	</view>
@@ -72,7 +72,7 @@
 		methods: {
 			async getList() {
 				let res = await this.myRequest('/api/integral/goods-detail', {
-					goods_id: 21
+					id: this.goodId
 				}, 'GET', false);
 				if (res.message == "success") {
 					if (res.data.content) res.data.content = res.data.content.replace(/\<img/gi,
@@ -80,7 +80,7 @@
 					this.listData = { ...res.data
 					};
 					console.log(this.listData.content)
-					this.swiperLength = this.listData.pic_join.length;
+					this.swiperLength = this.listData.goods_pic.length;
 				}
 
 			},
