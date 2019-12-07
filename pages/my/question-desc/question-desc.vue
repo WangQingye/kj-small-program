@@ -1,13 +1,9 @@
 <template>
 	<view>
 		<view class="question-desc">
-			<view class="list-item">
-				<view class="list-text" style="margin-top:30rpx"><text style="color: #ED193A;margin-right: 12rpx;">Q: </text> 小程序下单和线下下单有什么区别？</view>
-				<view class="list-text" style="margin-top:25rpx"><text style="color: #006CB7;margin-right: 12rpx;">A: </text> 您好，没有任何区别？</view>
-			</view>
-			<view class="list-item">
-				<view class="list-text" style="margin-top:30rpx"><text style="color: #ED193A;margin-right: 12rpx;">Q: </text> 小程序下单和线下下单有什么区别？</view>
-				<view class="list-text" style="margin-top:25rpx"><text style="color: #006CB7;margin-right: 12rpx;">A: </text> 您好，没有任何区别？</view>
+			<view class="list-item" v-for="(item,index) in questionList" :key="index">
+				<view class="list-text" style="margin-top:30rpx"><text style="color: #ED193A;margin-right: 12rpx;">Q: </text> {{item.title}}</view>
+				<view class="list-text" style="margin-top:25rpx"><text style="color: #006CB7;margin-right: 12rpx;">A: </text> {{item.describe}}</view>
 			</view>
 		</view>
 	</view>
@@ -17,8 +13,25 @@
 	export default {
 		data() {
 			return {
-
+			questionId:null,
+			questionList: []
 			};
+		},
+		onLoad(option) {
+			this.questionId = option.questionId;
+			this.getQuestion();
+		},
+		methods: {
+			async getQuestion() {
+					let res = await this.myRequest('/common/issue/getIssue', {
+						page:1,
+						per_page:1000,
+						issue_type_id: this.questionId
+					}, 'GET', false, false);
+					if (res.data.data) {
+						this.questionList = res.data.data
+					}
+			}
 		}
 	}
 </script>

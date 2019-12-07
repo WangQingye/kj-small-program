@@ -1,25 +1,29 @@
 <template>
 	<view class="score-mall">
-		<view class="score-detail">
-			<view class="score-desc">
-				<image class="score-desc-dount" src="../../../static/dount.png" mode="" @click="goScoreDesc"></image>
-				<text class="score-desc-text" @click="goScoreDesc">积分说明</text>
+		<view v-if="showPage">
+			<view class="score-detail">
+				<view class="score-desc">
+					<image class="score-desc-dount" src="../../../static/dount.png" mode="" @click="goScoreDesc"></image>
+					<text class="score-desc-text" @click="goScoreDesc">积分说明</text>
+				</view>
+				<view class="score-title">当前积分</view>
+				<view class="score-wrapper" v-if="score !== null">
+					<view class="score-num">{{score}}</view>
+					<button class="score-button" @click="goScoreDetail">明细</button>
+				</view>
 			</view>
-			<view class="score-title">当前积分</view>
-			<view class="score-wrapper" v-if="score !== null">
-				<view class="score-num">{{score}}</view>
-				<button class="score-button" @click="goScoreDetail">明细</button>
+			<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" @update:value="onTabChange" defaultColor="#333333"
+			 activeColor="#006CB7"></sun-tab>
+			<view class="score-items">
+				<view class="item-wrapper" @click="goDetail(item.id)" v-for="(item,index) in goodItems" :key="index" :style="'margin-right:' + ((index+1) % 3 == 0 ? 0 : 30) + 'rpx'">
+					<image class="item-img" :src="item.cover_pic" mode=""></image>
+					<view class="item-title">{{item.title}}</view>
+					<button class="item-button">兑换</button>
+				</view>
 			</view>
+			<load-more :status="status"></load-more>
 		</view>
-		<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" @update:value="onTabChange" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
-		<view class="score-items">
-			<view class="item-wrapper" @click="goDetail(item.id)" v-for="(item,index) in goodItems" :key="index" :style="'margin-right:' + ((index+1) % 3 == 0 ? 0 : 30) + 'rpx'">
-				<image class="item-img" :src="item.cover_pic" mode=""></image>
-				<view class="item-title">{{item.title}}</view>
-				<button class="item-button">兑换</button>
-			</view>
-		</view>
-		<load-more :status="status"></load-more>
+		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
@@ -27,6 +31,7 @@
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
 	import GoodItem from "@/components/good-item.vue";
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import LoginPage from '@/components/login-page.vue';
 	export default {
 		data() {
 			return {
@@ -37,12 +42,24 @@
 				goodPage: 1,
 				goodItems: [],
 				status: 'more',
-				score: null
+				score: null,
+				showLoginPage: false,
+				showPage: false
 			};
 		},
+		onLoad() {
+			if (this.$store.state.userToken.api_token) {
+				this.showPage = true;
+			}
+			if (this.showLoginPage) {
+				uni.hideTabBar();
+			}
+		},
 		onShow() {
-			this.getScore();
-			this.getGoodType();
+			if (this.$store.state.userToken.api_token) {
+				this.getScore();
+				this.getGoodType();
+			}
 		},
 		methods: {
 			async getScore() {
@@ -54,7 +71,7 @@
 			async getGoodType() {
 				let res = await this.myRequest('/api/integral/goodstype', {}, 'GET');
 				if (res) {
-					let data = res.data.sort((a,b) => {
+					let data = res.data.sort((a, b) => {
 						return a.sort - b.sort;
 					})
 					this.tabList = data.map(item => {
@@ -106,6 +123,28 @@
 				uni.navigateTo({
 					url: `/pages/good/integral-det/integral-det/integral-det?goodId=${id}`
 				});
+			},
+			loginOver(err) {
+				// 自动登录失败，显示登录框
+				if (err === 1) {
+					uni.hideTabBar();
+					this.showLoginPage = true;
+					return;
+				}
+				// 登录失败返回首页
+				if (err) {
+					this.myToast('登录失败');
+					uni.switchTab({
+						url: '/pages/index/index'
+					});
+					return;
+				}
+				// 登录成功
+				this.showLoginPage = false;
+				this.showPage = true;
+				this.getScore();
+				this.getGoodType();
+				uni.showTabBar();
 			}
 		},
 		onReachBottom() {
@@ -117,7 +156,8 @@
 		components: {
 			sunTab,
 			GoodItem,
-			LoadMore
+			LoadMore,
+			LoginPage
 		}
 	}
 </script>

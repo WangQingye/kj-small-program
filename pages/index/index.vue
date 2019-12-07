@@ -6,8 +6,8 @@
 		<view class="swiper-warpper">
 			<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="3000" indicator-color='rgb(139,187,218)'
 			 indicator-active-color='#006CB7'>
-				<swiper-item v-for="(item,index) in 3" :key="index">
-					<image class="swiper-img" src="../../static/banner.png" mode="aspectFill"></image>
+				<swiper-item v-for="(item,index) in banners" :key="index">
+					<image class="swiper-img" :src="item.pic" mode="aspectFill" @click="clickBanner(item)"></image>
 				</swiper-item>
 			</swiper>
 			<view class="swiper-text">
@@ -27,9 +27,9 @@
 		</view>
 		<view class="main-content">
 			<scroll-view class="main-type main-scroll" scroll-x="true">
-				<view class="type-item" v-for="(item,index) in 12" :key="index">
-					<image class="type-img" src="../../static/b10.png" mode="aspectFill"></image>
-					<text class="type-text">样本制备</text>
+				<view class="type-item" v-for="(item,index) in recomTypes" :key="index" @click="clickRecomType(item.id)">
+					<image class="type-img" :src="item.cover_pic" mode="aspectFill"></image>
+					<text class="type-text">{{item.title}}</text>
 				</view>
 			</scroll-view>
 			<view class="star-goods">
@@ -49,17 +49,17 @@
 					</view>
 				</view>
 			</view>
-			<image src="../../static/jifen.png" mode="aspectFill" style="width: 702rpx;height: 160rpx;margin-bottom: 20rpx;"></image>
+			<image src="../../static/jifen.png" @click="clickScoreMall" mode="aspectFill" style="width: 702rpx;height: 160rpx;margin-bottom: 20rpx;"></image>
 			<view class="activity">
-				<view class="activity-item" v-for="(item,index) in 2" :key="index">
-					<view class="activity-ad" @click="clickActivity">
-						<image class="activity-bg" src="../../static/cuxiao.png" mode="aspectFill"></image>
+				<view class="activity-item" v-for="(item,index) in activities" :key="index">
+					<view class="activity-ad" @click="clickActivity(item)">
+						<image class="activity-bg" :src="item.cover_pic" mode="aspectFill"></image>
 						<image class="activity-frame" src="../../static/cuxiaok.png" mode="aspectFill"></image>
-						<text class="activity-title">夏季促销双重礼</text>
+						<text class="activity-title">{{item.title}}</text>
 					</view>
 					<scroll-view class="main-scroll" scroll-x="true">
-						<good-item class="item" style="display:inline-block;margin-right: 30rpx;" v-for="(goodItem,goodIndex) in starItems"
-						 :key="goodIndex" :goodData="goodItem" :type="2"></good-item>
+						<good-item class="item" style="display:inline-block;margin-right: 30rpx;" v-for="(goodItem,goodIndex) in item.type_goods_join"
+						 :key="goodIndex" :goodData="goodItem.goods_join" :type="2"></good-item>
 					</scroll-view>
 				</view>
 			</view>
@@ -84,18 +84,27 @@
 				starItems: [],
 				recommendItems: [],
 				recommendPage: 1,
-				status: 'more'
+				status: 'more',
+				banners: [],
+				recomTypes: [],
+				activities: []
 			}
 		},
 		onLoad() {
+			this.getBanner();
+			this.getRecomTypes();
 			this.getStarGoods();
+			this.getActivities();
 			this.getRecomGoods(1);
 		},
 		onPullDownRefresh() {
+			this.getBanner();
+			this.getRecomTypes();
 			this.getStarGoods();
+			this.getActivities();
 			this.getRecomGoods(1);
-			setTimeout(function () {
-			    uni.stopPullDownRefresh();
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
 			}, 500);
 		},
 		onShow() {
@@ -108,6 +117,21 @@
 			}
 		},
 		methods: {
+			async getBanner() {
+				let res = await this.myRequest('/api/home/banner-list', {}, 'GET', false, false);
+				if (res.data) {
+					this.banners = res.data
+				}
+			},
+			async getRecomTypes() {
+				let res = await this.myRequest('/api/home/recommendType', {
+					page: 1,
+					per_page: 1000
+				}, 'GET', false, false);
+				if (res.data.data) {
+					this.recomTypes = res.data.data
+				}
+			},
 			async getStarGoods() {
 				let res = await this.myRequest('/api/goods/starGoods', {
 					page: 1,
@@ -115,6 +139,12 @@
 				}, 'GET', false);
 				if (res.data.data.length) {
 					this.starItems = res.data.data
+				}
+			},
+			async getActivities() {
+				let res = await this.myRequest('/api/home/activity', {}, 'GET', false, false);
+				if (res.data) {
+					this.activities = res.data
 				}
 			},
 			async getRecomGoods(page) {
@@ -136,9 +166,35 @@
 					}
 				}
 			},
-			clickActivity() {
+			clickBanner(data) {
+				switch (data.type) {
+					case 1:
+						break;
+					case 2:
+						uni.navigateTo({
+							url: `/pages/good/good-desc/good-desc?goodId=${data.goods_id}`
+						});
+						break;
+					case 3:
+						uni.navigateTo({
+							url: `/pages/good/good-activity/good-activity?activityId=${data.activity_id}`
+						});
+						break;
+					case 4:
+						break;
+				}
+			},
+			clickRecomType(id) {
+
+			},
+			clickScoreMall() {
 				uni.navigateTo({
-					url: `/pages/good/good-activity/good-activity`
+					url: `/pages/score/score-mall/score-mall`
+				});				
+			},
+			clickActivity(item) {
+				uni.navigateTo({
+					url: `/pages/good/good-activity/good-activity?activityId=${item.id}&activityImg=${item.cover_pic}`
 				});
 			}
 		},

@@ -53,7 +53,7 @@
 				</view>
 				<view class="remark">
 					<text>备注信息：</text>
-					<textarea class="remark-box" v-model="remark" placeholder="请输入备注信息" @blur="remarkChange" />
+					<textarea class="remark-box" v-model="businessRemark" placeholder="请输入备注信息" @blur="remarkChange" />
 					</view>
 				</view>
 			<view class="last-info">
@@ -138,7 +138,7 @@
 				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				showTc:'',
 				orderId: null,
-				remark: "",
+				businessRemark: "",
 				orderData: null,
 				organCode: null,
 				prices: [],
@@ -155,7 +155,7 @@
 					twoInfo:[]
 				},
 				chooseItem:{},//选择的goodsitem
-
+				orgInfos: []
 			};
 		},
 		onLoad(option) {
@@ -172,7 +172,7 @@
 				}, 'POST');
 				if (res) {
 					this.orderData = res.data;
-					// this.remark = res.data.remark;
+					this.businessRemark = res.data.business_remark;
 					this.organCode = res.data.organ_code;
 					this.prices = res.data.goods_join.map(item => {
 						return item.clinch_price;
@@ -195,7 +195,24 @@
 					this.myToast(res.message);
 				} else {
 					this.myToast('修改成功');
+					this.orderData.organ_code = this.organCode;
+					// 修改了客户代码后需要更新下方所属公司
+					this.getOrgInfo();
 					this.closeMc();
+				}
+			},
+			async getOrgInfo() {
+				let res = await this.myRequest('/common/getOrgan', {
+					keyword: this.orderData.organ_code,
+					page:1,
+					per_page:10
+				}, 'GET', true, false);
+				if (res.message != 'success') {
+					this.myToast(res.message);
+				} else {
+					if (res.data.data.length) {						
+						this.orderData.organ_name = res.data.data[0].name
+					}
 				}
 			},
 			async numChange(value,index) {
@@ -240,10 +257,10 @@
 				}
 			},
 			async remarkChange() {
-				if (!this.remark) return;
+				if (!this.businessRemark) return;
 				let res = await this.myRequest('/api/user/manage/upRemark', {
 					order_id: this.orderId,
-					remark: this.remark
+					business_remark: this.businessRemark
 				}, 'POST', true, false);
 				if (res.message != 'success') {
 					this.myToast(res.message);

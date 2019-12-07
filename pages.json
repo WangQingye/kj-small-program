@@ -115,7 +115,10 @@
 		}, {
 			"path": "pages/good/comfirm-integral/comfirm-integral/comfirm-integral",
 			"style": {
-				"navigationBarTitleText": "确认订单"
+				"navigationBarTitleText": "确认订单",
+				"usingComponents": {
+					"van-checkbox": "/wxcomponents/vant-weapp/checkbox/index"
+				}
 			}
 		}, {
 			"path": "pages/my/order-list/order-list/order-list",

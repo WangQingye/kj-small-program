@@ -79,8 +79,8 @@
 						"<img class='rich-text-img'");
 					this.listData = { ...res.data
 					};
-					console.log(this.listData.content)
 					this.swiperLength = this.listData.goods_pic.length;
+					this.$store.commit('saveScoreGood', res.data);
 				}
 
 			},

@@ -176,7 +176,7 @@
 			},
 			Goagreement (){
 				uni.navigateTo({
-					url: `/pages/score/score-desc/score-desc`
+					url: `/pages/score/score-desc/score-desc?singlePageId=1`
 				});
 			},
 			async getUserInfo() { //获取用户信息
@@ -202,7 +202,7 @@
 				if(this.orgIndex == null){
 					this.myToast('请选择机构类型');
 					return;
-				}				
+				}
 				if(this.subData.organ_name == ''){
 					this.myToast('请输入机构名称');
 					return;
@@ -274,7 +274,7 @@
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
 				if (res) {
 					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
-					if (this.addreses[1].area_join.city_join.province_id == 1) {						
+					if (this.addreses[1].area_join.city_join.province_id == 1) {
 						this.orgs = res.data.map((item,index) => {
 							return {label:item.zh_name, value:index};
 						});
@@ -296,11 +296,11 @@
 			},
 			async getUserOrg() {
 				if (this.$store.state.userInfo.nickname) {
-					if (this.$store.state.userInfo.organization_join) {						
+					if (this.$store.state.userInfo.organization_join) {
 						this.orgIndex = ~~this.$store.state.userInfo.organization_join.organ_type_id - 1;
 						this.subData.organ_name = this.$store.state.userInfo.organization_join.name
 					}
-				} else {					
+				} else {
 					let res = await this.myRequest('/api/user/info', {}, 'POST');
 					if (res) {
 						this.$store.commit('saveUserInfo', res.data);
@@ -315,7 +315,7 @@
 				}
 			},
 		},
-	
+
 		onShow () {
 			this.addreses = this.$store.state.userAddress;
 			this.getOrgs();
@@ -482,7 +482,7 @@
 				.list-item {
 					width: 690rpx;
 					height: 110rpx;
-				
+
 					.list-label {
 						color: #333333;
 						width: 150rpx;
@@ -492,14 +492,14 @@
 						vertical-align: middle;
 						font-size: 32rpx;
 					}
-				
+
 					.list-input {
 						display: inline-block;
 						vertical-align: middle;
 						font-size: 32rpx;
 						line-height: 110rpx;
 					}
-					
+
 					.right-arrow {
 						width: 16rpx;
 						height: 26rpx;

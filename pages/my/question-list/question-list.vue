@@ -1,20 +1,8 @@
 <template>
 	<view>
 		<view class="question-list">
-			<view class="list-item" @click="goDesc">
-				<view class="list-text">使用帮助</view>
-				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-			</view>
-			<view class="list-item" @click="goDesc">
-				<view class="list-text">下单流程</view>
-				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-			</view>
-			<view class="list-item" @click="goDesc">
-				<view class="list-text">商务合作</view>
-				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
-			</view>
-			<view class="list-item" @click="goDesc">
-				<view class="list-text">常见问题</view>
+			<view class="list-item" @click="goDesc(item.id)" v-for="(item,index) in questionList" :key="index">
+				<view class="list-text">{{item.title}}</view>
 				<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 			</view>
 		</view>
@@ -40,13 +28,25 @@
 	export default {
 		data() {
 			return {
-
+				questionList: []
 			};
 		},
+		onLoad() {
+			this.getQuestionList();
+		},
 		methods: {
-			goDesc() {
+			async getQuestionList() {
+				let res = await this.myRequest('/common/issue/getType', {
+					page:1,
+					per_page:1000
+				}, 'GET', false, false);
+				if (res.data.data) {
+					this.questionList = res.data.data
+				}
+			},
+			goDesc(id) {
 				uni.navigateTo({
-					url: `/pages/my/question-desc/question-desc`
+					url: `/pages/my/question-desc/question-desc?questionId=${id}`
 				});
 			}
 		}
@@ -56,7 +56,7 @@
 <style lang="scss" scoped>
 	.question-list {
 		width: 690rpx;
-		height: 442rpx;
+		// height: 442rpx;
 		background: white;
 		padding: 0 30rpx;
 		margin-top: 20rpx;

@@ -1,9 +1,9 @@
 <template>
 	<view class="good-activity">
-		<image class="activity-img" src="../../../static/qiangou.png" mode=""></image>
-		<sun-tab :value.sync="tabIndex" :tabList="tabList" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
+		<image class="activity-img" :src="activityImg" mode=""></image>
+		<sun-tab :value.sync="tabIndex" :tabList="tabList" @update:value="onTabChange" :scroll="true" defaultColor="#333333" activeColor="#006CB7"></sun-tab>
 		<view class="good-items">
-			<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
+			<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item.goods_join"></good-item>
 		</view>
 		<load-more :status="status"></load-more>
 	</view>
@@ -17,26 +17,53 @@
 		data() {
 			return {
 				tabIndex: 0,
-				tabList: ['周边产品', '选项1', '选项1', '选项1', '选项1', '选项1', '选项1', '选项1'],
+				tabList: [],
+				tabIds: [],
 				goodPage: 1,
 				goodItems: [],
-				status: 'more'
+				status: 'more',
+				activityImg: "",
+				activityId: null
 			};
 		},
-		onLoad() {
-			this.getActivityGoods(1);
+		onLoad(option) {
+			this.activityId = option.activityId;
+			this.activityImg = option.activityImg;
+			this.getActivityType();
 		},
-		methods: {
+		methods: {			
+			async getActivityType() {
+				let res = await this.myRequest('/api/home/activityType', {
+					activity_id: this.activityId
+				}, 'GET', false, false);
+				if (res.data) {
+					this.tabList = res.data.map(item => {
+						return item.title;
+					})
+					this.tabIds = res.data.map(item => {
+						return item.id;
+					})
+					this.nowType = this.tabIds[0];
+					this.getActivityGoods(1);
+				}
+			},
+			onTabChange(index) {
+				this.nowType = this.tabIds[index];
+				this.getActivityGoods(1);
+			},
 			async getActivityGoods(page) {
 				if (page != 1) {
 					this.status = 'loading';
+				} else {
+					this.goodItems = [];
 				}
 				let perPage = 8;
-				let res = await this.myRequest('/api/goods/newestGoods', {
+				let res = await this.myRequest('/api/home/activityGoods', {
+					activity_type_id: this.nowType,
 					page,
 					per_page: perPage
 				}, 'GET');
-				if (res.data.data.length) {
+				if (res.data.data) {
 					this.goodItems = this.goodItems.concat(res.data.data);
 					if (res.data.data.length < perPage) {
 						this.status = 'noMore'
