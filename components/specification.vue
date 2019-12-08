@@ -52,7 +52,7 @@
 					组合商品
 				</view>
 				<view class="m5-box">
-					<view class="m5-item" v-for="(item,index) in attach_goods" :key="index">
+					<view class="m5-item" v-for="(item,key) in attach_goods" :key= "key">
 						<label class="m5-checkbox" >
 								<checkbox class="m5-cb" @click="checkItem(item)"  />
 						</label>
@@ -64,7 +64,7 @@
 								<view class="m5-d1">
 									{{item.goods_attach_join.title}}            
 								</view>
-								<view class="m5-d2" @click="openMc(item)">
+								<view class="m5-d2" @click="openMc(item,key)">
 									{{item.discription}}
 								</view>
 								<view class="m5-d3">
@@ -85,7 +85,7 @@
 					{{listData.one_specs}}
 				</view>
 				<viwe class="m2-box">  
-					<view class="m2-item" :class="{active:zhgoods.Oid == item.id}" v-for="(item,index) in zhgoods.goods_attach_join.one_specs_join" :key="index" @click="changeOne(item,zhgoods)">
+					<view class="m2-item" :class="{active:zhgoods.Oid == item.id}" v-for="(item,index) in zhgoods.goods_attach_join.one_specs_join" :key="index" @click="changeOne(item,attach_goods[goodsIndex],index)">
 						{{item.title}}
 					</view>
 				</viwe>
@@ -95,7 +95,7 @@
 					{{listData.two_specs}}
 				</view>
 				<viwe class="m3-box">  
-					<view class="m3-item" :class="{active:zhgoods.Tid == val.id}" v-for="(val,index) in zht_goods" :key="index" @click="changeTwo(val,zhgoods)">
+					<view class="m3-item" :class="{active:zhgoods.Tid == val.id}" v-for="(val,index) in zht_goods" :key="index" @click="changeTwo(val,attach_goods[goodsIndex],index)">
 						{{val.title}}
 						<!-- {{'a' + zhgoods.Tid +"b" +val.id }} -->
 					</view>
@@ -120,6 +120,7 @@
 		},
 		data() {
 			return {
+				goodsIndex:0,
 				showLoginPage:false,
 				subData:{ //下单信息 加入购物车
 					num:1,
@@ -190,10 +191,11 @@
 						item.price_id = '';
 						item.goods_attach_id = '';
 						this.zhgoods = item;
-						this.changeOne(item.goods_attach_join.one_specs_join[0],item)
+						this.changeOne(item.goods_attach_join.one_specs_join[0],item,0)
 					})
 				}
 			},
+			
 			async addShopCar () { //加入购物车
 				if(this.type == 'choose'){
 					this.$emit('closeWin')
@@ -279,23 +281,27 @@
 					this.subData.num = data.num;
 				}
 			},
-			changeOne (data,item) { //组合商品 一级
-				console.log(data)
-				item.discription = data.title;
-				item.one_specs_title =data.title;
-				item.Oid =  data.id;
+			changeOne (data,parent,i) { //组合商品 一级
+				
+				parent.discription = data.title;
+				parent.index = i  ;
+				parent.one_specs_title =data.title;
+				parent.Oid =  data.id;
 				this.zht_goods = data.two_specs_join;
-				this.changeTwo(data.two_specs_join[0],item)
+				let q = parent.idx  || 0 ;
+				this.changeTwo(data.two_specs_join[q],parent,q)
 			},
-			changeTwo (item,data) { //组合商品 二级
-				data.price = item.attach_price;
-				data.yPrice = item.price;
-				data.img = item.cover_pic;
-				data.Tid = item.id;
-				data.price_id = item.attach_price_id;
-				data.goods_attach_id = item.goods_attach_id;
-				data.discription = data.discription + ";" + item.title
-				data.two_specs_title = item.title;
+		
+			changeTwo (item,parent,index=0) { //组合商品 二级
+				parent.idx = index;
+				parent.price = item.attach_price;
+				parent.yPrice = item.price;
+				parent.img = item.cover_pic;
+				parent.Tid = item.id;
+				parent.price_id = item.attach_price_id;
+				parent.goods_attach_id = item.goods_attach_id;
+				parent.discription = parent.discription + ";" + item.title
+				parent.two_specs_title = item.title;
 			},
 			changeColor (item) { //选择颜色
 				this.subData.colorTitle = item.title
@@ -311,10 +317,17 @@
 				this.subData.depict = item.depict;
 				
 			},
-			openMc (item) {
-				this.zhgoods = item;
-				this.changeOne(item.goods_attach_join.one_specs_join[0],item)
-				this.showTwo =true
+			openMc (item,index) {
+					console.log(this.attach_goods)
+					console.log(item,index)
+					this.goodsIndex = index;
+					this.zhgoods = item;
+					let i = item.index || 0;
+					this.changeOne(item.goods_attach_join.one_specs_join[i],item,i)
+				
+				
+				
+				this.showTwo = true
 				this.$refs['buyCode'].open()
 			},
 			closeMc () {
