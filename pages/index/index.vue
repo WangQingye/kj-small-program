@@ -40,12 +40,23 @@
 				</scroll-view>
 			</view>
 			<view class="flash-sell">
-				<view class="flash-item" v-for="(item,index) in 1" :key="index">
-					<image src="../../static/qiangou.png" mode="aspectFill" class="item-img"></image>
+				<view class="flash-item" v-for="(item,index) in seckillInfo" :key="index" @click="goGoodDesc(item)">
+					<image :src="item.cover_pic" mode="aspectFill" class="item-img"></image>
 					<view class="flash-count">
 						<text class="count-title">限时抢购</text>
-						<text class="count-time"><text class="count-time-1">14</text>:<text class="count-time-1">22</text>:<text class="count-time-1">11</text></text>
-						<text class="count-num">剩余199件</text>
+						<!-- <text class="count-time"><text class="count-time-1">14</text>:<text citemlass="count-time-1">22</text>:<text class="count-time-1">11</text></text> -->
+						<uni-Countdown
+							color="#ED193A" 
+							background-color="#FFF" 
+							border-color="#ED193A" 
+							:show-day="true"
+							:day="item.d"
+							:hour="item.h" 
+							:minute="item.m" 
+							:second="item.s" :reset="true"
+							class="countDown"
+						></uni-Countdown>
+						<text class="count-num">剩余{{item.surplus_num}}件</text>
 					</view>
 				</view>
 			</view>
@@ -76,6 +87,7 @@
 	import {
 		SearchInput
 	} from "@/components/search-input.vue";
+	import uniCountdown from "@/components/linnian-CountDown/uni-countdown.vue"
 	import GoodItem from "@/components/good-item.vue";
 	import LoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
@@ -87,7 +99,14 @@
 				status: 'more',
 				banners: [],
 				recomTypes: [],
-				activities: []
+				activities: [],
+				seckillInfo:[],//秒杀商品信息
+				seckillTime:{
+					d:'',
+					h:'',
+					m:'',
+					s:''
+				}
 			}
 		},
 		onLoad() {
@@ -95,10 +114,12 @@
 			this.getRecomTypes();
 			this.getStarGoods();
 			this.getActivities();
+			this.getSeckill();
 			this.getRecomGoods(1);
 		},
 		onPullDownRefresh() {
 			this.getBanner();
+			this.getSeckill();
 			this.getRecomTypes();
 			this.getStarGoods();
 			this.getActivities();
@@ -166,6 +187,21 @@
 					}
 				}
 			},
+			async getSeckill() { //获取秒杀数据	
+				let res = await this.myRequest('/api/home/seckill', {}, 'GET', false, false);
+				if (res.message == "success") {
+					
+					this.seckillInfo = res.data.map(item=>{
+						item.stop_time = item.stop_time *1000;
+						item.d = new Date(item.stop_time).getDate() -new Date().getDate()
+						item.h = new Date(item.stop_time).getHours()-new Date().getHours()
+						item.m = new Date(item.stop_time).getMinutes()-new Date().getMinutes()
+						item.s = new Date(item.stop_time).getSeconds()-new Date().getSeconds()
+						return item;
+					})
+				}
+			},
+			
 			clickBanner(data) {
 				switch (data.type) {
 					case 1:
@@ -187,6 +223,12 @@
 			clickRecomType(id) {
 
 			},
+			goGoodDesc(item) {
+				let goodId = item.id
+				uni.navigateTo({
+					url: `/pages/good/good-desc/good-desc?goodId=${goodId}`
+				});
+			},
 			clickScoreMall() {
 				uni.navigateTo({
 					url: `/pages/score/score-mall/score-mall`
@@ -201,7 +243,8 @@
 		components: {
 			SearchInput,
 			GoodItem,
-			LoadMore
+			LoadMore,
+			uniCountdown
 		}
 	}
 </script>
@@ -321,20 +364,21 @@
 					.flash-count {
 						position: absolute;
 						z-index: 2;
-						width: 200rpx;
-						height: 200rpx;
+						width: 240rpx;
+						height: 240rpx;
 						border-radius: 50%;
 						background: #ED193A;
 						left: 30rpx;
-						top: 40rpx;
-
+						top: 20rpx;
+						text-align: center;;
 						.count-title {
 							font-size: 28rpx;
 							color: white;
 							display: block;
 							font-weight: bold;
 							margin-top: 32rpx;
-							margin-left: 46rpx;
+							margin-bottom: 20rpx;;
+							
 						}
 
 						.count-time {
@@ -359,10 +403,11 @@
 						.count-num {
 							display: inline-block;
 							color: white;
-							font-size: 20rpx;
-							margin-top: 10rpx;
+							font-size: 24rpx;
+							margin-top: 20rpx;
 							text-align: center;
 							width: 100%;
+							
 						}
 
 					}
@@ -424,4 +469,9 @@
 			}
 		}
 	}
+	.uni-countdown__number {
+		margin:0 !important ;
+		padding:0 5rpx !important;
+	}
+		
 </style>

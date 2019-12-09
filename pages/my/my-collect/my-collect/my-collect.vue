@@ -1,7 +1,7 @@
 <template>
 	<view class="main">
 		<uni-Swipe-Action :options="option" v-for="(item,index) in list" :key="index" @click="bindClick(item.id)">
-			<view class="goods-item" >
+			<view class="goods-item" @click="goGoodDesc(item)">
 				<!-- 	<label class='goods-check'>
 						<checkbox class="check-box"/>
 					</label> -->
@@ -34,7 +34,8 @@
 	import {uniSwipeAction} from "@/components/uni-swipe-action/uni-swipe-action.vue"
 	export default {
 		components:{
-			uniSwipeAction
+			uniSwipeAction,
+			LoadMore
 		},
 		data() {
 			return {
@@ -52,6 +53,12 @@
 			};
 		},
 		methods:{
+			goGoodDesc(item) {
+				let goodId = item.goods_id
+				uni.navigateTo({
+					url: `/pages/good/good-desc/good-desc?goodId=${goodId}`
+				});
+			},
 			async getList () {
 				let res = await this.myRequest('/api/user/collect/index', {page:this.index,per_page:10}, 'POST', false);
 				if(res.message == "success"){
@@ -93,7 +100,7 @@
 				}
 			}
 		},
-		onShow () {
+		onLoad () {
 			this.getList()
 		},
 		onReachBottom() {
@@ -101,6 +108,15 @@
 				this.index++;
 				this.getList();
 			}
+		},
+		onPullDownRefresh() {
+			console.log('refresh');
+			this.index = 1;
+			this.list.length = 0;
+			this.getList();
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 500);
 		},
 	}
 </script>
@@ -114,6 +130,7 @@
 		width:100%;
 		background:#fff;
 		min-height:100vh;
+		overflow: auto;
 		box-sizing: border-box;
 		.goods-item{
 			width: 100%;

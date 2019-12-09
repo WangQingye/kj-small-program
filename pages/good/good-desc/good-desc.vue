@@ -195,7 +195,15 @@
 						"<img class='rich-text-img'");
 					this.listData = { ...res.data};
 					this.swiperLength = this.listData.pic_join.length;
-					
+				}else{
+					if(res.message == "无此商品数据");
+					uni.showToast({
+						title: res.message,
+						icon: 'none'
+					});
+					setTimeout(()=>{
+						uni.navigateBack()
+					},500)
 				}
 
 			},
@@ -210,7 +218,7 @@
 					}
 			},
 			async getSeckill () { //获取购物车数量
-					console.log(32423)
+				
 					let res = await this.myRequest('/common/getSeckill', {}, 'get', false,false);
 					if (res.message == "success" ) {
 						
