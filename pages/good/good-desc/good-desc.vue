@@ -141,6 +141,7 @@
 		},
 		data() {
 			return {
+				isCollect:false,
 				listData: {},
 				swiperCurrent: 0,
 				swiperLength: 0,
@@ -165,15 +166,24 @@
 		},
 		methods: {
 			async toFavorite () { //收藏
+				if (this.$store.state.userToken.api_token == '') {
+					this.showLoginPage = true;
+					this.isCollect = true;
+					return ;
+				}
 				let res = await this.myRequest('/api/user/collect/store', {
 					goods_id:this.listData.id,
 					seckill_id:''
 				}, 'POST', false,false);
 				if(res.message == "success"){
+					this.isCollect = false;
+					this.listData.is_collect = res.data.is_collect;
+					let title ='';
+					res.data.is_collect == 0 ? title ="取消收藏" : title='已收藏'
 					uni.showToast({
-						title: '已收藏'
+						title: title
 					});
-					this.getList()
+					
 				}
 			},
 			async getList() {
@@ -249,9 +259,13 @@
 					return;
 				}
 				if (this.$store.state.userToken.api_token) {
-					this.$refs['sp'].addShopCar()
+					if(this.isCollect){
+						this.toFavorite ()
+					}else {
+						this.$refs['sp'].addShopCar()
+					}
+					
 					this.getCarNum();
-					this.getSeckill()
 				}
 				this.showLoginPage = false;
 				// uni.showTabBar();
