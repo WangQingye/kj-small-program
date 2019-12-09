@@ -147,7 +147,7 @@
 						url = '/pages/my/order-list/order-list/order-list'
 						break;
 					case 5:
-						url = '/pages/score/score-desc/score-desc'
+						url = '/pages/score/score-desc/score-desc?singlePageId=2'
 						break;
 					default:
 						break;
