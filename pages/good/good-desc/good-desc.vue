@@ -104,9 +104,9 @@
 					<image class="p-b-zx" src="/static/c/c30zx.png" mode=""></image>
 					<text>咨询</text>
 				</view>
-				<view class="p-b-btn" :class="{active: favorite}" @click="toFavorite">
-					<image class="p-b-zx" src="/static/c/c30sc.png" mode=""></image>
-					<text>收藏</text>
+				<view class="p-b-btn"  @click="toFavorite">
+					<image class="p-b-zx " :class="{active: listData.is_collect == 1}" src="/static/c/c30sc.png" mode=""></image>
+					<text>{{listData.is_collect == 1 ?'已收藏':'收藏'}}</text>
 				</view>
 			</view>
 			<view class="f-r">
@@ -157,11 +157,25 @@
 		},
 		onShow () {
 			this.getList();
+			this.getSeckill()
 			if(this.$store.state.userToken.api_token){
-				this.getCarNum()
+				this.getCarNum();
+				
 			}
 		},
 		methods: {
+			async toFavorite () { //收藏
+				let res = await this.myRequest('/api/user/collect/store', {
+					goods_id:this.listData.id,
+					seckill_id:''
+				}, 'POST', false,false);
+				if(res.message == "success"){
+					uni.showToast({
+						title: '已收藏'
+					});
+					this.getList()
+				}
+			},
 			async getList() {
 				let res = await this.myRequest('/api/goods/show', {
 					goods_id: this.goodId
@@ -185,6 +199,14 @@
 						this.carNum = res.data.total
 					}
 			},
+			async getSeckill () { //获取购物车数量
+					console.log(32423)
+					let res = await this.myRequest('/common/getSeckill', {}, 'get', false,false);
+					if (res.message == "success" ) {
+						
+					}
+			},
+			
 			swiperChange(e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current;
 			},
@@ -229,6 +251,7 @@
 				if (this.$store.state.userToken.api_token) {
 					this.$refs['sp'].addShopCar()
 					this.getCarNum();
+					this.getSeckill()
 				}
 				this.showLoginPage = false;
 				// uni.showTabBar();
@@ -570,7 +593,6 @@
 						width: 42rpx;
 						height: 38rpx;
 					}
-
 					.p-b-zx {
 						width: 40rpx;
 						height: 40rpx;
