@@ -224,9 +224,9 @@
 
 			},
 			goGoodDesc(item) {
-				let goodId = item.id
+				let goodId = item.goods_id
 				uni.navigateTo({
-					url: `/pages/good/good-desc/good-desc?goodId=${goodId}`
+					url: `/pages/good/good-desc/good-desc?goodId=${goodId}&seckillId=${item.id}`
 				});
 			},
 			clickScoreMall() {

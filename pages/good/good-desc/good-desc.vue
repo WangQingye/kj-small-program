@@ -16,10 +16,10 @@
 				</view>
 			</view>
 			<!-- 限时秒杀 -->
-			<view class="ms" v-if="false">
+			<view class="ms" v-if="listData.seckill_join != null">
 				<view class="left-box">
 					<view class="left-top">限时秒杀</view>
-					<view class="left-bottom">还剩268件</view>
+					<view class="left-bottom">还剩{{listData.seckill_join.surplus_num}}件</view>
 				</view>
 				<view class="right-box">
 					<text>距离结束还剩</text>
@@ -27,10 +27,11 @@
 						color="#ED193A" 
 						background-color="#FFF" 
 						border-color="#ED193A" 
-						:show-day="false"
-						:hour="2" 
-						:minute="30" 
-						:second="0" :reset="false"
+						:show-day="true"
+						:day="listData.seckill_join.d"
+						:hour="listData.seckill_join.h" 
+						:minute="listData.seckill_join.m" 
+						:second="listData.seckill_join.s" :reset="true"
 						class="countDown"
 					></uni-Countdown>
 				</view>
@@ -149,16 +150,18 @@
 				showTc: false,
 				carNum:0,
 				showLoginPage:false,
-				type:''
+				type:'',
+				seckillId:''
 			};
 		},
 		onLoad(option) {
 			this.goodId = option.goodId;
+			option.seckillId && (this.seckillId = option.seckillId )
 			
 		},
 		onShow () {
 			this.getList();
-			this.getSeckill()
+			// this.getSeckill()
 			if(this.$store.state.userToken.api_token){
 				this.getCarNum();
 				
@@ -171,9 +174,10 @@
 					this.isCollect = true;
 					return ;
 				}
+				
 				let res = await this.myRequest('/api/user/collect/store', {
 					goods_id:this.listData.id,
-					seckill_id:''
+					seckill_id:this.seckillId
 				}, 'POST', false,false);
 				if(res.message == "success"){
 					this.isCollect = false;
@@ -187,13 +191,22 @@
 				}
 			},
 			async getList() {
+				
 				let res = await this.myRequest('/api/goods/show', {
-					goods_id: this.goodId
+					goods_id: this.goodId,
+					seckill_id:this.seckillId
 				}, 'GET', false);
 				if (res.message == "success") {
 					if (res.data.content) res.data.content = res.data.content.replace(/\<img/gi,
 						"<img class='rich-text-img'");
 					this.listData = { ...res.data};
+					if(this.listData.seckill_join != null) {
+						this.listData.seckill_join.stop_time = this.listData.seckill_join.stop_time * 1000;
+						this.listData.seckill_join.d = new Date(this.listData.seckill_join.stop_time).getDate() -new Date().getDate()
+						this.listData.seckill_join.h = new Date(this.listData.seckill_join.stop_time).getHours()-new Date().getHours()
+						this.listData.seckill_join.m = new Date(this.listData.seckill_join.stop_time).getMinutes()-new Date().getMinutes()
+						this.listData.seckill_join.s = new Date(this.listData.seckill_join.stop_time).getSeconds()-new Date().getSeconds()
+					}
 					this.swiperLength = this.listData.pic_join.length;
 				}else{
 					if(res.message == "无此商品数据");
@@ -217,7 +230,7 @@
 						this.carNum = res.data.total
 					}
 			},
-			async getSeckill () { //获取购物车数量
+			async getSeckill () { //量
 				
 					let res = await this.myRequest('/common/getSeckill', {}, 'get', false,false);
 					if (res.message == "success" ) {
@@ -348,7 +361,7 @@
 				box-sizing: border-box;
 				display: flex;
 				.left-box{
-					width: 180rpx;
+					width: 150rpx;
 					height: 100%;
 					position: relative;
 					&:after{
