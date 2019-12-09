@@ -1,5 +1,5 @@
 <template>
-	<view class="good-desc">
+	<view class="good-desc" v-if="listData.title">
 		<view class="body">
 			<!-- 轮播 -->
 			<view class="carousel">

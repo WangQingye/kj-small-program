@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "凯杰电商",
+				"navigationBarTitleText": "QIAMART",
 				"enablePullDownRefresh": true
 			}
 		}, {
@@ -59,7 +59,7 @@
 		}, {
 			"path": "pages/score/score-desc/score-desc",
 			"style": {
-				"navigationBarTitleText": "积分说明"
+				"navigationBarTitleText": ""
 			}
 		}, {
 			"path": "pages/score/score-detail/score-detail",

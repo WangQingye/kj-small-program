@@ -13,7 +13,7 @@
 		},
 		onLoad(option) {
 			this.singlePageId = option.singlePageId;
-			this.getSingleContent();
+			if (this.singlePageId) this.getSingleContent();
 		},
 		methods: {
 			async getSingleContent() {

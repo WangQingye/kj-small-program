@@ -111,7 +111,7 @@
 			},
 			goScoreDesc() {
 				uni.navigateTo({
-					url: `/pages/score/score-desc/score-desc`
+					url: `/pages/score/score-desc/score-desc?singlePageId=3`
 				});
 			},
 			goScoreDetail() {
