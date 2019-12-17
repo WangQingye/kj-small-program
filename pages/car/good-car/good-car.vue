@@ -296,7 +296,9 @@
 				}
 				this.calcTotal();
 			},
-			confirm() {
+			async confirm() {
+				if (!await this.testUserPhone()) return;
+				console.log('333')
 				let arr = [];
 				this.goodsInfo.map(res => {
 					if (res.checked == true) {
@@ -314,7 +316,25 @@
 				uni.navigateTo({
 					url: `/pages/car/confirm-order/confirm-order`
 				});
-			}
+			},
+			async testUserPhone() { //获取用户信息
+				if (this.$store.state.userInfo.mobile) {
+					return true;
+				}
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res.message == "success") {
+					if (res.data.mobile) {
+						return true;
+					} else {
+						uni.navigateTo({
+							url: `/pages/my/my-phone/my-phone`
+						});
+						return false;
+					}
+				} else {
+					this.myToast(res.message)
+				}
+			},
 		},
 		components: {
 			LoginPage,

@@ -206,6 +206,7 @@
 						return;
 					}
 					if(this.type == 'order'){
+						if (!await this.testUserPhone()) return;
 						let arr =[{
 							goods_title:this.listData.title,
 							goods_cover_pic:this.listData.cover_pic,
@@ -389,6 +390,24 @@
 						this.$emit('carNums',res.data.total)
 					}
 			},
+			async testUserPhone() { //获取用户信息
+				if (this.$store.state.userInfo.mobile) {
+					return true;
+				}
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res.message == "success") {
+					if (res.data.mobile) {
+						return true;
+					} else {
+						uni.navigateTo({
+							url: `/pages/my/my-phone/my-phone`
+						});
+						return false;
+					}
+				} else {
+					this.myToast(res.message)
+				}
+			}
 		},
 		
 		mounted () {

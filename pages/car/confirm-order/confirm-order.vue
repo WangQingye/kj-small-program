@@ -179,21 +179,6 @@
 					url: `/pages/score/score-desc/score-desc?singlePageId=1`
 				});
 			},
-			async getUserInfo() { //获取用户信息
-				let res = await this.myRequest('/api/user/info', {}, 'POST');
-				if (res.message == "success") {
-					if(res.data.mobile){
-						this.buyGoods();
-					}else{
-						uni.navigateTo({
-							url: `/pages/my/my-phone/my-phone`
-						});
-					}
-
-				} else {
-					this.myToast(res.message)
-				}
-			},
 			confirm () {
 				if(this.isWatch == false){
 					this.myToast('请勾选用户协议');
@@ -206,10 +191,6 @@
 				if(this.subData.organ_name == ''){
 					this.myToast('请输入机构名称');
 					return;
-				}
-				if(!this.$store.state.userInfo.mobile){
-					this.getUserInfo()
-					return ;
 				}
 				this.buyGoods ();
 
