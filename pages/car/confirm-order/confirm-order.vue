@@ -242,6 +242,7 @@
 						}
 					}
 					this.addreses = this.$store.state.userAddress;
+					console.log(this.addreses)
 					this.$forceUpdate();
 				}
 			},
@@ -251,7 +252,10 @@
 				})
 			},
 			async getOrgs() {
-				if (!this.addreses[1]) return;
+				if (!this.addreses[1]){
+					 this.orgs = [];
+					 return;
+				}
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
 				if (res) {
 					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
@@ -297,7 +301,8 @@
 			},
 		},
 
-		onShow () {
+		async onShow () {
+			await this.getAddress();
 			this.addreses = this.$store.state.userAddress;
 			this.getOrgs();
 			this.getUserOrg();
@@ -316,8 +321,8 @@
 			if(option){
 				this.isOrder = option.order;
 			}
-			await this.getAddress();
-			this.getOrgs();
+			// await this.getAddress();
+			// this.getOrgs();
 		}
 	}
 </script>
