@@ -40,7 +40,7 @@
               color="#999999"
             />我已阅读并同意<text
               style="color: #006CB7;"
-              @click="goAgreement"
+              @click.stop="goAgreement"
             >《用户协议》</text>
           </checkbox-group>
         </label>

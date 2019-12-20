@@ -5,7 +5,9 @@
 				<view class="left-top">{{item.type == 1 ? '奖励' : item.type == 2 ? '订单抵扣' : '消费'}}</view>
 				<view class="left-bottom">{{item.created_at}}</view>
 			</view>
-			<view class="right" :style="'color:' + (item.type == 1 ? '#ED193A' : '#333333')">{{(item.type == 1 ? '+' : '-') + item.score}}
+<!-- 			<view class="right" :style="'color:' + (item.type == 1 ? '#ED193A' : '#333333')">{{(item.type == 1 ? '+' : '-') + item.score}}
+			</view> -->
+			<view class="right" :style="'color:' + (item.type == 1 ? '#ED193A' : '#333333')">{{item.score}}
 			</view>
 		</view>
 		<load-more :status="status"></load-more>

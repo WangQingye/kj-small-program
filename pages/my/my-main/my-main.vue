@@ -1,5 +1,5 @@
 <template>
-	<view class="my-index">
+	<view class="my-index" v-if="!this.$store.state.needGoOrder">
 		<form-id>
 			<view v-if="showPage" style="background: #F6F6F6">
 				<view class="my-info">
@@ -43,7 +43,7 @@
 						<image class="right-arrow" src="../../../static/right-arrow.png" mode=""></image>
 					</view>
 				</view>
-				<view class="my-out">
+				<view class="my-out" @click="loginOut">
 					注销登录
 				</view>
 			</view>
@@ -67,6 +67,15 @@
 			};
 		},
 		onShow() {
+			// 判断是否需要跳转到订单页
+			if (this.$store.state.needGoOrder) {
+				uni.navigateTo({
+					url: `/pages/my/my-order/my-order/my-order?orderList=${this.$store.state.needGoOrder}`,
+				});
+				setTimeout(() => {
+					this.$store.commit('saveNeedGoOrder', null);
+				}, 2000);
+			}
 			if (this.$store.state.userToken.api_token) {
 				this.showPage = true;
 			}
@@ -112,8 +121,19 @@
 					this.nickName = res.data.nickname;
 					this.avatar = res.data.avatar;
 					this.company = (res.data.organization_join && res.data.organization_join.name) || '暂无机构'
-					this.isBusiness = Boolean(res.data.business_join &&res.data.business_join.type);
+					this.isBusiness = Boolean(res.data.business_join && res.data.business_join.type);
 					this.showPage = true;
+				} else {}
+			},
+			async loginOut() {
+				let res = await this.myRequest('/api/user/applet-logout', {
+					token: this.$store.state.userToken.api_token
+				}, 'POST');
+				if (res) {
+					this.$store.commit('resetStore');
+					uni.reLaunch({
+						url: '/pages/index/index'
+					});
 				} else {}
 			},
 			goMyInfo() {

@@ -15,7 +15,9 @@ const store = new Vuex.Store({
 		orderAddress: null,
 		scoreAddress: null,
 		userAddress: ['', '', '', ''],
-		scoreGood: null
+		scoreGood: null,
+		// 如果需要直接从"我的"界面跳到订单界面,可能的参数1代表普通订单,2代表积分订单
+		needGoOrder: null
 	},
 	mutations: {
 		saveUserInfo(state, info) {
@@ -42,6 +44,9 @@ const store = new Vuex.Store({
 		saveScoreGood(state, scoreGood) {
 			state.scoreGood = scoreGood;
 		},
+		saveNeedGoOrder(state, needGoOrder) {
+			state.needGoOrder = needGoOrder;
+		},
 		resetStore(state) {
 			state = {
 				userInfo: {},
@@ -53,7 +58,9 @@ const store = new Vuex.Store({
 				needFresh: false,
 				orderAddress: null,
 				scoreAddress: null,
-				userAddress: ['', '', '', '']
+				userAddress: ['', '', '', ''],
+				scoreGood: null,
+				needGoOrder: null
 			}
 		}
 	},

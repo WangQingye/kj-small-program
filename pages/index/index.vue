@@ -1,5 +1,5 @@
 <template>
-	<view class="index-content">
+	<view class="index-content" v-if="!this.$store.state.needGoOrder">
 		<view class="search-input">
 			<search-input />
 		</view>

@@ -99,7 +99,7 @@
 				</view>
 
 
-				<text style="color: #006CB7;" @click="Goagreement">《用户协议》</text>
+				<text style="color: #006CB7;" @click.stop="Goagreement">《用户协议》</text>
 
 
 			</view>
@@ -126,7 +126,7 @@
 			return {
 				total:0,
 				tabIndex:0,
-				isWatch:false,
+				isWatch:true,
 				tabList:['公司地址',"收货地址","发票邮寄地址"],
 				goodsInfo:[],
 				orgs: [],
@@ -216,8 +216,12 @@
 				}
 				if(res.message == "success"){
 					this.myToast('购买成功',1000,()=>{
-						uni.navigateTo({
-							url:`/pages/my/my-order/my-order/my-order`
+						// uni.navigateTo({
+						// 	url:`/pages/my/my-order/my-order/my-order`
+						// })
+						this.$store.commit('saveNeedGoOrder', 1);
+						uni.switchTab({
+							url: `/pages/my/my-main/my-main`
 						})
 					})
 
@@ -596,6 +600,7 @@
 				font-weight:400;
 				color:rgba(51,51,51,1);
 				display: flex;
+				align-items: top;
 				.re-content{
 					flex: 1;
 					height: 100%;

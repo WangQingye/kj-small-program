@@ -33,14 +33,14 @@
 
 						</view>
 					</view>
-					<text class="num"> x2</text>
+					<text class="num"> x1</text>
 				</view>
 
 			</view>
 			<view class="xiye">
 				<view @click="isWatch = !isWatch" style="display: flex;align-items: center;height: 100%;">
 					<van-checkbox :value="isWatch" style="margin-right: 20rpx;"></van-checkbox><text>我已阅读并同意</text><text style="color:#006CB7"
-					 @click="goArgreeMent">《用户协议》</text>
+					 @click.stop="goArgreeMent">《用户协议》</text>
 				</view>
 			</view>
 		</view>
@@ -56,7 +56,7 @@
 			return {
 				Ftitle: "确认预订",
 				address: null,
-				isWatch: false,
+				isWatch: true,
 				goodData: null
 			};
 		},
@@ -88,14 +88,19 @@
 					this.myToast('请勾选用户协议');
 					return;
 				}
+				if (!this.address) {
+					this.myToast('请先选择收货地址');
+					return;
+				}
 				let res = await this.myRequest("/api/integral/exchange", {
 					user_address_id: this.address.id,
 					integral_goods_id: this.goodData.id
 				}, "POST", true);
 				if (res.message == 'success') {
 					this.myToast('兑换成功', 1000, () => {
-						uni.navigateTo({
-							url: `/pages/my/my-order/my-order/my-order?orderList=2`
+						this.$store.commit('saveNeedGoOrder', 2);
+						uni.switchTab({
+							url: `/pages/my/my-main/my-main`
 						})
 					})
 				} else {
