@@ -76,7 +76,8 @@
 				</view>
 
 			</view>
-			<view class="discount">
+			<!-- 隐藏优惠券 -->
+			<view class="discount" v-if="false"> 
 				<view class="dis-title">优惠</view>
 				<view class="dis-content">
 					0积分，抵扣

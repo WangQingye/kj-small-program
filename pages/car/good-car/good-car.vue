@@ -298,7 +298,6 @@
 			},
 			async confirm() {
 				if (!await this.testUserPhone()) return;
-				console.log('333')
 				let arr = [];
 				this.goodsInfo.map(res => {
 					if (res.checked == true) {

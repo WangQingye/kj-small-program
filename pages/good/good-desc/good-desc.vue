@@ -121,8 +121,8 @@
 		</uni-popup>
 		<uni-popup ref='zx' type="center" class="zx-wrapper">
 			<view class="zx-box">
-				<view class="zx-item">技术咨询</view>
-				<view class="zx-item">购买咨询</view>
+				<view class="zx-item" @click="dial(1)">技术咨询</view>
+				<view class="zx-item" @click="dial(2)">购买咨询</view>
 			</view>
 		</uni-popup>
 	</view>
@@ -263,6 +263,18 @@
 			},
 			shopCarNum (num) {
 				this.carNum = num;
+			},
+			dial (type) {
+				let num =""
+				if(type ==1){
+					num = '800-988-0325'
+				}else{
+					num = '021-38563856'
+				}
+				uni.makePhoneCall({
+					phoneNumber:num
+				});
+				this.closeZx();
 			},
 			loginOver(err) {
 				console.log(err)
