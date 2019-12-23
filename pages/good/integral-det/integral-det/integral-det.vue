@@ -6,7 +6,7 @@
 				<swiper circular=true duration="400" class="carousel-box" @change="swiperChange">
 					<swiper-item class="swiper-item" v-for="(item,index) in listData.goods_pic" :key="index">
 						<view class="image-wrapper">
-							<image :src="item.pic" class="w100"></image>
+							<image :src="item.pic" class="w100" @click="perviewImg(item.pic)"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -98,6 +98,12 @@
 			goDetail () {
 				uni.navigateTo({
 					url: `/pages/good/comfirm-integral/comfirm-integral/comfirm-integral`
+				});
+			},
+			perviewImg(src) {
+				uni.previewImage({
+					current: src,
+					urls: [src]
 				});
 			}
 		},

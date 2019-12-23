@@ -26,20 +26,20 @@
 			</view>
 		</view>
 		<view class="main-content">
-			<scroll-view class="main-type main-scroll" scroll-x="true">
+			<scroll-view class="main-type main-scroll" scroll-x="true" v-if="recomTypes.length">
 				<view class="type-item" v-for="(item,index) in recomTypes" :key="index" @click="clickRecomType(item.id)">
 					<image class="type-img" :src="item.cover_pic" mode="aspectFill"></image>
 					<text class="type-text">{{item.title}}</text>
 				</view>
 			</scroll-view>
-			<view class="star-goods">
+			<view class="star-goods" v-if="starItems.length">
 				<view class="star-title">明星商品</view>
 				<scroll-view class="main-scroll" scroll-x="true">
 					<good-item class="item" style="display:inline-block;margin-right: 30rpx;" v-for="(item,index) in starItems" :key="index"
 					 :goodData="item" :type="2"></good-item>
 				</scroll-view>
 			</view>
-			<view class="flash-sell">
+			<view class="flash-sell" v-if="seckillInfo.length">
 				<view class="flash-item" v-for="(item,index) in seckillInfo" :key="index" @click="goGoodDesc(item)">
 					<image :src="item.cover_pic" mode="aspectFill" class="item-img"></image>
 					<view class="flash-count">

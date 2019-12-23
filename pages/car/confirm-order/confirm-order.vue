@@ -77,14 +77,14 @@
 
 			</view>
 			<!-- 隐藏优惠券 -->
-			<view class="discount" v-if="false"> 
+<!-- 			<view class="discount" v-if="false"> 
 				<view class="dis-title">优惠</view>
 				<view class="dis-content">
 					0积分，抵扣
 					<text style="color:#ED193A">￥0</text>
 				</view>
 				<image src="../../../static/c/c30gg.png" class="goOn d-img" mode=""></image>
-			</view>
+			</view> -->
 			<view class="remark">
 				<view class="re-title">备注信息：</view>
 				<textarea class="re-content" v-model="subData.remark" v-show="!hasOpenModel" placeholder="填写留言信息" />

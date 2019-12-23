@@ -1,12 +1,12 @@
 <template>
 	<view class="good-desc" v-if="JSON.stringify(listData) !='{}'">
-		<view class="body" >
+		<view class="body">
 			<!-- 轮播 -->
 			<view class="carousel">
 				<swiper circular=true duration="400" class="carousel-box" @change="swiperChange">
 					<swiper-item class="swiper-item" v-for="(item,index) in listData.pic_join" :key="index">
 						<view class="image-wrapper">
-							<image :src="item.pic" class="w100"></image>
+							<image :src="item.pic" class="w100" @click="perviewImg(item.pic)"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -23,17 +23,9 @@
 				</view>
 				<view class="right-box">
 					<text>距离结束还剩</text>
-					<uni-Countdown
-						color="#ED193A" 
-						background-color="#FFF" 
-						border-color="#ED193A" 
-						:show-day="true"
-						:day="listData.seckill_join.d"
-						:hour="listData.seckill_join.h" 
-						:minute="listData.seckill_join.m" 
-						:second="listData.seckill_join.s" :reset="true"
-						class="countDown"
-					></uni-Countdown>
+					<uni-Countdown color="#ED193A" background-color="#FFF" border-color="#ED193A" :show-day="true" :day="listData.seckill_join.d"
+					 :hour="listData.seckill_join.h" :minute="listData.seckill_join.m" :second="listData.seckill_join.s" :reset="true"
+					 class="countDown"></uni-Countdown>
 				</view>
 			</view>
 			<!-- 价格详情 -->
@@ -105,7 +97,7 @@
 					<image class="p-b-zx" src="/static/c/c30zx.png" mode=""></image>
 					<text>咨询</text>
 				</view>
-				<view class="p-b-btn"  @click="toFavorite">
+				<view class="p-b-btn" @click="toFavorite">
 					<image class="p-b-zx " :class="{active: listData.is_collect == 1}" src="/static/c/c30sc.png" mode=""></image>
 					<text>{{listData.is_collect == 1 ?'已收藏':'收藏'}}</text>
 				</view>
@@ -142,109 +134,110 @@
 		},
 		data() {
 			return {
-				isCollect:false,
+				isCollect: false,
 				listData: {},
 				swiperCurrent: 0,
 				swiperLength: 0,
 				goodId: 0,
 				showTc: false,
-				carNum:0,
-				showLoginPage:false,
-				type:'',
-				seckillId:''
+				carNum: 0,
+				showLoginPage: false,
+				type: '',
+				seckillId: ''
 			};
 		},
 		onLoad(option) {
 			this.goodId = option.goodId;
-			option.seckillId && (this.seckillId = option.seckillId )
-			
+			option.seckillId && (this.seckillId = option.seckillId)
+
 		},
-		onShow () {
+		onShow() {
 			this.getList();
 			// this.getSeckill()
-			if(this.$store.state.userToken.api_token){
+			if (this.$store.state.userToken.api_token) {
 				this.getCarNum();
-				
+
 			}
 		},
 		methods: {
-			async toFavorite () { //收藏
+			async toFavorite() { //收藏
 				if (this.$store.state.userToken.api_token == '') {
 					this.showLoginPage = true;
 					this.isCollect = true;
-					return ;
+					return;
 				}
-				
+
 				let res = await this.myRequest('/api/user/collect/store', {
-					goods_id:this.listData.id,
-					seckill_id:this.seckillId
-				}, 'POST', false,false);
-				if(res.message == "success"){
+					goods_id: this.listData.id,
+					seckill_id: this.seckillId
+				}, 'POST', false, false);
+				if (res.message == "success") {
 					this.isCollect = false;
 					this.listData.is_collect = res.data.is_collect;
-					let title ='';
-					res.data.is_collect == 0 ? title ="取消收藏" : title='已收藏'
+					let title = '';
+					res.data.is_collect == 0 ? title = "取消收藏" : title = '已收藏'
 					uni.showToast({
 						title: title
 					});
-					
+
 				}
 			},
 			async getList() {
-				
+
 				let res = await this.myRequest('/api/goods/show', {
 					goods_id: this.goodId,
-					seckill_id:this.seckillId
+					seckill_id: this.seckillId
 				}, 'GET', false);
 				if (res.message == "success") {
 					if (res.data.content) res.data.content = res.data.content.replace(/\<img/gi,
 						"<img class='rich-text-img'");
-					this.listData = { ...res.data};
-					if(this.listData.seckill_join != null) {
+					this.listData = { ...res.data
+					};
+					if (this.listData.seckill_join != null) {
 						this.listData.seckill_join.stop_time = this.listData.seckill_join.stop_time * 1000;
-						this.listData.seckill_join.d = new Date(this.listData.seckill_join.stop_time).getDate() -new Date().getDate()
-						this.listData.seckill_join.h = new Date(this.listData.seckill_join.stop_time).getHours()-new Date().getHours()
-						this.listData.seckill_join.m = new Date(this.listData.seckill_join.stop_time).getMinutes()-new Date().getMinutes()
-						this.listData.seckill_join.s = new Date(this.listData.seckill_join.stop_time).getSeconds()-new Date().getSeconds()
+						this.listData.seckill_join.d = new Date(this.listData.seckill_join.stop_time).getDate() - new Date().getDate()
+						this.listData.seckill_join.h = new Date(this.listData.seckill_join.stop_time).getHours() - new Date().getHours()
+						this.listData.seckill_join.m = new Date(this.listData.seckill_join.stop_time).getMinutes() - new Date().getMinutes()
+						this.listData.seckill_join.s = new Date(this.listData.seckill_join.stop_time).getSeconds() - new Date().getSeconds()
 					}
 					this.swiperLength = this.listData.pic_join.length;
-				}else{
-					if(res.message == "无此商品数据");
+				} else {
+					if (res.message == "无此商品数据");
 					uni.showToast({
 						title: res.message,
 						icon: 'none'
 					});
-					setTimeout(()=>{
+					setTimeout(() => {
 						uni.navigateBack()
-					},500)
+					}, 500)
 				}
 
 			},
-			async getCarNum () { //获取购物车数量
-					let res = await this.myRequest('/api/user/cart/list', {
-						api_token:this.$store.state.userToken.api_token,
-						page:1,
-						per_page:1
-					}, 'POST', false);
-					if (res.message == "success") {
-						this.carNum = res.data.total
-					}
+			async getCarNum() { //获取购物车数量
+				let res = await this.myRequest('/api/user/cart/list', {
+					api_token: this.$store.state.userToken.api_token,
+					page: 1,
+					per_page: 1
+				}, 'POST', false);
+				if (res.message == "success") {
+					this.carNum = res.data.total
+				}
 			},
-			async getSeckill () { //量
-				
-					let res = await this.myRequest('/common/getSeckill', {}, 'get', false,false);
-					if (res.message == "success" ) {
-						
-					}
+			async getSeckill() { //量
+
+				let res = await this.myRequest('/common/getSeckill', {}, 'get', false, false);
+				if (res.message == "success") {
+
+				}
 			},
-			
+
 			swiperChange(e) { //获取swiper Index
 				this.swiperCurrent = e.detail.current;
 			},
-			openZx () {
+			openZx() {
 				this.$refs['zx'].open()
 			},
-			closeZx () {
+			closeZx() {
 				this.$refs['zx'].close()
 			},
 			openMc(item) {
@@ -256,23 +249,23 @@
 				this.showTc = true;
 				this.$refs['buyCode'].open()
 			},
-			closeWin(data=false) {
+			closeWin(data = false) {
 				this.showTc = false;
 				this.showLoginPage = data;
 				this.$refs['buyCode'].close()
 			},
-			shopCarNum (num) {
+			shopCarNum(num) {
 				this.carNum = num;
 			},
-			dial (type) {
-				let num =""
-				if(type ==1){
+			dial(type) {
+				let num = ""
+				if (type == 1) {
 					num = '800-988-0325'
-				}else{
+				} else {
 					num = '021-38563856'
 				}
 				uni.makePhoneCall({
-					phoneNumber:num
+					phoneNumber: num
 				});
 				this.closeZx();
 			},
@@ -292,22 +285,28 @@
 					return;
 				}
 				if (this.$store.state.userToken.api_token) {
-					if(this.isCollect){
-						this.toFavorite ()
-					}else {
+					if (this.isCollect) {
+						this.toFavorite()
+					} else {
 						this.$refs['sp'].addShopCar()
 					}
-					
+
 					this.getCarNum();
 				}
 				this.showLoginPage = false;
 				// uni.showTabBar();
 			},
+			perviewImg(src) {
+				uni.previewImage({
+					current: src,
+					urls: [src]
+				});
+			}
 		},
 		onPullDownRefresh: function() { //下拉刷新
 			this.getList();
-			setTimeout(function () {
-			    uni.stopPullDownRefresh();
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
 			}, 500);
 		}
 	}
@@ -317,6 +316,7 @@
 	.rich-text-img {
 		max-width: 100%;
 	}
+
 	.good-desc {
 		width: 100%;
 		height: 100vh;
@@ -364,51 +364,61 @@
 				}
 
 			}
-			.ms{
-				width:100%;
+
+			.ms {
+				width: 100%;
 				height: 80rpx;
 				background: #ED193A;
-				color:#fff;
-				padding:14rpx 0 ;
+				color: #fff;
+				padding: 14rpx 0;
 				box-sizing: border-box;
 				display: flex;
-				.left-box{
+
+				.left-box {
 					width: 150rpx;
 					height: 100%;
 					position: relative;
-					&:after{
+
+					&:after {
 						content: '';
 						width: 1rpx;
 						height: 40rpx;
 						position: absolute;
-						right: 0;top:0;bottom:0;
-						margin:auto;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						margin: auto;
 						background: #fff;
 					}
-					.left-top{
+
+					.left-top {
 						font-size: 24rpx;
 						text-align: center;
 						line-height: 1;
 						margin-bottom: 10rpx;
 					}
-					.left-bottom{
+
+					.left-bottom {
 						line-height: 1;
 						text-align: center;
 						font-size: 20rpx;
 					}
 				}
-				.right-box{
-					flex:1;
+
+				.right-box {
+					flex: 1;
 					height: 100%;
 					display: flex;
 					align-items: center;
 					font-size: 28rpx;
 					margin-left: 116rpx;
-					.countDown{
+
+					.countDown {
 						font-weight: bold;
 					}
 				}
 			}
+
 			.goods-price {
 				width: 100%;
 				padding: 30rpx;
@@ -615,14 +625,15 @@
 
 				.p-b-btn {
 					display: flex;
-					position:relative;
+					position: relative;
 					flex-direction: column;
 					justify-content: space-between;
 					align-items: center;
 					width: 70rpx;
 					height: 100%;
 					margin-right: 30rpx;
-					.jb{
+
+					.jb {
 						width: 30rpx;
 						height: 20rpx;
 						border-radius: 14rpx;
@@ -640,6 +651,7 @@
 						width: 42rpx;
 						height: 38rpx;
 					}
+
 					.p-b-zx {
 						width: 40rpx;
 						height: 40rpx;
@@ -683,24 +695,28 @@
 		}
 
 	}
-	.zx-wrapper .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box{
-		padding:unset ;
+
+	.zx-wrapper .uni-popup__wrapper.uni-custom .uni-popup__wrapper-box {
+		padding: unset;
 	}
-	.zx-box{
+
+	.zx-box {
 		width: 560rpx;
 		height: 220rpx;
 		background: #fff;
-		.zx-item{
+
+		.zx-item {
 			width: 100%;
 			height: 110rpx;
 			border-bottom: 1rpx solid #ddd;
 			line-height: 110rpx;
 			text-align: center;
-			color:#000000;
+			color: #000000;
 			font-size: 32rpx;
-			font-family:PingFang SC;
+			font-family: PingFang SC;
 			box-sizing: border-box;
-			&:last-child{
+
+			&:last-child {
 				border-bottom: unset;
 			}
 		}

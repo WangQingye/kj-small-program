@@ -8,6 +8,10 @@
 					<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
 						{{item.name}}
 					</view>
+					<view class="title" style="margin-top: 60rpx;">搜索历史</view>
+<!-- 					<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
+						{{item.name}}
+					</view> -->
 				</view>
 				<view class="items" v-if="showFlag == 2">
 					<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
