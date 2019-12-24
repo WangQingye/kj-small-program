@@ -98,7 +98,7 @@
 					<text>咨询</text>
 				</view>
 				<view class="p-b-btn" @click="toFavorite">
-					<image class="p-b-zx " :class="{active: listData.is_collect == 1}" src="/static/c/c30sc.png" mode=""></image>
+					<image class="p-b-zx " :class="{active: listData.is_collect == 1}" :src="listData.is_collect == 1?'/static/c/star-1.png':'/static/c/c30sc.png'" mode=""></image>
 					<text>{{listData.is_collect == 1 ?'已收藏':'收藏'}}</text>
 				</view>
 			</view>

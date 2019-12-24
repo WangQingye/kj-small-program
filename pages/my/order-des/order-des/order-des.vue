@@ -37,11 +37,17 @@
 					<view class="goods-des">
 						<view class="goods-prices">
 							<text>单价：</text>
-							<input type="number" class="goods-inputs" v-model="prices[index]" @blur="priceChange(index)">
+							<view class="goods-inputs" @click="showChangeDiscount(index)">{{prices[index]}}</view>
 						</view>
 						<view class="goods-num">
 							<uniNumberBox class="goods-numbox" v-model="nums[index]" @change="numChange($event,index)" :min="1" :max="99"></uniNumberBox>
 							<text>数量：</text>
+						</view>
+					</view>
+					<view class="goods-des" v-if="discount[index] !== 1">
+						<view class="goods-prices">
+							<text>修改后单价：</text>
+							<view class="goods-inputs">{{changedPrices[index]}}</view>
 						</view>
 					</view>
 				</view>
@@ -118,6 +124,14 @@
 				<view class="code-footer" @click="editOrganCode">确认</view>
 				<view class="close" @click="closeMc">	</view>
 			</view>
+			<view class="code" v-if="showTc == 3">
+				<view class="code-title">修改商品折扣</view>
+				<view class="code-box">
+					<input type="text" v-model="changedDiscount" class="code-input"/>
+				</view>
+				<view class="code-footer" @click="discountChange">确认</view>
+				<view class="close" @click="closeMc">	</view>
+			</view>
 		</uniPopup>
 	</view>
 </template>
@@ -142,7 +156,11 @@
 				orderData: null,
 				organCode: null,
 				prices: [],
+				changedPrices: [],
 				nums: [],
+				discount: [],
+				changedDiscount: 1,
+				changingDiscountIndex: 0,
 				typeInfo:[],
 				areaData: null,
 				chooseData:{
@@ -177,8 +195,14 @@
 					this.prices = res.data.goods_join.map(item => {
 						return item.clinch_price;
 					})
+					// 修改前价格都是一样的,注意要拷贝一下
+					this.changedPrices = this.prices.slice();
 					this.nums = res.data.goods_join.map(item => {
 						return item.num;
+					})
+					// 初始化的折扣都是1
+					this.discount = res.data.goods_join.map(item => {
+						return 1;
 					})
 					this.areaData = res.data.address_join;
 				}
@@ -230,15 +254,33 @@
 					this.myToast(res.message);
 				}
 			},
+			showChangeDiscount(index) {
+				this.changingDiscountIndex = index;
+				this.changedDiscount = this.discount[index];
+				this.$refs['buyCode'].open()
+				this.showTc = 3;
+			},
+			discountChange() {
+				if (this.changedDiscount < 0.01 || this.changedDiscount > 1) {
+					this.myToast('折扣区间必须在0.01-1之间');
+					return;
+				}
+				this.discount[this.changingDiscountIndex] = this.changedDiscount;
+				this.changedPrices[this.changingDiscountIndex] =  this.prices[this.changingDiscountIndex] * this.changedDiscount;
+				this.priceChange(this.changingDiscountIndex);
+				this.closeMc();
+			},
 			async priceChange(index) {
-				if (!this.prices[index]) return;
-				if (this.prices[index] < 0.01 || this.prices[index] > 99999999.99) {
+				if (!this.changedPrices[index]) return;
+				if (this.changedPrices[index] < 0.01 || this.changedPrices[index] > 99999999.99) {
 					this.myToast('价格必须在0.01-99999999.99之间');
 					return;
 				}
+				let score = Math.round(this.orderData.goods_join[index].clinch_integral * this.discount[index]);
 				let res = await this.myRequest('/api/user/manage/upClinchPrice', {
 					order_goods_id: this.orderData.goods_join[index].id,
-					clinch_price: this.prices[index]
+					clinch_price: this.changedPrices[index],
+					clinch_integral: score
 				}, 'POST', true, false);
 				if (res.message != 'success') {
 					this.myToast(res.message);
@@ -585,6 +627,7 @@
 							.goods-inputs{
 								width:240rpx;
 								height: 64rpx;
+								line-height: 64rpx;
 								border:1px solid rgba(153,153,153,1);
 								border-radius:10rpx;
 								box-sizing: border-box;

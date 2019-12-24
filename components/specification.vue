@@ -400,7 +400,8 @@
 						return true;
 					} else {
 						uni.navigateTo({
-							url: `/pages/my/my-phone/my-phone`
+							// 因为下订单引起的手机号修改，成功后直接到确认订单页
+							url: `/pages/my/my-phone/my-phone?needGoComfirm=1`
 						});
 						return false;
 					}

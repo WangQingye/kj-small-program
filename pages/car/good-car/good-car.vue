@@ -297,7 +297,6 @@
 				this.calcTotal();
 			},
 			async confirm() {
-				if (!await this.testUserPhone()) return;
 				let arr = [];
 				this.goodsInfo.map(res => {
 					if (res.checked == true) {
@@ -312,6 +311,7 @@
 					return;
 				}
 				uni.setStorageSync("goodsInfo", JSON.stringify(arr));
+				if (!await this.testUserPhone()) return;
 				uni.navigateTo({
 					url: `/pages/car/confirm-order/confirm-order`
 				});
@@ -326,7 +326,8 @@
 						return true;
 					} else {
 						uni.navigateTo({
-							url: `/pages/my/my-phone/my-phone`
+							// 因为下订单引起的手机号修改，成功后直接到确认订单页
+							url: `/pages/my/my-phone/my-phone?needGoComfirm=1`
 						});
 						return false;
 					}
