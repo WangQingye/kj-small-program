@@ -108,6 +108,12 @@
 			"style": {
 				"navigationBarTitleText": "订单列表"
 			}
+		},
+		{
+			"path": "pages/my/order-info/order-info",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
 		}, {
 			"path": "pages/good/integral-det/integral-det/integral-det",
 			"style": {
@@ -143,11 +149,7 @@
 				"navigationBarTitleText": "新建收货地址"
 			}
 		}
-	    ,{
-            "path" : "pages/my/order-info/order-info",
-            "style" : {}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "凯杰电商",

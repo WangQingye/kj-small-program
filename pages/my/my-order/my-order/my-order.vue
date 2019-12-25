@@ -9,8 +9,8 @@
 		<view class="body">
 			<view v-if="tabIndex == 0">
 				<view class="order-box" v-for="(item,index) in listItems" :key="index">
-					<view class="order-title">
-						<text class="order-num">
+					<view class="order-title" @click="goOrderInfo(item.id)">
+						<text class="order-num" style="color: rgba(0, 108, 183, 1); text-decoration: underline;">
 							订单编号:{{item.sn}}
 						</text>
 						<text class="order-status">
@@ -155,6 +155,11 @@
 			goGoodDesc(id) {
 				uni.navigateTo({
 					url: `/pages/good/good-desc/good-desc?goodId=${id}`
+				});
+			},
+			goOrderInfo(id) {
+				uni.navigateTo({
+					url: `/pages/my/order-info/order-info?orderId=${id}`
 				});
 			}
 		}
