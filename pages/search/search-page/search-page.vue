@@ -3,15 +3,20 @@
 		<form-id>
 			<search-input :needCancel="true" ref="searchInput" @goSearch="goSearch" />
 			<view class="search-content">
-				<view class="hot" v-if="showFlag == 1">
-					<view class="title">热门搜索</view>
-					<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
-						{{item.name}}
+				<view>
+					<view class="hot" v-if="showFlag == 1">
+						<view class="title">热门搜索</view>
+						<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
+							{{item.name}}
+						</view>
+						<view class="title" style="margin-top: 60rpx;">搜索历史</view>
+						<view class="search-history">
+							<view class="history-item" v-for="(item, index) in searchHistory" :key="index">
+								<view class="history-text" @click="goSearch(item)">{{item}}</view>
+								<image class="history-delete" src="../../../static/delete.png" mode="" @click="deleteSearchHistory(item)"></image>
+							</view>
+						</view>
 					</view>
-					<view class="title" style="margin-top: 60rpx;">搜索历史</view>
-<!-- 					<view class="serach-item" v-for="(item,index) in searchItems" :key="index" @click="goSearch(item.name)">
-						{{item.name}}
-					</view> -->
 				</view>
 				<view class="items" v-if="showFlag == 2">
 					<good-item class="item" v-for="(item,index) in goodItems" :key="index" :goodData="item"></good-item>
@@ -42,11 +47,13 @@
 				showLoginPage: true,
 				goodItems: [],
 				status: 'more',
-				searchPage: 1
+				searchPage: 1,
+				searchHistory: []
 			};
 		},
 		onLoad() {
 			this.getHotWord();
+			this.getSearchHistory();
 			uni.hideTabBar();
 		},
 		methods: {
@@ -55,6 +62,16 @@
 				if (res.data) {
 					this.searchItems = res.data;
 				}
+			},
+			getSearchHistory() {
+				this.searchHistory = uni.getStorageSync('kajie_search_history') || [];
+			},
+			saveSearchHistory() {
+				uni.setStorageSync('kajie_search_history', this.searchHistory);
+			},
+			deleteSearchHistory(text) {
+				this.searchHistory.splice(this.searchHistory.indexOf(text), 1);
+				this.saveSearchHistory();
 			},
 			async goSearch(searchText, page = 1) {
 				this.searchPage = page;
@@ -66,6 +83,9 @@
 				let perPage = 8;
 				this.$refs.searchInput.setSearchText(searchText);
 				this.nowSearch = searchText;
+				// 没有才放入历史，有的话不管
+				if (this.searchHistory.indexOf(searchText) == -1) this.searchHistory.push(searchText);
+				this.saveSearchHistory();
 				let res = await this.myRequest('/api/goods/list', {
 					keyword: searchText,
 					page,
@@ -151,6 +171,28 @@
 				margin-top: 30rpx;
 				font-size: 28rpx;
 				font-weight: normal;
+			}
+
+			.search-history {
+				.history-item {
+					display: flex;
+					justify-content: space-between;
+					border-bottom: 1rpx solid rgba(229, 229, 229, 1);
+					align-items: center;
+					height: 100rpx;
+
+					.history-text {
+						font-size: 28rpx;
+						color: #333333;
+						width: 600rpx;
+						line-height: 100rpx;
+					}
+
+					.history-delete {
+						width: 40rpx;
+						height: 40rpx;
+					}
+				}
 			}
 		}
 

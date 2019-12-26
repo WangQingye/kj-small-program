@@ -63,7 +63,7 @@
 						<view class="goods-item">
 							<view class="goods-content" @click="goGoodDesc(good.goods_id)">
 								<view class="goods-imgbox">
-									<image class="w100" :src="good.cover_pic"></image>
+									<image class="w100" :src="item.cover_pic"></image>
 								</view>
 								<view class="goods-dis">
 									<view class="g1">
