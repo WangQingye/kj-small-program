@@ -77,7 +77,7 @@
 
 			</view>
 			<!-- 隐藏优惠券 -->
-<!-- 			<view class="discount" v-if="false"> 
+			<!-- 			<view class="discount" v-if="false"> 
 				<view class="dis-title">优惠</view>
 				<view class="dis-content">
 					0积分，抵扣
@@ -264,15 +264,15 @@
 				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
 				if (res) {
 					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
-					if (this.addreses[1].area_join.city_join.province_id == 1) {
-						this.orgs = res.data.map((item,index) => {
-							return {label:item.zh_name, value:index};
-						});
-					} else {
+					// if (this.addreses[1].area_join.city_join.province_id == 1) {
+					// 	this.orgs = res.data.map((item,index) => {
+					// 		return {label:item.zh_name, value:index};
+					// 	});
+					// } else {
 						this.orgs = res.data.slice(0,5).map((item,index) => {
 							return {label:item.zh_name, value:index};
 						});
-					}
+					// }
 				}
 			},
 			showOrgSelect() {

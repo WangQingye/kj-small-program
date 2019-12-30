@@ -146,7 +146,7 @@
 
 			"path": "pages/score/score-address/score-address",
 			"style": {
-				"navigationBarTitleText": "新建收货地址"
+				"navigationBarTitleText": "新建地址"
 			}
 		}
 	],

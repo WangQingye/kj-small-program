@@ -64,11 +64,27 @@
 				</view>
 			<view class="last-info">
 				<view class="order-num">订单编号：{{orderData.sn}}</view>
-				<view class="order-company">所属公司：{{orderData.organ_name}}</view>
+				<view class="order-num" v-if="!isSuper">所属公司：{{orderData.organ_name}}</view>
+				<view class="order-company" v-if="isSuper">
+					<text>所属公司：</text>
+					<textarea v-show="!hasOpenModel" class="remark-box" v-model="organName"/>
+				</view>
+				<view class="order-company" v-if="isSuper">
+					<text>业务经理：</text>
+					<view class="remark-box" @click="showBusinessSelect">{{businessName}}</view>
+					<w-picker mode="selector" @confirm="bussinessChange" @cancel="hasOpenModel = false" ref="businessSelector" themeColor="#006CB7" :selectList="businessMans"></w-picker>
+				</view>
+				<view class="order-company" v-if="isSuper">					
+					<text>机构类型：</text>
+					<view class="remark-box" @click="showOrgSelect">{{organType}}</view>
+				</view>
+				<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
 			</view>
 		</view>
 		<view class="footer">
 			<view class="order-refuse" @click="changeOrderStatus(2)">拒绝订单</view>
+			<view v-if="isSuper" class="order-middle" @click="superChange">修改订单</view>
+			<view v-else class="order-middle" @click="backToSuper">返回管理员</view>
 			<view class="order-pass" @click="changeOrderStatus(3)">确认订单</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
@@ -140,11 +156,13 @@
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
+	import wPicker from "@/components/w-picker/w-picker.vue";
 	export default {
 		components:{
 			uniNumberBox,
 			uniPopup,
-			sunTab
+			sunTab,
+			wPicker
 		},
 		data() {
 			return {
@@ -173,7 +191,17 @@
 					twoInfo:[]
 				},
 				chooseItem:{},//选择的goodsitem
-				orgInfos: []
+				orgInfos: [],
+				isSuper: 0,
+				organName: "",
+				organType: "",
+				orgs: [],
+				orgIndex:0,
+				// 为了防止输入框重叠
+				hasOpenModel: false,
+				businessName: "",
+				businessManId: 0,
+				businessMans: []
 			};
 		},
 		onLoad(option) {
@@ -182,6 +210,8 @@
 		},
 		onShow() {
 			if (this.orderId) this.getOrderDesc();
+			// 是否是超级管理员
+			this.isSuper = this.$store.state.userInfo.business_join.is_super;
 		},
 		methods:{
 			async getOrderDesc() {
@@ -192,6 +222,10 @@
 					this.orderData = res.data;
 					this.businessRemark = res.data.business_remark;
 					this.organCode = res.data.organ_code;
+					this.organName = res.data.organ_name;
+					this.organType = res.data.organ_type_zh;
+					this.businessName = res.data.business_name;
+					this.businessManId = res.data.business_id;
 					this.prices = res.data.goods_join.map(item => {
 						return item.clinch_price;
 					})
@@ -205,6 +239,85 @@
 						return 1;
 					})
 					this.areaData = res.data.address_join;
+					if (this.isSuper) this.getOrgs();
+				}
+			},
+			async getOrgs() {
+				let res = await this.myRequest('/common/getOrganType', {}, 'GET', true, false);
+				if (res) {
+					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
+					if (this.areaData[0].province_id == 1) {
+						this.orgs = res.data.map((item,index) => {
+							return {label:item.zh_name, value:index};
+						});
+					} else {
+						this.orgs = res.data.slice(0,5).map((item,index) => {
+							return {label:item.zh_name, value:index};
+						});
+					}
+				}
+				this.orgIndex = this.orgs[this.orgs.findIndex(item => {return item.label == this.organType})].value;
+			},
+			async showOrgSelect() {
+				this.$refs.selector.show();
+				this.hasOpenModel = true;
+			},
+			orgChange(e) {
+				this.orgIndex = e.checkArr.value;
+				this.organType = this.orgs[this.orgIndex].label;
+				this.hasOpenModel = false;
+			},
+			async showBusinessSelect() {
+				if (!this.businessMans.length) await this.getBusinessMan();
+				this.$refs.businessSelector.show();
+				this.hasOpenModel = true;
+			},
+			bussinessChange(e) {
+				this.businessName = e.checkArr.label;
+				this.businessManId = e.checkArr.value;
+				this.hasOpenModel = false;
+			},
+			async getBusinessMan() {
+				let res = await this.myRequest('/common/getBusinessManager', {
+					page: 1,
+					per_page:1000
+				}, 'GET', true, false);
+				if (res) {
+					this.businessMans = res.data.data.map((item,index) => {
+						return {label:item.name, value:item.id};
+					});
+				}
+			},
+			async superChange() {
+				let res = await this.myRequest('/api/user/manage/superUp', {
+					order_id: this.orderId,
+					organ_name: this.organName,
+					organ_code: this.organCode,
+					organ_type_id: ~~this.orgIndex + 1,
+					business_id: this.businessManId
+				}, 'POST');
+				if (res.message == 'success') {
+					this.myToast('操作成功', 1000, ()=>{
+						uni.navigateBack({
+							delta:1
+						})
+					});
+				} else {
+					this.myToast(res.message);
+				}
+			},
+			async backToSuper() {
+				let res = await this.myRequest('/api/user/manage/pushSuper', {
+					order_id: this.orderId
+				}, 'POST');
+				if (res.message == 'success') {
+					this.myToast('操作成功', 1000, ()=>{
+						uni.navigateBack({
+							delta:1
+						})
+					});
+				} else {
+					this.myToast(res.message);
 				}
 			},
 			async editOrganCode() {
@@ -678,8 +791,6 @@
 				}
 			}
 			.last-info{
-				wdith:100%;
-				height: 133rpx;
 				background: #FFF;
 				padding:30rpx;
 				box-sizing: border-box;;
@@ -691,6 +802,21 @@
 				margin-bottom: 30rpx;
 				.order-num{
 					margin-bottom: 20rpx;
+				}
+				.order-company {
+					margin-bottom: 20rpx;
+					display: flex;
+					color:rgba(51,51,51,1);
+					font-size:32rpx;
+					height: 80rpx;
+					line-height: 80rpx;
+					.remark-box{
+						flex: 1;
+						height: 100%;
+						line-height: 40rpx;
+						padding-top:20rpx;
+						box-sizing: border-box;
+					}
 				}
 			}
 		}
@@ -708,15 +834,22 @@
 				flex: 1;
 				height: 100%;
 				line-height: 88rpx;
-				text-align: center;;
+				text-align: center;
 				background:rgba(0,108,183,1);
 			}
 			.order-refuse{
 				flex: 1;
 				height: 100%;
 				line-height: 88rpx;
-				text-align: center;;
+				text-align: center;
 				background:rgba(237,25,58,1);
+			}			
+			.order-middle{
+				flex: 1;
+				height: 100%;
+				line-height: 88rpx;
+				text-align: center;
+				background:rgba(111,164,215,1);
 			}
 		}
 	}

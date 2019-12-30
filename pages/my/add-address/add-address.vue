@@ -46,7 +46,7 @@
 		<view class="list-item list-item-1" style="height: 240rpx;" v-if="!orderAddressId && !isScore">
 			<label><checkbox value="cb" :checked="status" style="transform:scale(0.7)" color="#999999"/>设为默认地址</label>
 		</view>
-		<view class="save-button" @click="saveAddress">保存</view>
+		<view class="save-button" @click="saveAddress">请分别新建并保存公司/收货/发票地址</view>
 	</view>
 </template>
 
@@ -111,14 +111,14 @@
 					});
 				} else {
 					uni.setNavigationBarTitle({
-					    title: '新建收货地址'
+					    title: '新建地址'
 					});
 				}
 				this.isScore = true;
 				this.showForm = true;
 			} else {
 				uni.setNavigationBarTitle({
-				    title: '新建收货地址'
+				    title: '新建地址'
 				});
 				this.showForm = true;
 			}
@@ -186,7 +186,7 @@
 					url = '/api/integral/update-address';
 					delete data.type;
 					delete data.status;
-					delete data.email;					
+					delete data.email;
 				} else {
 					url = '/api/user/address/store'
 				}
