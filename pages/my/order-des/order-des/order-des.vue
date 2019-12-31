@@ -16,7 +16,7 @@
 
 			<view class="kf-code">
 				<view class="kf-content">客户代码：{{orderData.organ_code}}</view>
-				<view class="kf-btn" @click="openMc(2)"></view>
+				<view v-if="!isSuper" class="kf-btn" @click="openMc(2)"></view>
 			</view>
 			<view class="goods-box">
 				<view class="goods-item" v-for="(item,index) in orderData.goods_join" :key="index">
@@ -59,7 +59,7 @@
 				</view>
 				<view class="remark">
 					<text>备注信息：</text>
-					<textarea class="remark-box" v-model="businessRemark" placeholder="请输入备注信息" @blur="remarkChange" />
+					<input class="remark-box" style="padding-top: 4rpx;" v-show="!hasOpenModel" v-model="businessRemark" placeholder="请输入备注信息" @blur="remarkChange" />
 					</view>
 				</view>
 			<view class="last-info">
@@ -67,7 +67,7 @@
 				<view class="order-num" v-if="!isSuper">所属公司：{{orderData.organ_name}}</view>
 				<view class="order-company" v-if="isSuper">
 					<text>所属公司：</text>
-					<textarea v-show="!hasOpenModel" class="remark-box" v-model="organName"/>
+					<input v-show="!hasOpenModel" class="remark-box" v-model="organName" style="padding-top: 4rpx;"/>
 				</view>
 				<view class="order-company" v-if="isSuper">
 					<text>业务经理：</text>
@@ -87,7 +87,7 @@
 			<view v-else class="order-middle" @click="backToSuper">返回管理员</view>
 			<view class="order-pass" @click="changeOrderStatus(3)">确认订单</view>
 		</view>
-		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper">
+		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" @change="popChange">
 			<cover-view class="guige" v-if = "showTc == 1">
 				<cover-view class="body">
 					<cover-view class="m1">
@@ -227,16 +227,18 @@
 					this.businessName = res.data.business_name;
 					this.businessManId = res.data.business_id;
 					this.prices = res.data.goods_join.map(item => {
-						return item.clinch_price;
+						return item.original_price;
+					})					
+					// 修改后的价格
+					this.changedPrices = res.data.goods_join.map((item,index) => {
+						return item.clinch_price		
 					})
-					// 修改前价格都是一样的,注意要拷贝一下
-					this.changedPrices = this.prices.slice();
 					this.nums = res.data.goods_join.map(item => {
 						return item.num;
 					})
 					// 初始化的折扣都是1
 					this.discount = res.data.goods_join.map(item => {
-						return 1;
+						return Math.round((Number(item.clinch_price) / Number(item.original_price)).toFixed(2) * 100) / 100;
 					})
 					this.areaData = res.data.address_join;
 					if (this.isSuper) this.getOrgs();
@@ -370,6 +372,7 @@
 			showChangeDiscount(index) {
 				this.changingDiscountIndex = index;
 				this.changedDiscount = this.discount[index];
+				this.hasOpenModel = true;
 				this.$refs['buyCode'].open()
 				this.showTc = 3;
 			},
@@ -379,7 +382,7 @@
 					return;
 				}
 				this.discount[this.changingDiscountIndex] = this.changedDiscount;
-				this.changedPrices[this.changingDiscountIndex] =  this.prices[this.changingDiscountIndex] * this.changedDiscount;
+				this.changedPrices[this.changingDiscountIndex] =  Math.round((this.prices[this.changingDiscountIndex] * this.changedDiscount).toFixed(2) * 100) / 100;
 				this.priceChange(this.changingDiscountIndex);
 				this.closeMc();
 			},
@@ -389,7 +392,7 @@
 					this.myToast('价格必须在0.01-99999999.99之间');
 					return;
 				}
-				let score = Math.round(this.orderData.goods_join[index].clinch_integral * this.discount[index]);
+				let score = Math.round(this.orderData.goods_join[index].original_integral * this.discount[index]);
 				let res = await this.myRequest('/api/user/manage/upClinchPrice', {
 					order_goods_id: this.orderData.goods_join[index].id,
 					clinch_price: this.changedPrices[index],
@@ -472,6 +475,7 @@
 			openMc (item) {
 				if (item == 2) {
 					this.showTc = 2;
+					this.hasOpenModel = true;
 					this.$refs['buyCode'].open()
 					return;
 				}
@@ -479,8 +483,13 @@
 				this.getType(item);
 			},
 			closeMc () {
+				console.log(111);
 				this.showTc = false;
-				this.$refs['buyCode'].close()
+				this.hasOpenModel = false;
+				this.$refs['buyCode'].close();
+			},
+			popChange(status) {
+				if (!status.show) this.hasOpenModel = false;
 			},
 			goEdit(id) {
 				this.$store.commit('saveOrderAddress', this.areaData[this.tabIndex]);
