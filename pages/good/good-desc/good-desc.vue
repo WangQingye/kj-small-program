@@ -103,8 +103,9 @@
 				</view>
 			</view>
 			<view class="f-r">
-				<view class="addCar" @click="openMc('shopCar')">{{'加入购物车'}}</view>
-				<view class="order" @click="openMc('order')">{{'预约下单'}}</view>
+				<view v-if="!listData.is_buy" class="addCar" style="width: 100%;background: #666666;">暂未销售</view>
+				<view v-if="listData.is_buy" class="addCar" @click="openMc('shopCar')">{{'加入购物车'}}</view>
+				<view v-if="listData.is_buy" class="order" @click="openMc('order')">{{'预约下单'}}</view>
 			</view>
 		</view>
 		<login-page :showFlag="showLoginPage" v-if="showLoginPage" @login-over="loginOver"></login-page>
