@@ -1,5 +1,5 @@
 <template>
-	<view class="main" v-if="orderData">
+	<view class="main" v-if="orderData || showLoginPage">
 		<view class="body">
 			<view class="header">
 				<view class="header-title">
@@ -59,26 +59,29 @@
 				</view>
 				<view class="remark">
 					<text>备注信息：</text>
-					<input class="remark-box" style="padding-top: 4rpx;" v-show="!hasOpenModel" v-model="businessRemark" placeholder="请输入备注信息" @blur="remarkChange" />
-					</view>
+					<input class="remark-box" style="padding-top: 4rpx;" v-show="!hasOpenModel" v-model="businessRemark" placeholder="请输入备注信息"
+					 @blur="remarkChange" />
 				</view>
+			</view>
 			<view class="last-info">
 				<view class="order-num">订单编号：{{orderData.sn}}</view>
 				<view class="order-num" v-if="!isSuper">所属公司：{{orderData.organ_name}}</view>
 				<view class="order-company" v-if="isSuper">
 					<text>所属公司：</text>
-					<input v-show="!hasOpenModel" class="remark-box" v-model="organName" style="padding-top: 4rpx;"/>
+					<input v-show="!hasOpenModel" class="remark-box" v-model="organName" style="padding-top: 4rpx;" />
 				</view>
 				<view class="order-company" v-if="isSuper">
 					<text>业务经理：</text>
 					<view class="remark-box" @click="showBusinessSelect">{{businessName}}</view>
-					<w-picker mode="selector" @confirm="bussinessChange" @cancel="hasOpenModel = false" ref="businessSelector" themeColor="#006CB7" :selectList="businessMans"></w-picker>
+					<w-picker mode="selector" @confirm="bussinessChange" @cancel="hasOpenModel = false" ref="businessSelector"
+					 themeColor="#006CB7" :selectList="businessMans"></w-picker>
 				</view>
-				<view class="order-company" v-if="isSuper">					
+				<view class="order-company" v-if="isSuper">
 					<text>机构类型：</text>
 					<view class="remark-box" @click="showOrgSelect">{{organType}}</view>
 				</view>
-				<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7" :selectList="orgs"></w-picker>
+				<w-picker mode="selector" @confirm="orgChange" @cancel="hasOpenModel = false" ref="selector" themeColor="#006CB7"
+				 :selectList="orgs"></w-picker>
 			</view>
 		</view>
 		<view class="footer">
@@ -88,7 +91,7 @@
 			<view class="order-pass" @click="changeOrderStatus(3)">确认订单</view>
 		</view>
 		<uniPopup ref="buyCode" type="bottom" class="buy-wrapper" @change="popChange">
-			<cover-view class="guige" v-if = "showTc == 1">
+			<cover-view class="guige" v-if="showTc == 1">
 				<cover-view class="body">
 					<cover-view class="m1">
 						<cover-view class="m1-imgbox">
@@ -109,18 +112,20 @@
 							颜色
 						</cover-view>
 						<cover-view class="m2-box">
-						<!-- " -->
-							<cover-view class="m2-item" :class="{active:chooseData.Fid == item.id}" v-for="(item,index) in typeInfo" :key="index" @click="chooseOne(item)">
+							<!-- " -->
+							<cover-view class="m2-item" :class="{active:chooseData.Fid == item.id}" v-for="(item,index) in typeInfo" :key="index"
+							 @click="chooseOne(item)">
 								{{item.title}}
 							</cover-view>
 						</cover-view>
 					</cover-view>
 					<cover-view class="m3">
-						<cover-view class="m3-title" >
+						<cover-view class="m3-title">
 							编号
 						</cover-view>
 						<cover-view class="m3-box">
-							<cover-view class="m3-item" :class="{active:chooseData.Tid == item.id}" v-for="(item,index) in chooseData.twoInfo" :key="index" @click="chooseTwo(item)">
+							<cover-view class="m3-item" :class="{active:chooseData.Tid == item.id}" v-for="(item,index) in chooseData.twoInfo"
+							 :key="index" @click="chooseTwo(item)">
 								{{item.title}}
 							</cover-view>
 						</cover-view>
@@ -135,20 +140,21 @@
 			<view class="code" v-if="showTc == 2">
 				<view class="code-title">编辑客户代码</view>
 				<view class="code-box">
-					<input type="text" v-model="organCode" class="code-input"/>
+					<input type="text" v-model="organCode" class="code-input" />
 				</view>
 				<view class="code-footer" @click="editOrganCode">确认</view>
-				<view class="close" @click="closeMc">	</view>
+				<view class="close" @click="closeMc"> </view>
 			</view>
 			<view class="code" v-if="showTc == 3">
 				<view class="code-title">修改商品折扣</view>
 				<view class="code-box">
-					<input type="text" v-model="changedDiscount" class="code-input"/>
+					<input type="text" v-model="changedDiscount" class="code-input" />
 				</view>
 				<view class="code-footer" @click="discountChange">确认</view>
-				<view class="close" @click="closeMc">	</view>
+				<view class="close" @click="closeMc"> </view>
 			</view>
 		</uniPopup>
+		<login-page :showFlag="showLoginPage" @login-over="loginOver"></login-page>
 	</view>
 </template>
 
@@ -157,18 +163,20 @@
 	import uniNumberBox from "@/components/uni-number-box/uni-number-box.vue"
 	import sunTab from '@/components/sun-tab/sun-tab.vue';
 	import wPicker from "@/components/w-picker/w-picker.vue";
+	import LoginPage from '@/components/login-page.vue';
 	export default {
-		components:{
+		components: {
 			uniNumberBox,
 			uniPopup,
 			sunTab,
-			wPicker
+			wPicker,
+			LoginPage
 		},
 		data() {
 			return {
-				tabIndex:0,
-				tabList:['公司地址',"收货地址","发票邮寄地址"],
-				showTc:'',
+				tabIndex: 0,
+				tabList: ['公司地址', "收货地址", "发票邮寄地址"],
+				showTc: '',
 				orderId: null,
 				businessRemark: "",
 				orderData: null,
@@ -179,41 +187,78 @@
 				discount: [],
 				changedDiscount: 1,
 				changingDiscountIndex: 0,
-				typeInfo:[],
+				typeInfo: [],
 				areaData: null,
-				chooseData:{
-					Fid:'',//一级id
-					Tid:'',//二级id
-					price:'',
-					depict:'',//规格
-					Ftitle:'',
-					Ttitle:'',
-					twoInfo:[]
+				chooseData: {
+					Fid: '', //一级id
+					Tid: '', //二级id
+					price: '',
+					depict: '', //规格
+					Ftitle: '',
+					Ttitle: '',
+					twoInfo: []
 				},
-				chooseItem:{},//选择的goodsitem
+				chooseItem: {}, //选择的goodsitem
 				orgInfos: [],
 				isSuper: 0,
 				organName: "",
 				organType: "",
 				orgs: [],
-				orgIndex:0,
+				orgIndex: 0,
 				// 为了防止输入框重叠
 				hasOpenModel: false,
 				businessName: "",
 				businessManId: 0,
-				businessMans: []
+				businessMans: [],
+				showLoginPage: true
 			};
+		},
+		beforeCreate() {
+			if (this.$store.state.userToken.api_token == '') {
+				this.showLoginPage = true;
+			}
 		},
 		onLoad(option) {
 			this.orderId = option.orderId;
-			// this.getOrderDesc();
 		},
 		onShow() {
-			if (this.orderId) this.getOrderDesc();
-			// 是否是超级管理员
-			this.isSuper = this.$store.state.userInfo.business_join.is_super;
+			if (this.$store.state.userToken.api_token) {
+				if (this.orderId) this.getOrderDesc();
+				// 是否是超级管理员
+				this.isSuper = this.$store.state.userInfo.business_join.is_super;
+			}
 		},
-		methods:{
+		methods: {
+			// 有可能直接点进这个页面，所以要做登录判断
+			loginOver(err) {
+				// 自动登录失败，显示登录框
+				if (err === 1) {
+					this.showLoginPage = true;
+					return;
+				}
+				// 登录失败返回首页
+				if (err) {
+					uni.switchTab({
+						url: '/pages/index/index'
+					});
+					return;
+				}
+				if (this.$store.state.userToken.api_token) {
+					if (this.orderId) this.getOrderDesc();
+					// 是否是超级管理员
+					if (!this.$store.state.userInfo) {
+						this.getUserInfo();
+					}
+				}
+				this.showLoginPage = false;
+			},
+			async getUserInfo() {
+				let res = await this.myRequest('/api/user/info', {}, 'POST');
+				if (res) {
+					this.$store.commit('saveUserInfo', res.data);
+					this.isSuper = this.$store.state.userInfo.business_join.is_super;
+				}
+			},
 			async getOrderDesc() {
 				let res = await this.myRequest('/api/user/manage/show', {
 					order_id: this.orderId
@@ -228,10 +273,10 @@
 					this.businessManId = res.data.business_id;
 					this.prices = res.data.goods_join.map(item => {
 						return item.original_price;
-					})					
+					})
 					// 修改后的价格
-					this.changedPrices = res.data.goods_join.map((item,index) => {
-						return item.clinch_price		
+					this.changedPrices = res.data.goods_join.map((item, index) => {
+						return item.clinch_price
 					})
 					this.nums = res.data.goods_join.map(item => {
 						return item.num;
@@ -249,16 +294,24 @@
 				if (res) {
 					// 如果公司地址是北京地区，那么显示所有机构类型，否则只显示前5个
 					if (this.areaData[0].province_id == 1) {
-						this.orgs = res.data.map((item,index) => {
-							return {label:item.zh_name, value:index};
+						this.orgs = res.data.map((item, index) => {
+							return {
+								label: item.zh_name,
+								value: index
+							};
 						});
 					} else {
-						this.orgs = res.data.slice(0,5).map((item,index) => {
-							return {label:item.zh_name, value:index};
+						this.orgs = res.data.slice(0, 5).map((item, index) => {
+							return {
+								label: item.zh_name,
+								value: index
+							};
 						});
 					}
 				}
-				this.orgIndex = this.orgs[this.orgs.findIndex(item => {return item.label == this.organType})].value;
+				this.orgIndex = this.orgs[this.orgs.findIndex(item => {
+					return item.label == this.organType
+				})].value;
 			},
 			async showOrgSelect() {
 				this.$refs.selector.show();
@@ -282,11 +335,14 @@
 			async getBusinessMan() {
 				let res = await this.myRequest('/common/getBusinessManager', {
 					page: 1,
-					per_page:1000
+					per_page: 1000
 				}, 'GET', true, false);
 				if (res) {
-					this.businessMans = res.data.data.map((item,index) => {
-						return {label:item.name, value:item.id};
+					this.businessMans = res.data.data.map((item, index) => {
+						return {
+							label: item.name,
+							value: item.id
+						};
 					});
 				}
 			},
@@ -299,9 +355,9 @@
 					business_id: this.businessManId
 				}, 'POST');
 				if (res.message == 'success') {
-					this.myToast('操作成功', 1000, ()=>{
+					this.myToast('操作成功', 1000, () => {
 						uni.navigateBack({
-							delta:1
+							delta: 1
 						})
 					});
 				} else {
@@ -313,9 +369,9 @@
 					order_id: this.orderId
 				}, 'POST');
 				if (res.message == 'success') {
-					this.myToast('操作成功', 1000, ()=>{
+					this.myToast('操作成功', 1000, () => {
 						uni.navigateBack({
-							delta:1
+							delta: 1
 						})
 					});
 				} else {
@@ -343,18 +399,18 @@
 			async getOrgInfo() {
 				let res = await this.myRequest('/common/getOrgan', {
 					keyword: this.orderData.organ_code,
-					page:1,
-					per_page:10
+					page: 1,
+					per_page: 10
 				}, 'GET', true, false);
 				if (res.message != 'success') {
 					this.myToast(res.message);
 				} else {
-					if (res.data.data.length) {						
+					if (res.data.data.length) {
 						this.orderData.organ_name = res.data.data[0].name
 					}
 				}
 			},
-			async numChange(value,index) {
+			async numChange(value, index) {
 				if (!value.num) return;
 				if (value.num < 1 || value.num > 99) {
 					this.myToast('数量必须在1-99之间');
@@ -382,7 +438,8 @@
 					return;
 				}
 				this.discount[this.changingDiscountIndex] = this.changedDiscount;
-				this.changedPrices[this.changingDiscountIndex] =  Math.round((this.prices[this.changingDiscountIndex] * this.changedDiscount).toFixed(2) * 100) / 100;
+				this.changedPrices[this.changingDiscountIndex] = Math.round((this.prices[this.changingDiscountIndex] * this.changedDiscount)
+					.toFixed(2) * 100) / 100;
 				this.priceChange(this.changingDiscountIndex);
 				this.closeMc();
 			},
@@ -432,47 +489,49 @@
 				if (!this.orderData.organ_name) {
 					this.myToast('客户所属公司不能为空');
 					return;
-				}				
+				}
 				let res = await this.myRequest('/api/user/manage/upStatus', {
 					order_id: this.orderId,
 					status
 				}, 'POST', true, false);
 				if (res.message == 'success') {
-					this.myToast('操作成功', 1000, ()=>{
+					this.myToast('操作成功', 1000, () => {
 						uni.navigateBack({
-							delta:1
+							delta: 1
 						})
 					});
 				} else {
 					this.myToast(res.message);
 				}
 			},
-			async getType (souceData) {
-				let res = await this.myRequest('/api/goods/getSpesc', {goods_id:souceData.goods_id}, 'GET', true, true);
-				if(res.message == "success") {
+			async getType(souceData) {
+				let res = await this.myRequest('/api/goods/getSpesc', {
+					goods_id: souceData.goods_id
+				}, 'GET', true, true);
+				if (res.message == "success") {
 					this.typeInfo = [...res.data];
 					this.chooseOne(this.typeInfo[0]);
 					this.$refs['buyCode'].open()
 					this.showTc = 1;
 				}
 			},
-			async confimType () {
-				let data ={
-					order_goods_id:this.chooseItem.id
+			async confimType() {
+				let data = {
+					order_goods_id: this.chooseItem.id
 				};
 				console.log(this.chooseData)
-				if(this.chooseItem.pid == 0){
-					data.two_specs_id  = this.chooseData.Tid
+				if (this.chooseItem.pid == 0) {
+					data.two_specs_id = this.chooseData.Tid
 				}
 				let res = await this.myRequest('/api/user/manage/upSpecs', data, 'POST', true, true);
 				this.closeMc();
-				if(res.message == 'success'){
+				if (res.message == 'success') {
 					this.getOrderDesc();
-				}else{
+				} else {
 					this.myToast(res.message)
 				}
 			},
-			openMc (item) {
+			openMc(item) {
 				if (item == 2) {
 					this.showTc = 2;
 					this.hasOpenModel = true;
@@ -482,7 +541,7 @@
 				this.chooseItem = item;
 				this.getType(item);
 			},
-			closeMc () {
+			closeMc() {
 				console.log(111);
 				this.showTc = false;
 				this.hasOpenModel = false;
@@ -497,13 +556,13 @@
 					url: `/pages/my/add-address/add-address?orderAddressId=${id}`
 				});
 			},
-			chooseOne (item) {
+			chooseOne(item) {
 				this.chooseData.Fid = item.id;
 				this.chooseData.twoInfo = item.two_specs_join;
 				this.chooseData.Ftitle = item.title
 				this.chooseTwo(item.two_specs_join[0])
 			},
-			chooseTwo (item) {
+			chooseTwo(item) {
 				this.chooseData.Tid = item.id;
 				this.chooseData.price = item.price;
 				this.chooseData.depict = item.depict;
@@ -517,241 +576,280 @@
 </script>
 
 <style lang="scss">
-	.w100{
-		max-width:100%;
+	.w100 {
+		max-width: 100%;
 		max-height: 100%;
-		text-align: center;;
+		text-align: center;
+		;
 	}
-	.main{
+
+	.main {
 		width: 100%;
 		height: 100vh;
 		display: flex;
 		background-color: #eee;
 		flex-direction: column;
 		overflow: hidden;
-		.body{
+
+		.body {
 			width: 100%;
 			flex: 1;
 			overflow: auto;
-			.header{
+
+			.header {
 				width: 100%;
 				box-sizing: border-box;
 				background: #fff;
 				margin-bottom: 20rpx;
-				.header-title{
+
+				.header-title {
 					height: 102rpx;
 					width: 100%;
 					padding: 0 30rpx;
 					box-sizing: border-box;
+
 					.uni-tab {
 						justify-content: space-between;
 						height: 100%;
-						.uni-tab-item{
-							line-height:102rpx;
+
+						.uni-tab-item {
+							line-height: 102rpx;
 						}
 					}
 				}
-				.header-content{
-					width:100%;
+
+				.header-content {
+					width: 100%;
 					box-sizing: border-box;
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
-					position:relative;
-					.h-person{
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
+					position: relative;
+
+					.h-person {
 						margin-bottom: 29rpx;
 						line-height: 1;
 					}
-					.h-address{
-						font-size:24rpx;
-						font-family:PingFang SC;
-						font-weight:400;
-						color:rgba(153,153,153,1)
+
+					.h-address {
+						font-size: 24rpx;
+						font-family: PingFang SC;
+						font-weight: 400;
+						color: rgba(153, 153, 153, 1)
 					}
-					.h-img{
-						position:absolute;
-						right:0rpx;
-						top:0;bottom:0;margin:auto;
+
+					.h-img {
+						position: absolute;
+						right: 0rpx;
+						top: 0;
+						bottom: 0;
+						margin: auto;
 					}
 				}
 
 			}
-			.order-address{
+
+			.order-address {
 				width: 100%;
 				height: 180rpx;
 				background: #fff;
 				position: relative;
-				padding:40rpx 30rpx;
+				padding: 40rpx 30rpx;
 				box-sizing: border-box;
 				margin-bottom: 20rpx;
-				.order-person{
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+
+				.order-person {
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 					line-height: 1;
 					margin-bottom: 30rpx;
 				}
-				.order-com-add{
-					font-size:24rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(153,153,153,1);
+
+				.order-com-add {
+					font-size: 24rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(153, 153, 153, 1);
 					line-height: 1;
 				}
-				.order-add-btn{
+
+				.order-add-btn {
 					width: 40rpx;
 					height: 40rpx;
 					background: url(../../../../static/edit.png) no-repeat;
 					background-size: cover;
 					position: absolute;
-					top:0;bottom:0;
-					right:30rpx;
-					margin:auto;
+					top: 0;
+					bottom: 0;
+					right: 30rpx;
+					margin: auto;
 				}
 			}
-			.kf-code{
+
+			.kf-code {
 				width: 100%;
 				height: 110rpx;
-				padding:0 70rpx 0 30rpx;
+				padding: 0 70rpx 0 30rpx;
 				box-sizing: border-box;
 
 				background-color: #FFF;
 				margin-bottom: 20rpx;
 				position: relative;
-				.kf-btn{
+
+				.kf-btn {
 					width: 40rpx;
 					height: 40rpx;
 					background: url(../../../../static/edit.png) no-repeat;
 					background-size: cover;
 					position: absolute;
-					top:0;bottom:0;
-					right:30rpx;
-					margin:auto;
+					top: 0;
+					bottom: 0;
+					right: 30rpx;
+					margin: auto;
 				}
-				.kf-content{
+
+				.kf-content {
 					width: 100%;
 					height: 100%;
 					line-height: 110rpx;
-					font-size:32rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+					font-size: 32rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 				}
 			}
-			.goods-box{
+
+			.goods-box {
 				width: 100%;
 				background-color: #fff;
 				margin-bottom: 20rpx;
-				padding:0 30rpx;
+				padding: 0 30rpx;
 				box-sizing: border-box;
-				.goods-item{
+
+				.goods-item {
 					width: 100%;
-					padding:30rpx 0;
+					padding: 30rpx 0;
 					min-height: 210rpx;
 					box-sizing: border-box;
 					background: #fff;
 					position: relative;
 					border-bottom: 1rpx solid #E6E6E6;
-					.goods-content{
+
+					.goods-content {
 						display: flex;
-						.goods-imgbox{
-							width:240rpx;
+
+						.goods-imgbox {
+							width: 240rpx;
 							height: 135rpx;
 							// background:red;
 							margin-right: 20rpx;
 						}
-						.goods-dis{
+
+						.goods-dis {
 							flex: 1;
-							.g1{
-								font-size:28rpx;
-								font-family:PingFang SC;
-								font-weight:400;
-								color:rgba(51,51,51,1);
-								line-height:38rpx;
+
+							.g1 {
+								font-size: 28rpx;
+								font-family: PingFang SC;
+								font-weight: 400;
+								color: rgba(51, 51, 51, 1);
+								line-height: 38rpx;
 								min-height: 76rpx;
 								margin-bottom: 10rpx;
 							}
-							.g2{
-								font-size:24rpx;
-								font-family:PingFang SC;
-								font-weight:400;
-								color:rgba(153,153,153,1);
-								line-height:44rpx;
+
+							.g2 {
+								font-size: 24rpx;
+								font-family: PingFang SC;
+								font-weight: 400;
+								color: rgba(153, 153, 153, 1);
+								line-height: 44rpx;
 								margin-bottom: 10rpx;
-								padding:8rpx 42rpx 8rpx 11rpx;
-								box-sizing:border-box;
+								padding: 8rpx 42rpx 8rpx 11rpx;
+								box-sizing: border-box;
 								display: inline-block;
-								background:rgba(246,246,246,1);
+								background: rgba(246, 246, 246, 1);
 								position: relative;
 								line-height: 1;
-								&:after{
+
+								&:after {
 									content: '';
 									position: absolute;
 									width: 14rpx;
 									height: 7rpx;
 									right: 14rpx;
-									top:0;bottom:0;
-									margin:auto;
+									top: 0;
+									bottom: 0;
+									margin: auto;
 									background: url(../../../../static/down.png) no-repeat;
 									background-size: cover;
 
 								}
 							}
+
 							.delete-img {
 								width: 40rpx;
 								height: 40rpx;
 								float: right;
 							}
-							.g3{
-								.gx-p{
-									font-size:28rpx;
-									font-family:PingFang SC;
-									font-weight:500;
-									color:rgba(237,25,58,1);
-									line-height:44rpx;
+
+							.g3 {
+								.gx-p {
+									font-size: 28rpx;
+									font-family: PingFang SC;
+									font-weight: 500;
+									color: rgba(237, 25, 58, 1);
+									line-height: 44rpx;
 								}
-								.gy-p{
-									font-size:20rpx;
-									font-family:PingFang SC;
-									font-weight:400;
-									text-decoration:line-through;
-									color:rgba(153,153,153,1);
-									line-height:44rpx;
+
+								.gy-p {
+									font-size: 20rpx;
+									font-family: PingFang SC;
+									font-weight: 400;
+									text-decoration: line-through;
+									color: rgba(153, 153, 153, 1);
+									line-height: 44rpx;
 								}
 							}
-							.logistics{
-								font-size:24rpx;
-								font-family:PingFang SC;
-								font-weight:400;
-								color:rgba(153,153,153,1);
-								margin-top:10rpx;
+
+							.logistics {
+								font-size: 24rpx;
+								font-family: PingFang SC;
+								font-weight: 400;
+								color: rgba(153, 153, 153, 1);
+								margin-top: 10rpx;
 							}
 						}
 					}
-					.goods-des{
+
+					.goods-des {
 						width: 100%;
 						height: 114rpx;
-						pdding-top:40rpx;
+						pdding-top: 40rpx;
 						box-sizing: border-box;
 						display: flex;
 						justify-content: space-between;
-						font-size:28rpx;
-						font-family:PingFang SC;
-						font-weight:400;
-						color:rgba(51,51,51,1);
-						.goods-prices{
+						font-size: 28rpx;
+						font-family: PingFang SC;
+						font-weight: 400;
+						color: rgba(51, 51, 51, 1);
+
+						.goods-prices {
 							flex: 1;
 							height: 100%;
 							display: flex;
-							align-items: center;;
-							.goods-inputs{
-								width:240rpx;
+							align-items: center;
+							;
+
+							.goods-inputs {
+								width: 240rpx;
 								height: 64rpx;
 								line-height: 64rpx;
-								border:1px solid rgba(153,153,153,1);
-								border-radius:10rpx;
+								border: 1px solid rgba(153, 153, 153, 1);
+								border-radius: 10rpx;
 								box-sizing: border-box;
 								display: block;
 								border: 1px solid #ccc;
@@ -760,14 +858,17 @@
 								color: #ED193A;
 							}
 						}
-						.goods-num{
+
+						.goods-num {
 							flex: 1;
 							height: 100%;
 							display: flex;
-							align-items: center;;
-							flex-direction:row-reverse;
-							.goods-numbox{
-								width:240rpx;
+							align-items: center;
+							;
+							flex-direction: row-reverse;
+
+							.goods-numbox {
+								width: 240rpx;
 								height: 64rpx;
 							}
 						}
@@ -775,289 +876,329 @@
 				}
 
 			}
+
 			.remark-wrapper {
 				width: 100%;
 				background-color: #fff;
 				margin-bottom: 20rpx;
-				padding:0 30rpx;
+				padding: 0 30rpx;
 				box-sizing: border-box;
 			}
-			.remark{
+
+			.remark {
 				width: 100%;
 				height: 80rpx;
 				line-height: 80rpx;
-				font-size:32rpx;
-				font-family:PingFang SC;
-				font-weight:400;
-				color:rgba(51,51,51,1);
+				font-size: 32rpx;
+				font-family: PingFang SC;
+				font-weight: 400;
+				color: rgba(51, 51, 51, 1);
 				display: flex;
-				.remark-box{
+
+				.remark-box {
 					flex: 1;
 					height: 100%;
 					line-height: 40rpx;
-					padding-top:20rpx;
+					padding-top: 20rpx;
 					box-sizing: border-box;
 				}
 			}
-			.last-info{
+
+			.last-info {
 				background: #FFF;
-				padding:30rpx;
-				box-sizing: border-box;;
-				font-size:28rpx;
-				font-family:PingFang SC;
-				font-weight:400;
-				color:rgba(153,153,153,1);
+				padding: 30rpx;
+				box-sizing: border-box;
+				;
+				font-size: 28rpx;
+				font-family: PingFang SC;
+				font-weight: 400;
+				color: rgba(153, 153, 153, 1);
 				line-height: 1;
 				margin-bottom: 30rpx;
-				.order-num{
+
+				.order-num {
 					margin-bottom: 20rpx;
 				}
+
 				.order-company {
 					margin-bottom: 20rpx;
 					display: flex;
-					color:rgba(51,51,51,1);
-					font-size:32rpx;
+					color: rgba(51, 51, 51, 1);
+					font-size: 32rpx;
 					height: 80rpx;
 					line-height: 80rpx;
-					.remark-box{
+
+					.remark-box {
 						flex: 1;
 						height: 100%;
 						line-height: 40rpx;
-						padding-top:20rpx;
+						padding-top: 20rpx;
 						box-sizing: border-box;
 					}
 				}
 			}
 		}
-		.footer{
+
+		.footer {
 			width: 100%;
 			height: 88rpx;
 			display: flex;
 			justify-content: space-between;
-			align-items: center;;
-			font-size:32rpx;
-			font-family:PingFang SC;
-			font-weight:400;
-			color:rgba(255,255,255,1);
-			.order-pass{
+			align-items: center;
+			;
+			font-size: 32rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: rgba(255, 255, 255, 1);
+
+			.order-pass {
 				flex: 1;
 				height: 100%;
 				line-height: 88rpx;
 				text-align: center;
-				background:rgba(0,108,183,1);
+				background: rgba(0, 108, 183, 1);
 			}
-			.order-refuse{
+
+			.order-refuse {
 				flex: 1;
 				height: 100%;
 				line-height: 88rpx;
 				text-align: center;
-				background:rgba(237,25,58,1);
-			}			
-			.order-middle{
+				background: rgba(237, 25, 58, 1);
+			}
+
+			.order-middle {
 				flex: 1;
 				height: 100%;
 				line-height: 88rpx;
 				text-align: center;
-				background:rgba(111,164,215,1);
+				background: rgba(111, 164, 215, 1);
 			}
 		}
 	}
+
 	.code {
 		width: 100%;
 		height: 360rpx;
 		background: #fff;
-		padding-bottom:96rpx;
+		padding-bottom: 96rpx;
 		box-sizing: border-box;
 		position: relative;
-		.close{
+
+		.close {
 			width: 28rpx;
 			height: 28rpx;
 			background: url(../../../../static/c/c31close.png) no-repeat;
 			background-size: cover;
 			position: absolute;
-			right:0rpx;top:0rpx;
+			right: 0rpx;
+			top: 0rpx;
 		}
-		.code-title{
-			font-size:36rpx;
-			font-family:PingFang SC;
-			font-weight:600;
-			color:rgba(51,51,51,1);
+
+		.code-title {
+			font-size: 36rpx;
+			font-family: PingFang SC;
+			font-weight: 600;
+			color: rgba(51, 51, 51, 1);
 			margin-bottom: 60rpx;
 			text-align: center;
 		}
-		.code-box{
-			width:100%;
+
+		.code-box {
+			width: 100%;
 			height: 88rpx;
-			background:rgba(246,246,246,1);
-			font-size:32rpx;
-			font-family:PingFang SC;
-			font-weight:400;
-			color:rgba(51,51,51,1);
+			background: rgba(246, 246, 246, 1);
+			font-size: 32rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: rgba(51, 51, 51, 1);
 			text-align: center;
-			.code-input{
+
+			.code-input {
 				width: 100%;
 				height: 100%;
 			}
 		}
-		.code-footer{
+
+		.code-footer {
 			width: 100%;
 			height: 96rpx;
 			position: fixed;
-			left: 0;bottom: 0;
+			left: 0;
+			bottom: 0;
 			text-align: center;
 			line-height: 96rpx;
 			background: #006CB7;
-			font-size:32rpx;
-			font-family:PingFang SC;
-			font-weight:400;
-			color:rgba(255,255,255,1);
+			font-size: 32rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: rgba(255, 255, 255, 1);
 		}
 	}
-	.guige{
 
-		.body{
+	.guige {
+
+		.body {
 			overflow: auto;
-			width:100%;
+			width: 100%;
 			box-sizing: border-box;
 			background: white;
 			padding-bottom: 96rpx;
-			.m1{
+
+			.m1 {
 				width: 100%;
 				height: 173rpx;
 				display: flex;
 				margin-bottom: 60rpx;
 				background: #fff;
-				padding:30rpx 0;
+				padding: 30rpx 0;
 				box-sizing: border-box;
 				z-index: 99;
-				.m1-close{
-					width:28rpx;
+
+				.m1-close {
+					width: 28rpx;
 					height: 28rpx;
 					position: absolute;
-					top:30rpx;
+					top: 30rpx;
 					right: 30rpx;
 					z-index: 66;
 				}
-				.m1-imgbox{
-					width:200rpx;
+
+				.m1-imgbox {
+					width: 200rpx;
 					height: 100%;
 					margin-right: 30rpx;
 
 				}
-				.m1-price{
-					flex:1;
-					.m1-p{
-						font-size:38rpx;
-						font-family:PingFang SC;
-						font-weight:500;
-						color:rgba(237,25,58,1);
-						margin-top:10rpx;
+
+				.m1-price {
+					flex: 1;
+
+					.m1-p {
+						font-size: 38rpx;
+						font-family: PingFang SC;
+						font-weight: 500;
+						color: rgba(237, 25, 58, 1);
+						margin-top: 10rpx;
 						line-height: 1;
 						margin-bottom: 20rpx;
 					}
-					.m1-d{
-						font-size:28rpx;
-						font-family:PingFang SC;
-						font-weight:400;
-						color:rgba(51,51,51,1);
-						line-height:1;
+
+					.m1-d {
+						font-size: 28rpx;
+						font-family: PingFang SC;
+						font-weight: 400;
+						color: rgba(51, 51, 51, 1);
+						line-height: 1;
 					}
 				}
 
 			}
 
-			.m2{
+			.m2 {
 				width: 100%;
 				margin-bottom: 40rpx;
-				.m2-title{
-					font-size:28rpx;
+
+				.m2-title {
+					font-size: 28rpx;
 					margin-bottom: 20rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 
 				}
-				.m2-box{
+
+				.m2-box {
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
-					.m2-item{
-						padding:20rpx 40rpx;
-						background:rgba(255,255,255,1);
-						border:1px solid rgba(205,205,205,1);
-						color:#999999;
-						border-radius:10rpx;
+
+					.m2-item {
+						padding: 20rpx 40rpx;
+						background: rgba(255, 255, 255, 1);
+						border: 1px solid rgba(205, 205, 205, 1);
+						color: #999999;
+						border-radius: 10rpx;
 						margin-bottom: 30rpx;
 						font-size: 28rpx;
 						text-align: center;
 						line-height: 1;
 						box-sizing: border-box;
 						margin-right: 30rpx;
-						&.active{
-							color:#006CB7;
-							border:1px solid rgba(0,108,183,1);
+
+						&.active {
+							color: #006CB7;
+							border: 1px solid rgba(0, 108, 183, 1);
 						}
 					}
 				}
 
 			}
-			.m3{
+
+			.m3 {
 				width: 100%;
 				margin-bottom: 40rpx;
-				.m3-title{
-					font-size:28rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(51,51,51,1);
+
+				.m3-title {
+					font-size: 28rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(51, 51, 51, 1);
 					margin-bottom: 20rpx;
 				}
-				.m3-box{
+
+				.m3-box {
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
 
-					.m3-item{
-						padding:20rpx 40rpx;
+					.m3-item {
+						padding: 20rpx 40rpx;
 						margin-bottom: 30rpx;
-						background:rgba(255,255,255,1);
-						border:1px solid rgba(205,205,205,1);
-						color:#999999;
-						border-radius:10rpx;
+						background: rgba(255, 255, 255, 1);
+						border: 1px solid rgba(205, 205, 205, 1);
+						color: #999999;
+						border-radius: 10rpx;
 						font-size: 28rpx;
-						margin-right: 30rpx;;
+						margin-right: 30rpx;
+						;
 						text-align: center;
 						line-height: 1;
 						box-sizing: border-box;
-						&.active{
-							color:#006CB7;
-							border:1px solid rgba(0,108,183,1);
+
+						&.active {
+							color: #006CB7;
+							border: 1px solid rgba(0, 108, 183, 1);
 						}
 					}
 				}
-				.m3-tips{
-					font-size:24rpx;
-					font-family:PingFang SC;
-					font-weight:400;
-					color:rgba(153,153,153,1);
-					line-height:1;
+
+				.m3-tips {
+					font-size: 24rpx;
+					font-family: PingFang SC;
+					font-weight: 400;
+					color: rgba(153, 153, 153, 1);
+					line-height: 1;
 					margin-bottom: 40rpx;
 				}
 			}
 
 
 		}
-		.footer{
-			width:100%;
+
+		.footer {
+			width: 100%;
 			height: 96rpx;
-			font-size:32rpx;
-			font-family:PingFang SC;
-			font-weight:400;
-			color:rgba(255,255,255,1);
-			background:rgba(0,108,183,1);
+			font-size: 32rpx;
+			font-family: PingFang SC;
+			font-weight: 400;
+			color: rgba(255, 255, 255, 1);
+			background: rgba(0, 108, 183, 1);
 			text-align: center;
 			line-height: 96rpx;
-			position:fixed;
-			left:0;bottom:0;
+			position: fixed;
+			left: 0;
+			bottom: 0;
 			z-index: 665;
 			display: block;
 		}
