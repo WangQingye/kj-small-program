@@ -129,11 +129,13 @@
 
 		.order-remark {
 			width: 750rpx;
-			height: 110rpx;
+			min-height: 110rpx;
 			background: white;
 			line-height: 110rpx;
-			padding-left: 30rpx;
+			padding: 0 30rpx;
 			margin: 20rpx 0;
+			word-break: break-all;
+			box-sizing: border-box;
 		}
 
 		.order-goods {

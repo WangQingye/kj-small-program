@@ -21,8 +21,8 @@
 					</checkbox-group>
 				</label>
 			</view>
-			<view class="save-button" v-if="userProto" @click="updatePhone">保存</view>
-			<view class="save-button disable-button" v-else>保存</view>
+			<view class="save-button" @click="updatePhone">保存</view>
+			<!-- <view class="save-button disable-button" v-else>保存</view> -->
 		</view>
 	</view>
 </template>
@@ -31,7 +31,7 @@
 	export default {
 		data() {
 			return {
-				userProto: true,
+				userProto: false,
 				buttonText: "获取验证码",
 				phone: "",
 				verifyCode: "",
@@ -80,6 +80,13 @@
 				} else if (!this.verifyCode) {
 					uni.showToast({
 						title: "请输入验证码",
+						duration: 2000,
+						icon: "none"
+					});
+					return false;
+				} else if (!this.userProto) {
+					uni.showToast({
+						title: "请先勾选用户协议",
 						duration: 2000,
 						icon: "none"
 					});

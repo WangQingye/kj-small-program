@@ -28,7 +28,7 @@
 							<view class="g1">
 								{{item.title}}
 							</view>
-							<view class="g2" @click="openMc(item)">
+							<view class="g2" @click="openMc(item)" v-if="isSuper">
 								{{item.two_type_title + ';' + item.two_specs_title}}
 							</view>
 							<image src="../../../../static/delete.png" class="delete-img" @click="deleteGood(item.id)"></image>
@@ -55,11 +55,11 @@
 			<view class="remark-wrapper">
 				<view class="remark">
 					<text>客户备注：</text>
-					<view class="remark-box">{{orderData.remark || '无'}}</view>
+					<view class="remark-box-1">{{orderData.remark || '无'}}</view>
 				</view>
 				<view class="remark">
 					<text>备注信息：</text>
-					<input class="remark-box" style="padding-top: 4rpx;" v-show="!hasOpenModel" v-model="businessRemark" placeholder="请输入备注信息"
+					<input class="remark-box" style="padding-top: 15rpx;" v-show="!hasOpenModel" v-model="businessRemark" placeholder="请输入备注信息"
 					 @blur="remarkChange" />
 				</view>
 			</view>
@@ -210,7 +210,7 @@
 				businessName: "",
 				businessManId: 0,
 				businessMans: [],
-				showLoginPage: true
+				showLoginPage: false
 			};
 		},
 		beforeCreate() {
@@ -887,7 +887,7 @@
 
 			.remark {
 				width: 100%;
-				height: 80rpx;
+				min-height: 80rpx;
 				line-height: 80rpx;
 				font-size: 32rpx;
 				font-family: PingFang SC;
@@ -900,6 +900,13 @@
 					height: 100%;
 					line-height: 40rpx;
 					padding-top: 20rpx;
+				}
+				.remark-box-1 {
+					flex: 1;
+					height: 100%;
+					line-height: 40rpx;
+					padding-top: 20rpx;
+					word-break: break-all;
 					box-sizing: border-box;
 				}
 			}

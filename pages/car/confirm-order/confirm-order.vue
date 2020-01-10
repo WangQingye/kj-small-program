@@ -17,7 +17,7 @@
 			<view class="code-wrapper">
 				<view class="list-item list-picker">
 					<view class="list-label">机构类型</view>
-					<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null">{{orgs[orgIndex].label}}</view>
+					<view class="list-input ellipsis" style="width: 520rpx; font-size: 32rpx;" @click="showOrgSelect" v-if="orgIndex !== null && originOrgs.length">{{originOrgs[orgIndex].label}}</view>
 					<view v-else class="list-input" @click="showOrgSelect" style="min-width: 520rpx;color: #999999;">
 						请选择机构类型
 					</view>
@@ -133,6 +133,7 @@
 				tabList: ['公司地址', "收货地址", "发票邮寄地址"],
 				goodsInfo: [],
 				orgs: [],
+				originOrgs: [],
 				selectList: [{
 					label: "男",
 					value: 0
@@ -275,6 +276,13 @@
 					// 		return {label:item.zh_name, value:index};
 					// 	});
 					// } else {
+						// 所有机构，用于展示
+					this.originOrgs = res.data.map((item, index) => {
+					return {
+						label: item.zh_name,
+						value: index
+					};
+					});;
 					this.orgs = res.data.slice(0, 5).map((item, index) => {
 						return {
 							label: item.zh_name,

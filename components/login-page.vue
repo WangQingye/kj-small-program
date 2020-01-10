@@ -14,7 +14,9 @@
 		},
 		props: ['showFlag', 'isTabBar'],
 		mounted() {
-			this.wxLogin();
+			if (!this.$store.state.userToken.api_token) {
+				this.wxLogin();
+			}
 		},
 		methods: {
 			wxLogin() {
